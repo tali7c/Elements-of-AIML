@@ -1,0 +1,180 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 05 -- Lecture 01: AI for Society, Women \& Environment}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: \textbf{responsible AI} --- fairness, privacy, safety, sustainability\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:why}{\beamerbutton{Why}}\hspace{0.6em}
+  \hyperlink{sec:bias}{\beamerbutton{Bias/Fairness}}\hspace{0.6em}
+  \hyperlink{sec:privacy}{\beamerbutton{Privacy}}\hspace{0.6em}
+  \hyperlink{sec:env}{\beamerbutton{Environment}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Why responsible AI?}
+\label{sec:why}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item Explain why AI/ML requires responsible practices in real deployments.
+    \item Define common sources of bias and explain fairness at a high level.
+    \item Describe privacy risks in data-driven systems.
+    \item Discuss environmental and sustainability considerations for AI.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations \& Keywords}
+  \begin{itemize}[<+->]
+    \item PII: personally identifiable information
+    \item Bias: systematic error/unfairness; Fairness: equitable outcomes/treatment
+    \item Audit: checking data/model behavior; Accountability: assign responsibility
+    \item Drift: data changes over time; Monitoring: ongoing checks after deployment
+    \item Sustainability: energy/compute cost considerations
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why This Unit Matters}
+  AI systems influence real decisions:
+  \begin{itemize}[<+->]
+    \item admissions, hiring, loans
+    \item healthcare triage and diagnosis support
+    \item policing and surveillance
+  \end{itemize}
+  \vspace{0.4em}
+  So we must evaluate not only accuracy, but also \textbf{fairness, safety, privacy, and accountability}.
+\end{frame}
+
+\section{Bias and fairness}
+\label{sec:bias}
+
+\begin{frame}{Bias: Where It Comes From}
+  \begin{itemize}[<+->]
+    \item \textbf{Sampling bias}: training data does not represent real population
+    \item \textbf{Measurement/label bias}: labels reflect human/systematic errors
+    \item \textbf{Historical bias}: past decisions encode unfairness
+    \item \textbf{Proxy features}: non-sensitive variables correlate with sensitive ones
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Fairness (High-Level)}
+  Fairness can mean different things depending on context:
+  \begin{itemize}[<+->]
+    \item Similar individuals should be treated similarly (individual fairness).
+    \item Error rates should be similar across groups (group fairness).
+    \item Outcomes should not systematically disadvantage protected groups.
+  \end{itemize}
+  \vspace{0.4em}
+  There is no single universal metric; choose based on domain and risks.
+\end{frame}
+
+\begin{frame}{Fairness Metrics (Examples, not exhaustive)}
+  \begin{itemize}[<+->]
+    \item \textbf{Demographic parity}: positive prediction rates similar across groups
+    \item \textbf{Equal opportunity}: similar true-positive rates across groups
+    \item \textbf{Error-rate balance}: similar FPR/FNR across groups
+  \end{itemize}
+  \vspace{0.3em}
+  \small Different metrics can conflict; choose based on domain harms and legal/ethical constraints.
+\end{frame}
+
+\section{Privacy and security}
+\label{sec:privacy}
+
+\begin{frame}{Privacy Risks}
+  \begin{itemize}[<+->]
+    \item Training data may contain sensitive information.
+    \item Models can leak information (membership inference, memorization).
+    \item Sharing data across teams/vendors increases risk.
+  \end{itemize}
+  \vspace{0.4em}
+  Mitigations: data minimization, access control, anonymization (with caution), audits.
+\end{frame}
+
+\begin{frame}{Safety and Misuse}
+  \begin{itemize}[<+->]
+    \item Misclassification can cause harm (medical, finance).
+    \item Models can be attacked (adversarial inputs) or misused.
+    \item Monitoring and human oversight are often required.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Responsible AI Checklist (Practical)}
+  Before deployment, ask:
+  \begin{itemize}[<+->]
+    \item Who can be harmed by errors? (FP vs FN costs)
+    \item Are results consistent across groups/subpopulations?
+    \item What data/PII is used and who has access?
+    \item How will drift be detected and handled?
+    \item Is there a human escalation/appeal path?
+  \end{itemize}
+\end{frame}
+
+\section{Environment and sustainability}
+\label{sec:env}
+
+\begin{frame}{Environmental Considerations}
+  \begin{itemize}[<+->]
+    \item Training large models consumes energy and compute.
+    \item Efficiency matters: smaller models, fewer features, fewer retrains.
+    \item Choose ``good enough'' accuracy when marginal gains cost huge resources.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Inclusive Design (Women \& Society)}
+  \begin{itemize}[<+->]
+    \item Ensure datasets represent diverse users (avoid under-representation).
+    \item Evaluate outcomes across groups; investigate gaps.
+    \item Use participatory design: stakeholders help define success and risks.
+  \end{itemize}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Responsible AI requires fairness, privacy, safety, and accountability checks.
+    \item Bias can enter via data, labels, and historical decisions.
+    \item Sustainability matters: compute/energy trade-offs should be considered.
+  \end{itemize}
+  \slidesources{\AIMLUnitVSources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item List three sources of bias in ML datasets.
+    \item Give one example where fairness concerns are critical.
+    \item What is one privacy risk of ML models (not just datasets)?
+    \item Name two ways to reduce environmental impact of ML systems.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

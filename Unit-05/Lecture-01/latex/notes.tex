@@ -1,0 +1,212 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 05 -- Lecture 01 Notes\\AI for Society, Women \& Environment}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture introduces responsible AI considerations:
+\begin{itemize}[leftmargin=*]
+  \item fairness and bias,
+  \item privacy and security,
+  \item safety and accountability,
+  \item environmental sustainability,
+  \item inclusive design considerations (including gender impacts).
+\end{itemize}
+\notesources{\AIMLUnitVSources}
+
+\section{How to use these notes (self-study)}
+Responsible AI is best studied through questions:
+Who is affected, what harms are possible, and what evidence do we need before deployment?
+When you read each section (fairness, privacy, sustainability), try to connect it to a concrete scenario such as loan approval, hiring, or healthcare triage.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Explain why responsible AI is required beyond accuracy metrics.
+  \item Identify sources of bias and describe fairness at a high level.
+  \item Describe privacy risks in data-driven systems.
+  \item Explain environmental trade-offs of training and deploying models.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Bias:} systematic error or unfairness introduced by data/processes.
+  \item \textbf{Fairness:} notion of equitable treatment across individuals or groups.
+  \item \textbf{Privacy:} protection of sensitive information about individuals.
+  \item \textbf{Accountability:} ability to assign responsibility, explain and audit decisions.
+  \item \textbf{Sustainability:} considering energy/compute and environmental costs.
+\end{itemize}
+
+\section{Abbreviations and key terms}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PII}: Personally Identifiable Information (e.g., phone number, address, ID number).
+  \item \textbf{Drift}: data distribution changes over time (inputs or labels).
+  \item \textbf{Audit}: systematic check of datasets/models for issues (bias, leakage, failures).
+  \item \textbf{Stakeholders}: people affected by a system (users, applicants, patients, society).
+  \item \textbf{High-stakes}: settings where errors can cause significant harm (health, finance, justice).
+\end{itemize}
+
+\section{Why responsible AI?}
+AI systems influence human lives. In many domains, errors have different costs for different people.
+Therefore we must evaluate:
+\begin{itemize}[leftmargin=*]
+  \item performance (accuracy/error),
+  \item fairness across relevant groups,
+  \item privacy and data governance,
+  \item safety and security,
+  \item monitoring and accountability.
+\end{itemize}
+
+\subsection{A practical mindset}
+Responsible AI is not a single technique; it is a \textbf{process}:
+\begin{itemize}[leftmargin=*]
+  \item define harms and success criteria with stakeholders,
+  \item measure model performance \emph{overall and by subgroup},
+  \item implement mitigations (data, model, thresholds, policy),
+  \item monitor and update after deployment.
+\end{itemize}
+
+\section{Bias and fairness}
+\subsection{Sources of bias}
+Common bias sources include:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Sampling bias}: training data under-represents some groups.
+  \item \textbf{Measurement/label bias}: labels reflect human errors or biased judgments.
+  \item \textbf{Historical bias}: past patterns embed unfairness into data.
+  \item \textbf{Proxy bias}: non-sensitive features correlate with sensitive attributes.
+\end{itemize}
+
+\subsection{Fairness (practical view)}
+Fairness is context-dependent. Common questions:
+\begin{itemize}[leftmargin=*]
+  \item Are error rates similar across groups?
+  \item Do different groups receive systematically different outcomes?
+  \item Is there a strong justification for differences?
+\end{itemize}
+There is no single metric that solves every fairness situation; we choose based on domain and risk tolerance.
+
+\subsection{Fairness metrics (high-level examples)}
+Some common (but not universal) fairness notions:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Demographic parity:} positive prediction rates are similar across groups.
+  \item \textbf{Equal opportunity:} true positive rates (recall) are similar across groups.
+  \item \textbf{Error rate balance:} false positive/false negative rates are similar across groups.
+\end{itemize}
+Important: different metrics can conflict; you must choose based on domain harms, legal constraints, and feasibility.
+
+\subsection{Mitigation options (practical)}
+Examples of fairness-related mitigations:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Data fixes}: collect more representative data, reweight samples, improve labels.
+  \item \textbf{Modeling fixes}: add constraints/regularization, use interpretable models where needed.
+  \item \textbf{Decision fixes}: different thresholds by group (requires strong justification), human review for borderline cases.
+  \item \textbf{Process fixes}: documentation, audits, and continuous monitoring.
+\end{itemize}
+
+\section{Privacy and security}
+\subsection{Dataset privacy}
+Sensitive data (medical, financial) must be handled with governance:
+\begin{itemize}[leftmargin=*]
+  \item access controls, consent, retention policies,
+  \item encryption and secure storage,
+  \item careful sharing with third parties.
+\end{itemize}
+
+\subsection{Privacy vs security (quick distinction)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Privacy}: who is allowed to know what about an individual.
+  \item \textbf{Security}: preventing unauthorized access, tampering, and attacks.
+\end{itemize}
+Both are needed for real-world AI systems.
+
+\subsection{Model privacy (important)}
+Even if the dataset is protected, models can leak information:
+\begin{itemize}[leftmargin=*]
+  \item membership inference (whether a person was in training data),
+  \item memorization of rare records,
+  \item extraction attacks when models are exposed publicly.
+\end{itemize}
+Mitigations include limiting access, careful logging, and privacy-preserving techniques (advanced topic).
+
+\section{Safety and accountability}
+In high-stakes settings:
+\begin{itemize}[leftmargin=*]
+  \item humans may need to remain in the loop,
+  \item decisions should be explainable and contestable,
+  \item monitoring should detect drift and harmful outcomes.
+\end{itemize}
+
+\subsection{Accountability artifacts (what to keep)}
+In practice, organizations maintain:
+\begin{itemize}[leftmargin=*]
+  \item dataset documentation (source, time range, known limitations),
+  \item model documentation (features used, training procedure, evaluation results),
+  \item decision logs (for audit/appeals), where appropriate and legal.
+\end{itemize}
+
+\section{Environmental impact and sustainability}
+Compute has real energy costs. Practical ways to reduce impact:
+\begin{itemize}[leftmargin=*]
+  \item prefer smaller models when sufficient,
+  \item reduce unnecessary features and retraining,
+  \item use efficient evaluation and early stopping where appropriate,
+  \item measure cost vs benefit (marginal accuracy gains vs compute).
+\end{itemize}
+
+\subsection{Sustainability is also a design choice}
+Sometimes the most responsible choice is not the most complex model:
+\begin{itemize}[leftmargin=*]
+  \item simpler models can be easier to audit and explain,
+  \item smaller compute footprints reduce cost and environmental impact,
+  \item marginal accuracy gains may not justify the added cost/risk.
+\end{itemize}
+
+\section{Inclusive design (women \& society)}
+Under-representation can cause unequal performance. Practical actions:
+\begin{itemize}[leftmargin=*]
+  \item check representation in datasets,
+  \item evaluate metrics by subgroup,
+  \item collect feedback and involve stakeholders in defining success.
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. Give one example of a proxy feature that could introduce unfairness.}
+\textbf{Answer:} ZIP code can act as a proxy for socioeconomic status or race/ethnicity in some regions; using it for credit decisions can introduce unfair outcomes.
+
+\subsection*{P2. What is drift and why does it matter?}
+\textbf{Answer:} drift is change in input/label distribution over time; it can reduce model accuracy and increase unfair outcomes if not monitored.
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Treating fairness as one metric:} fairness is context-dependent; different metrics can conflict.
+  \item \textbf{Assuming anonymization is always safe:} re-identification is possible; privacy needs governance and access controls.
+  \item \textbf{Ignoring subgroup performance:} a model can be ``good on average'' but harmful for some groups.
+  \item \textbf{No monitoring plan:} drift can turn a safe model into an unsafe one after deployment.
+  \item \textbf{Over-optimizing accuracy:} marginal accuracy gains may increase cost, risk, and environmental impact.
+\end{itemize}
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. List three sources of bias in ML datasets.}
+\textbf{Answer:} sampling bias, measurement/label bias, historical bias, proxy bias (any three).
+
+\subsection*{Q2. Give one example where fairness is critical.}
+\textbf{Answer:} loan approval, hiring screening, medical triage, criminal justice risk assessment.
+
+\subsection*{Q3. One privacy risk of models (not just datasets).}
+\textbf{Answer:} membership inference or memorization: the model can leak information about specific training examples.
+
+\subsection*{Q4. Two ways to reduce environmental impact.}
+\textbf{Answer:} use smaller models, reduce retraining frequency, optimize pipelines, prefer efficient algorithms/hardware, avoid unnecessary experiments.
+
+\section{Summary}
+Responsible AI means evaluating and managing fairness, privacy, safety, and sustainability along with accuracy.
+\notesources{\AIMLUnitVSources}
+
+\end{document}

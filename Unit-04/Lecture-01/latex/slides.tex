@@ -1,0 +1,167 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 04 -- Lecture 01: Supervised Learning (Regression)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: predicting \textbf{continuous values} and evaluating regression models\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitIVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:reg}{\beamerbutton{Regression}}\hspace{0.6em}
+  \hyperlink{sec:linear}{\beamerbutton{Linear Model}}\hspace{0.6em}
+  \hyperlink{sec:metrics}{\beamerbutton{Metrics}}\hspace{0.6em}
+  \hyperlink{sec:overfit}{\beamerbutton{Overfitting}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Regression basics}
+\label{sec:reg}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item Define regression and give common use-cases.
+    \item Describe linear regression and the idea of a loss function.
+    \item Compare MAE, MSE/RMSE, and $R^2$.
+    \item Explain overfitting and how regularization helps.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations \& Symbols}
+  \begin{itemize}[<+->]
+    \item $X$: features,\; $y$: target,\; $\hat{y}$: prediction
+    \item $n$: samples,\; $d$: features,\; $w$: weights,\; $w_0$: intercept
+    \item MAE/MSE/RMSE: regression error metrics
+    \item $R^2$: coefficient of determination (variance explained)
+    \item $\lambda$: regularization strength; $\|w\|_1,\|w\|_2$: L1/L2 penalties
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What is Regression?}
+  \begin{block}{Regression}
+    Predict a \textbf{continuous} target value from input features.
+  \end{block}
+  \vspace{0.4em}
+  Examples:
+  \begin{itemize}[<+->]
+    \item house price prediction
+    \item demand forecasting
+    \item temperature prediction
+  \end{itemize}
+\end{frame}
+
+\section{Linear regression}
+\label{sec:linear}
+
+\begin{frame}{Linear Regression Model}
+  \[
+    \hat{y} = w_0 + w_1 x_1 + \cdots + w_d x_d
+  \]
+  \begin{itemize}[<+->]
+    \item $w$ are learned from training data.
+    \item The model is ``linear in parameters''.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Loss Function (MSE)}
+  We learn parameters by minimizing a loss.
+  \[
+    \text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2
+  \]
+  \begin{itemize}[<+->]
+    \item Squared error penalizes large mistakes more.
+    \item Other losses exist (MAE, Huber), depending on needs.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Mini Worked Example (Compute Errors)}
+  Suppose true values $y=[50,60,80]$ and predictions $\hat{y}=[55,58,70]$.
+  \begin{itemize}[<+->]
+    \item Errors: $e = y-\hat{y} = [-5,2,10]$
+    \item MAE $= \frac{|{-5}|+|2|+|10|}{3}=\frac{17}{3}\approx 5.67$
+    \item MSE $= \frac{25+4+100}{3}=\frac{129}{3}=43$
+    \item RMSE $= \sqrt{43}\approx 6.56$ (same units as $y$)
+  \end{itemize}
+\end{frame}
+
+\section{Metrics}
+\label{sec:metrics}
+
+\begin{frame}{Regression Evaluation Metrics}
+  \begin{itemize}[<+->]
+    \item \textbf{MAE}: average absolute error
+    \item \textbf{MSE / RMSE}: squared error (RMSE is in original units)
+    \item \textbf{$R^2$}: proportion of variance explained (can be misleading)
+  \end{itemize}
+\end{frame}
+
+\section{Overfitting}
+\label{sec:overfit}
+
+\begin{frame}{Underfitting vs Overfitting}
+  \begin{itemize}[<+->]
+    \item \textbf{Underfitting}: model too simple, high bias, poor train and test.
+    \item \textbf{Overfitting}: model too complex, low train error but high test error.
+  \end{itemize}
+  \vspace{0.4em}
+  Remedies: more data, better features, regularization, cross-validation.
+\end{frame}
+
+\begin{frame}{Regularization (Idea)}
+  Add a penalty to discourage overly large weights:
+  \[
+    \text{Loss} = \text{MSE} + \lambda \|w\|^2
+  \]
+  \begin{itemize}[<+->]
+    \item Ridge ($\ell_2$) shrinks weights.
+    \item Lasso ($\ell_1$) can push some weights to zero (feature selection effect).
+  \end{itemize}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Regression predicts continuous values.
+    \item Linear regression minimizes a loss such as MSE.
+    \item Metrics: MAE, RMSE, $R^2$ (interpret carefully).
+    \item Overfitting can be reduced with regularization and proper validation.
+  \end{itemize}
+  \slidesources{\AIMLUnitIVSources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item What is the difference between regression and classification?
+    \item Why is RMSE often easier to interpret than MSE?
+    \item What does $R^2$ measure and when can it be misleading?
+    \item Explain overfitting and list two mitigation strategies.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

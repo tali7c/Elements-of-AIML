@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 04 -- Lecture 03 Notes\\Clustering, Reinforcement Learning \& Semi-Supervised ML}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture covers three important ML paradigms beyond basic supervised learning:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Clustering} (unsupervised),
+  \item \textbf{Reinforcement learning} (interaction + reward),
+  \item \textbf{Semi-supervised learning} (limited labels + many unlabeled examples).
+\end{itemize}
+\notesources{\AIMLUnitIVSources}
+
+\section{How to use these notes (self-study)}
+This lecture has three mini-topics. Study them in this order:
+(1) clustering (because it uses only data $X$), (2) reinforcement learning (because it adds time/interaction), and (3) semi-supervised learning (because it combines labeled and unlabeled data).
+For each topic, focus on the \textbf{objective} and the \textbf{main pitfalls}.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Explain clustering and describe k-means steps and objective.
+  \item Identify practical issues in clustering (choice of $k$, initialization, scaling).
+  \item Explain key RL terminology and the RL learning goal.
+  \item Describe semi-supervised learning and risks of pseudo-labeling.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Cluster:} group of similar points.
+  \item \textbf{k-means:} clustering algorithm minimizing within-cluster squared distances.
+  \item \textbf{State/action/reward/policy:} core RL terms.
+  \item \textbf{Semi-supervised:} learning using both labeled and unlabeled data.
+\end{itemize}
+
+\section{Abbreviations and symbols}
+\begin{itemize}[leftmargin=*]
+  \item $k$: number of clusters; $\mu_j$: centroid of cluster $j$; $c(i)$: cluster assignment of point $x_i$.
+  \item Inertia/objective: $\sum_i \|x_i-\mu_{c(i)}\|^2$ (within-cluster sum of squares).
+  \item RL: $s$ state, $a$ action, $r$ reward, $\pi$ policy, $\gamma$ discount factor.
+  \item $Q(s,a)$: action-value (Q-function); $\alpha$: learning rate.
+  \item Semi-supervised: labeled set $L$, unlabeled set $U$, pseudo-labels.
+\end{itemize}
+
+\section{Clustering}
+\subsection{What is clustering?}
+Clustering is an unsupervised task: we group data points to discover structure.
+Unlike classification, there are no labels provided.
+
+\subsection{Use-cases}
+\begin{itemize}[leftmargin=*]
+  \item customer segmentation,
+  \item grouping similar documents/images,
+  \item anomaly detection (points far from clusters).
+\end{itemize}
+
+\section{k-means}
+\subsection{Algorithm}
+k-means alternates between assignment and update:
+\begin{enumerate}[leftmargin=*]
+  \item initialize $k$ centers,
+  \item assign each point to the nearest center,
+  \item recompute each center as mean of assigned points,
+  \item repeat until assignments stabilize.
+\end{enumerate}
+
+\subsection{Objective}
+k-means minimizes within-cluster sum of squares:
+\[
+  \sum_{i=1}^{n}\left\|x_i - \mu_{c(i)}\right\|^2
+\]
+
+\subsection{Why the objective makes sense}
+The objective encourages:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{compactness:} points in a cluster should be close to the centroid,
+  \item \textbf{separation:} different clusters represent different regions of the feature space.
+\end{itemize}
+Because it uses Euclidean distance, k-means works best when clusters are roughly spherical and similar in size.
+
+\subsection{Practical notes}
+\begin{itemize}[leftmargin=*]
+  \item scaling matters (distance-based),
+  \item initialization affects result; multiple runs help,
+  \item choosing $k$ is not automatic (elbow method is a heuristic).
+\end{itemize}
+
+\subsection{Choosing $k$ and evaluating clustering}
+Since clustering has no ground-truth labels, we use heuristics and domain checks:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Elbow method:} plot inertia vs $k$ and look for diminishing returns.
+  \item \textbf{Silhouette score (intuition):} compares how close a point is to its own cluster vs other clusters.
+  \item \textbf{Stability:} run k-means multiple times; stable clusters increase confidence.
+  \item \textbf{Domain interpretability:} clusters should map to meaningful groups (e.g., customer segments).
+\end{itemize}
+
+\subsection{Mini worked example (1D)}
+Points: $[1,2,8,9]$ with $k=2$.
+Initialize $\mu_1=2$, $\mu_2=9$.
+\begin{itemize}[leftmargin=*]
+  \item Assign: $\{1,2\}\rightarrow \mu_1$ and $\{8,9\}\rightarrow \mu_2$.
+  \item Update: $\mu_1=\text{mean}(1,2)=1.5$, $\mu_2=\text{mean}(8,9)=8.5$.
+\end{itemize}
+Next iteration keeps the same assignments, so the algorithm converges.
+
+\section{Reinforcement learning (overview)}
+\subsection{Core idea}
+RL learns by interaction. At each time step:
+\begin{itemize}[leftmargin=*]
+  \item agent observes state $s$,
+  \item chooses action $a$,
+  \item receives reward $r$ and new state $s'$.
+\end{itemize}
+Goal: learn a policy $\pi(a|s)$ that maximizes cumulative reward.
+
+\subsection{Return and discounting}
+We usually care about the \textbf{return} (total future reward), not just immediate reward:
+\[
+  G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots
+\]
+where $\gamma \in [0,1)$ is the \textbf{discount factor}.
+\begin{itemize}[leftmargin=*]
+  \item $\gamma$ close to 0: focus on short-term reward.
+  \item $\gamma$ close to 1: focus on long-term reward.
+\end{itemize}
+
+\subsection{Why RL is harder}
+\begin{itemize}[leftmargin=*]
+  \item feedback can be delayed,
+  \item exploration vs exploitation trade-off,
+  \item environment can be stochastic.
+\end{itemize}
+
+\subsection{Q-learning (high-level)}
+One famous RL method is \textbf{Q-learning}, which learns a value for taking action $a$ in state $s$:
+\[
+  Q(s,a) \leftarrow Q(s,a) + \alpha\bigl(r + \gamma \max_{a'}Q(s',a') - Q(s,a)\bigr)
+\]
+Interpretation: update your estimate toward ``reward + best future value''.
+You are not expected to derive this formula, but you should understand:
+\begin{itemize}[leftmargin=*]
+  \item the meanings of $s,a,r,s'$,
+  \item the role of $\gamma$ (short-term vs long-term),
+  \item why exploration is needed.
+\end{itemize}
+
+\section{Semi-supervised learning}
+\subsection{Motivation}
+Often labels are expensive (medical, legal), but unlabeled data is abundant.
+
+\subsection{Self-training (one simple approach)}
+\begin{enumerate}[leftmargin=*]
+  \item train a model on labeled data,
+  \item predict labels for unlabeled data,
+  \item add high-confidence pseudo-labels to training,
+  \item repeat.
+\end{enumerate}
+Risk: if pseudo-labels are wrong, errors can be reinforced.
+
+\subsection{Other semi-supervised approaches (brief)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Co-training}: two models teach each other using different feature ``views'' (when applicable).
+  \item \textbf{Label propagation}: build a similarity graph and spread labels to nearby points.
+  \item \textbf{Consistency regularization}: encourage stable predictions under perturbations (modern deep learning idea).
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. Why does scaling matter for k-means?}
+\textbf{Answer:} k-means is distance-based. If one feature has a large numeric scale, it dominates the distance calculation and therefore dominates clustering.
+
+\subsection*{P2. Give one RL example with state, action, and reward.}
+\textbf{Answer:} robot navigation: state = robot position; action = move; reward = +1 for reaching goal, negative for hitting obstacles, small negative per step.
+
+\subsection*{P3. What is the main risk of self-training?}
+\textbf{Answer:} the model can add incorrect pseudo-labels and reinforce its own mistakes, reducing performance.
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Using k-means on unscaled data:} distance-based methods are dominated by large-scale features.
+  \item \textbf{Assuming k-means finds the global optimum:} it can converge to local minima; use multiple initializations.
+  \item \textbf{Confusing clustering with classification:} clusters are discovered structure, not ground-truth labels.
+  \item \textbf{Ignoring exploration in RL:} without exploration the agent may never discover better actions.
+  \item \textbf{Self-training error reinforcement:} pseudo-labeling can amplify early mistakes; validate carefully.
+\end{itemize}
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. What is the k-means objective in words?}
+\textbf{Answer:} minimize the total squared distance between points and their assigned cluster centers.
+
+\subsection*{Q2. Why can k-means produce different results on different runs?}
+\textbf{Answer:} because random initialization can lead to different local minima; multiple initializations reduce this issue.
+
+\subsection*{Q3. Define state, action, reward, policy.}
+\textbf{Answer:} state = situation description; action = choice made by agent; reward = feedback signal; policy = mapping from states to actions (or action probabilities).
+
+\subsection*{Q4. One benefit and one risk of semi-supervised learning?}
+\textbf{Answer:} benefit: uses unlabeled data to improve performance; risk: wrong pseudo-labels can reinforce errors.
+
+\section{Summary}
+Clustering discovers structure without labels, RL learns from rewards, and semi-supervised learning leverages unlabeled data when labels are scarce.
+\notesources{\AIMLUnitIVSources}
+
+\end{document}

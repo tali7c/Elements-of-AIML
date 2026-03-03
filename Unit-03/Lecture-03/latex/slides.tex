@@ -1,0 +1,211 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 03 -- Lecture 03: Dimensionality Reduction (PCA, LDA, ICA)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: \textbf{reduce dimensions} for speed, noise reduction, and visualization\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitIIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:why}{\beamerbutton{Why Reduce?}}\hspace{0.6em}
+  \hyperlink{sec:pca}{\beamerbutton{PCA}}\hspace{0.6em}
+  \hyperlink{sec:ldaica}{\beamerbutton{LDA/ICA}}\hspace{0.6em}
+  \hyperlink{sec:example}{\beamerbutton{Example}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Why reduce dimensions?}
+\label{sec:why}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item Explain why high-dimensional data can be difficult (curse of dimensionality).
+    \item Describe PCA intuition (maximum variance directions).
+    \item Outline PCA steps and interpret explained variance.
+    \item Distinguish PCA vs LDA vs ICA at a conceptual level.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations \& Symbols}
+  \begin{itemize}[<+->]
+    \item $n$: samples,\; $d$: original features,\; $k$: reduced dimensions
+    \item $X \in \mathbb{R}^{n\times d}$: data matrix,\; $Z \in \mathbb{R}^{n\times k}$: reduced data
+    \item $C$: covariance matrix,\; $\lambda_i$: eigenvalues,\; $v_i$: eigenvectors
+    \item PC: principal component,\; EVR: explained variance ratio
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Curse of Dimensionality (Intuition)}
+  \begin{itemize}[<+->]
+    \item In high dimensions, data becomes sparse.
+    \item Distances can become less informative.
+    \item Models may overfit and require more data.
+  \end{itemize}
+  \vspace{0.4em}
+  Dimensionality reduction helps with \textbf{compression}, \textbf{noise reduction}, and \textbf{visualization}.
+\end{frame}
+
+\section{PCA}
+\label{sec:pca}
+
+\begin{frame}{PCA: Intuition}
+  \begin{block}{Principal Component Analysis (PCA)}
+    Find orthogonal directions (components) that capture \textbf{maximum variance} in the data.
+  \end{block}
+  \vspace{0.4em}
+  \begin{itemize}[<+->]
+    \item First component: direction with highest variance.
+    \item Next components: highest remaining variance, orthogonal to previous.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{PCA Geometry (2D Intuition)}
+  \centering
+  \begin{tikzpicture}[scale=0.85]
+    \draw[->] (-0.2,0) -- (5.2,0) node[right] {$x_1$};
+    \draw[->] (0,-0.2) -- (0,4.2) node[above] {$x_2$};
+    \draw[thick, blue!70] (0.6,0.6) -- (4.4,3.8) node[right] {PC1};
+    \foreach \x/\y in {0.8/0.9,1.2/1.1,1.7/1.5,2.2/1.9,2.6/2.2,3.0/2.6,3.4/3.0,3.8/3.2,4.1/3.5}{
+      \fill[black] (\x,\y) circle (1.4pt);
+    }
+  \end{tikzpicture}
+  \vspace{0.3em}
+  \small PCA chooses the direction with maximum spread (variance) and projects data onto it.
+\end{frame}
+
+\begin{frame}{PCA Steps (High Level)}
+  \begin{enumerate}[<+->]
+    \item Standardize features (often needed).
+    \item Compute covariance matrix.
+    \item Compute eigenvectors/eigenvalues.
+    \item Choose top-$k$ eigenvectors (components).
+    \item Project data onto these components.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Key Formulas (What PCA computes)}
+  \begin{itemize}[<+->]
+    \item Centered data: $X_c = X - \mu$
+    \item Covariance: $C = \frac{1}{n-1} X_c^\top X_c$
+    \item Eigen-decomposition: $C v_i = \lambda_i v_i$
+    \item Projection (keep top-$k$): $Z = X_c V_k$
+  \end{itemize}
+  \vspace{0.3em}
+  \small $V_k$ contains the top-$k$ eigenvectors (principal directions).
+\end{frame}
+
+\begin{frame}{Explained Variance}
+  \begin{itemize}[<+->]
+    \item Eigenvalues indicate how much variance each component captures.
+    \item Explained variance ratio helps choose $k$.
+    \item Goal: keep enough components to retain most information.
+  \end{itemize}
+  \vspace{0.4em}
+  Example rule: choose the smallest $k$ with $\ge 90\%$ explained variance (depends on use-case).
+\end{frame}
+
+\begin{frame}{Choosing $k$ (Scree Plot Idea)}
+  \begin{itemize}[<+->]
+    \item Plot EVR per component: large drop $\Rightarrow$ ``elbow'' point.
+    \item Or use cumulative EVR: pick smallest $k$ reaching a target (e.g., 90\%).
+    \item Trade-off: compression vs information loss.
+  \end{itemize}
+\end{frame}
+
+\section{LDA and ICA (overview)}
+\label{sec:ldaica}
+
+\begin{frame}{PCA vs LDA vs ICA (Concept)}
+  \begin{itemize}[<+->]
+    \item \textbf{PCA}: unsupervised; maximizes variance.
+    \item \textbf{LDA}: supervised; finds projections that separate classes.
+    \item \textbf{ICA}: unsupervised; finds statistically independent components (source separation idea).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Quick Comparison Table}
+  \centering
+  \begin{tabular}{llll}
+    \toprule
+    \textbf{Method} & \textbf{Uses labels?} & \textbf{Goal} & \textbf{Typical use} \\
+    \midrule
+    PCA & No & maximize variance & compression/visualization \\
+    LDA & Yes & separate classes & classification features \\
+    ICA & No & independent sources & signal separation \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\section{Mini example}
+\label{sec:example}
+
+\begin{frame}{Mini Example (2D to 1D Projection)}
+  \begin{itemize}[<+->]
+    \item Suppose points lie roughly along a diagonal line in 2D.
+    \item PCA finds the diagonal direction and projects data to 1D.
+    \item Result: compressed representation with minimal information loss.
+  \end{itemize}
+  \vspace{0.4em}
+  In the lab, you will implement PCA and visualize explained variance.
+\end{frame}
+
+\begin{frame}[fragile]{Minimal PCA in Python (sketch)}
+  \begin{lstlisting}[language=Python]
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+X_scaled = StandardScaler().fit_transform(X)
+pca = PCA(n_components=2)
+Z = pca.fit_transform(X_scaled)
+print(pca.explained_variance_ratio_)
+  \end{lstlisting}
+  \small Standardize first; then inspect explained variance ratios.
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Dimensionality reduction combats high-dimensional issues and improves efficiency.
+    \item PCA finds maximum-variance orthogonal directions; explained variance guides $k$.
+    \item LDA uses labels to separate classes; ICA seeks independent components.
+  \end{itemize}
+  \slidesources{\AIMLUnitIIISources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item What does PCA optimize?
+    \item Why do we often standardize before PCA?
+    \item Compare PCA and LDA in one paragraph.
+    \item What does ``explained variance'' mean?
+  \end{enumerate}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,236 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Elements of AIML (B.Tech)}
+\rhead{Unit 02: Logic for AI}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{March 8, 2026}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Assignment -- Unit 02}}\\[0.25em]
+  {\large Elements of AIML}\\[0.25em]
+  \normalsize (Propositional logic, predicate logic (FOL), entailment, CNF/clause form, resolution, unification)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item Answer \textbf{all} questions. Show key steps (truth tables, CNF conversion steps, resolution steps, substitutions).
+  \item Submission format: submit a single ZIP containing:
+    \begin{itemize}[leftmargin=*]
+      \item \texttt{notebook.ipynb} (typed solutions; use Markdown + LaTeX math)
+      \item \texttt{README.md} (1-page summary + references/links used)
+      \item optional \texttt{assets/} for diagrams/screenshots
+    \end{itemize}
+  \item You may use Python for verification (optional), but your notebook must include the reasoning steps.
+  \item Use standard logic symbols consistently: $\lnot, \land, \lor, \rightarrow, \leftrightarrow, \forall, \exists$.
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=E\arabic*., leftmargin=*]
+  \item \textbf{Propositional symbols:} Let
+    \[
+      P=\text{``It is raining''},\quad Q=\text{``The ground is wet''},\quad R=\text{``I carry an umbrella''}.
+    \]
+    Translate into propositional logic:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item If it is raining then the ground is wet.
+      \item It is raining and I do not carry an umbrella.
+      \item The ground is wet only if it is raining.
+      \item Either it is raining or the ground is wet, but not both.
+    \end{enumerate}
+
+  \item \textbf{Truth table:} Build the truth table for $(P \rightarrow Q) \land P$ and state whether it entails $Q$.
+
+  \item \textbf{Equivalence:} Show that $P \rightarrow Q$ is logically equivalent to $\lnot P \lor Q$ (use a truth table).
+
+  \item \textbf{Key definitions:} Define (with one example each):
+    \textbf{valid}, \textbf{satisfiable}, \textbf{unsatisfiable/contradiction}.
+
+  \item \textbf{Entailment vs implication:} Explain the difference between:
+    \[
+      KB \models \alpha \quad \text{and} \quad KB \rightarrow \alpha
+    \]
+    in 6--10 lines. Give one example where $KB \rightarrow \alpha$ is true but $KB \not\models \alpha$.
+
+  \item \textbf{Model checking (small KB):} Let $KB=\{P \rightarrow Q,\; Q \rightarrow R,\; P\}$.
+    Does $KB \models R$? Justify using models or a truth table.
+
+  \item \textbf{CNF (basic):} Convert $\lnot(P \rightarrow Q)$ into CNF.
+
+  \item \textbf{One resolution step:} Apply resolution to the clauses:
+    \[
+      (P \lor Q), \quad (\lnot P \lor R)
+    \]
+    and write the resolvent.
+
+  \item \textbf{FOL vocabulary:} Consider:
+    \[
+      Likes(Ali, IceCream),\quad Student(x),\quad Teaches(Prof, Course),\quad Parent(f(x), y)
+    \]
+    Identify constants, variables, predicate symbols, and function symbols.
+
+  \item \textbf{Quantifier scope:} Explain the difference between:
+    \[
+      \forall x\; P(x) \rightarrow Q(x) \quad \text{and} \quad \forall x\; (P(x) \rightarrow Q(x)).
+    \]
+    Give one English sentence for each.
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=M\arabic*., leftmargin=*]
+  \item \textbf{Entailment by models:} Let $KB=\{P \lor Q,\; \lnot P \rightarrow R,\; Q \rightarrow R\}$.
+    Check whether $KB \models R$ by enumerating models (or any correct model-checking method).
+
+  \item \textbf{Satisfiability of clauses:} Determine whether the following set of clauses is satisfiable.
+    If satisfiable, give one satisfying assignment; if unsatisfiable, explain why.
+    \[
+      (P \lor Q),\ (\lnot P \lor Q),\ (P \lor \lnot Q),\ (\lnot P \lor \lnot Q)
+    \]
+
+  \item \textbf{CNF conversion (pipeline):} Convert the formula to CNF:
+    \[
+      (P \rightarrow Q) \land (Q \rightarrow R) \rightarrow (P \rightarrow R).
+    \]
+    Show steps: eliminate $\rightarrow$, push negations, distribute $\lor$ over $\land$.
+
+  \item \textbf{Resolution proof (PL):} Using resolution refutation, prove that:
+    \[
+      \{P \rightarrow Q,\ Q \rightarrow R,\ P\} \models R.
+    \]
+    Show the clause set and the sequence of resolvents leading to contradiction.
+
+  \item \textbf{English $\rightarrow$ FOL:} Use the domain \emph{students and courses}. Translate:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item Every student studies at least one course.
+      \item Some course is studied by every student.
+      \item There exists a student who studies all courses.
+    \end{enumerate}
+
+  \item \textbf{Clause form (FOL, basic):} Convert the following to clause form (show main steps):
+    \[
+      \forall x\ (Student(x) \rightarrow \exists y\ Mentors(y,x)).
+    \]
+    (You may introduce a Skolem function if needed.)
+
+  \item \textbf{Unification (MGU):} Find a most general unifier (MGU) if it exists:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item $Knows(John, x)$ and $Knows(y, Bill)$
+      \item $P(f(x), x)$ and $P(y, a)$
+    \end{enumerate}
+
+  \item \textbf{Occurs-check (concept):} Explain why unifying $x$ with $f(x)$ should fail (5--8 lines).
+
+  \item \textbf{Resolution with unification (one step):} Resolve the clauses:
+    \[
+      (P(x) \lor Q(x)),\quad (\lnot P(a))
+    \]
+    and show the substitution used.
+
+  \item \textbf{PL vs FOL expressiveness:} Explain (8--12 lines) why propositional logic becomes verbose for ``objects and relations''.
+    Use one example statement such as ``All humans are mortal''.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=H\arabic*., leftmargin=*]
+  \item \textbf{Resolution proof (PL, bigger):} Let
+    \[
+      KB=\{A \rightarrow B,\ B \rightarrow C,\ C \rightarrow D,\ A\}.
+    \]
+    Prove $KB \models D$ using resolution refutation. (Show clauses and steps.)
+
+  \item \textbf{CNF (non-trivial):} Convert the formula to CNF:
+    \[
+      \lnot(P \leftrightarrow Q) \rightarrow (R \lor P).
+    \]
+    Show steps (including handling $\leftrightarrow$).
+
+  \item \textbf{Clause form (nested quantifiers):} Convert to clause form:
+    \[
+      \forall x\ \exists y\ \forall z\ (Loves(x,y) \rightarrow Loves(z,y)).
+    \]
+    Show Skolemization and the final clause set.
+
+  \item \textbf{FOL resolution (mini proof):} Use the KB:
+    \[
+      \forall x\ (Human(x) \rightarrow Mortal(x)),\quad Human(Socrates).
+    \]
+    Prove $Mortal(Socrates)$ using resolution (convert to clauses and refute $\lnot Mortal(Socrates)$).
+
+  \item \textbf{Build a KB (family):} Create a small FOL KB for family relations with predicates like
+    $Parent(x,y)$ and $Grandparent(x,z)$.
+    Include at least 5 facts and 2 rules. Ask and answer one query using entailment reasoning.
+
+  \item \textbf{Unsatisfiable set by design:} Construct a set of at least 5 clauses that is unsatisfiable.
+    Show the resolution steps that derive the empty clause.
+
+  \item \textbf{Ambiguity and scope:} Write two different FOL translations for the sentence:
+    ``Every student likes a course.''
+    Explain in 8--12 lines how the meanings differ.
+
+  \item \textbf{Unification trace:} Perform a unification trace (step-by-step substitutions) for:
+    \[
+      P(g(x), f(y), y) \quad \text{and} \quad P(g(a), f(z), z).
+    \]
+    Give the final substitution or show where it fails.
+
+  \item \textbf{Entailment check by countermodel:} Give an example where $KB \not\models \alpha$ by providing a countermodel.
+    Use a small KB (2--3 sentences) and clearly write the interpretation/assignment.
+
+  \item \textbf{Mini case KB:} Create a propositional KB for a simple security system:
+    \[
+      A=\text{Alarm},\quad B=\text{Burglary},\quad E=\text{Earthquake}.
+    \]
+    Write at least 4 sentences (rules/facts) and ask one entailment query (e.g., does the alarm entail burglary?).
+    Answer using models or resolution.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assignment}
+
+\end{document}

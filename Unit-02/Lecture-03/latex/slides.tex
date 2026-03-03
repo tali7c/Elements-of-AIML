@@ -1,0 +1,300 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 02 -- Lecture 03: Clause Form, Resolution \& Unification}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: \textbf{automated inference} via refutation (resolution)\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitIISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:cnf}{\beamerbutton{Clause Form}}\hspace{0.6em}
+  \hyperlink{sec:respl}{\beamerbutton{Resolution (PL)}}\hspace{0.6em}
+  \hyperlink{sec:resfol}{\beamerbutton{Resolution (FOL)}}\hspace{0.6em}
+  \hyperlink{sec:unif}{\beamerbutton{Unification}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Clause form (CNF)}
+\label{sec:cnf}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item Convert simple propositional sentences to \textbf{CNF / clause form}.
+    \item Explain \textbf{resolution} as a refutation proof method.
+    \item Apply resolution to small propositional knowledge bases.
+    \item Explain \textbf{unification} and why it is needed for FOL resolution.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations \& Symbols}
+  \begin{itemize}[<+->]
+    \item $KB$: knowledge base (set of sentences/facts/rules)
+    \item $\alpha$: query (goal sentence)
+    \item $\models$: semantic entailment (true in all models)
+    \item $\vdash$: syntactic derivation (provable in a proof system)
+    \item $\lnot,\land,\lor$: NOT, AND, OR
+    \item CNF: conjunctive normal form; DNF: disjunctive normal form
+    \item $\Box$: empty clause (contradiction); $\theta$: substitution; MGU: most general unifier
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Refutation View of Entailment}
+  Key equivalence (idea used by SAT/resolution):
+  \[
+    KB \models \alpha \;\;\;\; \Leftrightarrow \;\;\;\; KB \land \lnot \alpha \text{ is unsatisfiable}
+  \]
+  \vspace{0.4em}
+  So to prove $KB \models \alpha$, we:
+  \begin{enumerate}
+    \item add $\lnot \alpha$ to $KB$,
+    \item derive a contradiction (empty clause) using resolution.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Clause Form (CNF)}
+  \begin{itemize}[<+->]
+    \item CNF: \textbf{AND} of \textbf{OR} clauses:
+    \[
+      (a \lor b \lor \lnot c) \land (\lnot a \lor d)
+    \]
+    \item A \textbf{literal} is a variable or its negation (e.g., $p$ or $\lnot p$).
+    \item A \textbf{clause} is a disjunction of literals.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CNF Conversion Recipe (PL)}
+  Convert any propositional formula into CNF using these steps:
+  \begin{enumerate}[<+->]
+    \item Eliminate $\leftrightarrow$ and $\rightarrow$
+    \item Push $\lnot$ inward (De Morgan + double negation)
+    \item Distribute $\lor$ over $\land$
+    \item Split the final $\land$ into a set of clauses
+  \end{enumerate}
+  \vspace{0.3em}
+  \small CNF is a \textbf{representation choice} that makes automated inference systematic.
+\end{frame}
+
+\begin{frame}{CNF Conversion (Mini Example)}
+  Convert: $(p \rightarrow q) \land p$
+  \begin{itemize}[<+->]
+    \item Eliminate implication: $(\lnot p \lor q) \land p$
+    \item Already in CNF:
+    \[
+      (\lnot p \lor q) \land (p)
+    \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{CNF Conversion (Needs Distribution)}
+  Convert: $p \rightarrow (q \land r)$
+  \begin{itemize}[<+->]
+    \item Eliminate implication:
+    \[
+      \lnot p \lor (q \land r)
+    \]
+    \item Distribute $\lor$ over $\land$:
+    \[
+      (\lnot p \lor q) \land (\lnot p \lor r)
+    \]
+    \item Clauses: $(\lnot p \lor q)$ and $(\lnot p \lor r)$
+  \end{itemize}
+\end{frame}
+
+\section{Resolution in propositional logic}
+\label{sec:respl}
+
+\begin{frame}{Resolution Rule (PL)}
+  From two clauses:
+  \[
+    (A \lor p),\;\;\; (B \lor \lnot p)
+  \]
+  we can infer:
+  \[
+    (A \lor B)
+  \]
+  \vspace{0.4em}
+  Intuition: if either $p$ is true or false, one of the two clauses forces the remaining parts.
+\end{frame}
+
+\begin{frame}{Worked Example (PL): $(p\rightarrow q), p \models q$}
+  \begin{itemize}[<+->]
+    \item $KB = \{p \rightarrow q,\; p\}$, query $\alpha = q$
+    \item Add $\lnot q$ and convert to CNF:
+    \[
+      (\lnot p \lor q),\; (p),\; (\lnot q)
+    \]
+    \item Resolve $(\lnot p \lor q)$ with $(p)$ gives $(q)$
+    \item Resolve $(q)$ with $(\lnot q)$ gives \textbf{empty clause} $\Box$
+  \end{itemize}
+  Therefore $KB \models q$.
+\end{frame}
+
+\begin{frame}{Worked Example (PL): $(p\rightarrow q),(q\rightarrow r),p \models r$}
+  \begin{itemize}[<+->]
+    \item Add $\lnot r$ and convert to CNF:
+    \[
+      (\lnot p \lor q),\;(\lnot q \lor r),\;(p),\;(\lnot r)
+    \]
+    \item Resolve $(\lnot p \lor q)$ with $(p)$ gives $(q)$
+    \item Resolve $(\lnot q \lor r)$ with $(q)$ gives $(r)$
+    \item Resolve $(r)$ with $(\lnot r)$ gives $\Box$
+  \end{itemize}
+  This shows \textbf{entailment by contradiction}.
+\end{frame}
+
+\section{Resolution in first-order logic}
+\label{sec:resfol}
+
+\begin{frame}{FOL Resolution: What's New?}
+  \begin{itemize}[<+->]
+    \item Variables and quantifiers
+    \item Need to convert to a clause form suitable for resolution
+    \item When literals ``almost match'', we use \textbf{unification} to make them match
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{FOL Clause Form Pipeline (High-Level)}
+  \begin{enumerate}[<+->]
+    \item Remove $\leftrightarrow,\rightarrow$
+    \item Push $\lnot$ inward
+    \item Standardize variables apart (rename to avoid clashes)
+    \item Skolemize $\exists$ (replace with new constants/functions)
+    \item Drop $\forall$ (implicit in clauses), distribute, split into clauses
+  \end{enumerate}
+  \vspace{0.3em}
+  \small The output is a \textbf{set of clauses} used by resolution.
+\end{frame}
+
+\begin{frame}{Skolemization (Intuition)}
+  \begin{itemize}[<+->]
+    \item $\exists$ means ``there exists something'' --- introduce a \textbf{new symbol} for it.
+    \item Example:
+    \[
+      \forall x\; \exists y\; Likes(x,y)
+    \]
+    becomes
+    \[
+      \forall x\; Likes(x,f(x))
+    \]
+    \item $f$ is a \textbf{Skolem function} (depends on $x$).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Classic FOL Example: Socrates is Mortal}
+  Knowledge:
+  \begin{itemize}
+    \item $\forall x\; Human(x) \rightarrow Mortal(x)$
+    \item $Human(Socrates)$
+  \end{itemize}
+  Query: $Mortal(Socrates)$
+  \vspace{0.4em}
+  Refutation: add $\lnot Mortal(Socrates)$ and resolve to contradiction.
+\end{frame}
+
+\begin{frame}{Socrates: Clauses + One Resolution Step}
+  CNF (clause form):
+  \begin{itemize}[<+->]
+    \item $\lnot Human(x) \lor Mortal(x)$
+    \item $Human(Socrates)$
+    \item $\lnot Mortal(Socrates)$ \hfill (negated query)
+  \end{itemize}
+  \vspace{0.3em}
+  Resolve $Human(Socrates)$ with $\lnot Human(x) \lor Mortal(x)$ using $\{x/Socrates\}$ to infer $Mortal(Socrates)$, then derive $\Box$ with $\lnot Mortal(Socrates)$.
+\end{frame}
+
+\section{Unification}
+\label{sec:unif}
+
+\begin{frame}{What is Unification?}
+  Unification finds a substitution that makes two expressions identical.
+  \vspace{0.4em}
+  \begin{exampleblock}{Example}
+    Unify $Likes(x, AI)$ and $Likes(Ali, AI)$
+    \[
+      \Rightarrow \{x/Ali\}
+    \]
+  \end{exampleblock}
+  We prefer the \textbf{most general unifier (MGU)}.
+\end{frame}
+
+\begin{frame}{Occurs-Check (Why some unifications fail)}
+  Trying to unify $x$ with $f(x)$ should fail:
+  \[
+    x = f(x)
+  \]
+  because it would require an infinite term $x = f(f(f(\dots)))$.
+  \vspace{0.4em}
+  This check avoids inconsistent substitutions.
+\end{frame}
+
+\begin{frame}{Unification Steps (Algorithm Idea)}
+  To unify two expressions, repeatedly:
+  \begin{enumerate}[<+->]
+    \item if they are identical, continue
+    \item if one side is a variable, substitute it (if occurs-check passes)
+    \item if both are functions/predicates, unify their corresponding arguments
+    \item otherwise, fail (no unifier exists)
+  \end{enumerate}
+  \vspace{0.3em}
+  Output is a substitution $\theta$; the best one is the \textbf{MGU}.
+\end{frame}
+
+\begin{frame}{Unification Example (MGU)}
+  Unify:
+  \[
+    Knows(x, f(y), y)\;\;\text{and}\;\; Knows(Ali, f(z), z)
+  \]
+  \begin{itemize}[<+->]
+    \item $x \mapsto Ali$
+    \item need $f(y)=f(z)$ so $y \mapsto z$
+  \end{itemize}
+  MGU: $\{x/Ali,\; y/z\}$.
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item To prove $KB \models \alpha$, check unsatisfiability of $KB \land \lnot \alpha$.
+    \item Resolution works on CNF (clauses).
+    \item FOL resolution needs unification to match literals with variables.
+  \end{itemize}
+  \slidesources{\AIMLUnitIISources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item Why do we convert to CNF before resolution?
+    \item State the resolution rule for propositional logic.
+    \item Explain unification with an example substitution.
+    \item Why does the occurs-check matter?
+  \end{enumerate}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,266 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 02 -- Lecture 01 Notes\\Propositional Logic Foundations (Entailment)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+These notes introduce \textbf{propositional logic} as a tool to represent knowledge and to reason correctly from that knowledge.
+In AI, we often store:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{facts} (what is currently true), and
+  \item \textbf{rules} (how truths imply other truths),
+\end{itemize}
+and then ask queries such as: ``Given my knowledge base, must this query be true?''.
+
+The key concept for that question is \textbf{entailment}:
+\[
+  KB \models \alpha
+  \quad\text{(every model of $KB$ is a model of $\alpha$).}
+\]
+
+This lecture also introduces \textbf{CNF} (conjunctive normal form), because many automated reasoning methods expect knowledge in a standard clause-like form (resolution is covered later in this unit).
+\notesources{\AIMLUnitIISources}
+
+\section{How to use these notes (self-study)}
+Read the sections in order.
+When you see a worked example, try to solve it yourself before reading the solution.
+For practice problems, write your full reasoning (not only the final answer); in logic, the \emph{justification} is part of the learning outcome.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Define propositions and logical connectives; compute truth values using truth tables.
+  \item Classify formulas as valid (tautology), satisfiable, or unsatisfiable.
+  \item Explain semantic entailment $KB \models \alpha$ and test it for small KBs using models/truth tables.
+  \item Convert simple propositional formulas to CNF and explain why CNF is useful.
+  \item Explain (at a high level) why propositional logic is insufficient for many-object relational domains.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Proposition:} a declarative statement that is either True or False.
+  \item \textbf{WFF (well-formed formula):} a syntactically valid logic expression.
+  \item \textbf{Model:} a truth assignment that makes a sentence true.
+  \item \textbf{Entailment ($\models$):} truth in all models (semantic consequence).
+  \item \textbf{Validity:} true in all models (tautology).
+  \item \textbf{Satisfiable:} true in at least one model.
+  \item \textbf{CNF:} conjunction (AND) of disjunctions (OR-clauses).
+\end{itemize}
+
+\section{Abbreviations and symbols}
+\begin{itemize}[leftmargin=*]
+  \item $KB$: knowledge base (set of sentences/facts/rules).
+  \item $\alpha$: query/goal sentence.
+  \item $\lnot,\land,\lor,\rightarrow,\leftrightarrow$: NOT, AND, OR, IMPLIES, IFF.
+  \item $\models$: entailment (semantic); $\vdash$: derivation/provability (syntactic).
+  \item \textbf{CNF}: conjunctive normal form; \textbf{literal}: $p$ or $\lnot p$; \textbf{clause}: OR of literals.
+\end{itemize}
+
+\section{Why logic in AI? (KBs and queries)}
+\subsection{Knowledge base and query}
+A \textbf{knowledge base (KB)} is a set of sentences describing a world.
+For example:
+\begin{itemize}[leftmargin=*]
+  \item Fact: $p$ = ``It is raining.''
+  \item Rule: $p \rightarrow q$ = ``If it is raining, then the ground is wet.''
+\end{itemize}
+A \textbf{query} $\alpha$ is what we want to know, e.g., $q$ = ``The ground is wet.''.
+
+\subsection{Syntax vs semantics (the important separation)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Syntax}: which strings count as legal formulas (grammar).
+  \item \textbf{Semantics}: what those formulas mean (truth in models).
+\end{itemize}
+We can manipulate syntax mechanically (proofs) and still preserve meaning if our inference rules are sound.
+
+\section{Propositional logic}
+\subsection{Syntax: propositions and well-formed formulas}
+Propositional logic uses propositional symbols (atoms) like $p,q,r$.
+We build complex formulas using connectives:
+\[
+  \lnot p,\; (p\land q),\; (p\lor q),\; (p\rightarrow q),\; (p\leftrightarrow q)
+\]
+A formula is a \textbf{well-formed formula (WFF)} if it follows the grammar (symbols, connectives, parentheses).
+
+\subsection{Semantics: truth assignments and models}
+A \textbf{truth assignment} $v$ maps each propositional symbol to $T$ or $F$.
+The truth of a complex formula is computed using the connective truth tables.
+
+If a formula $\varphi$ is true under assignment $v$, we say $v$ is a \textbf{model} of $\varphi$ and write $v \models \varphi$.
+If $v$ makes all sentences in $KB$ true, then $v$ is a model of $KB$ (treating $KB$ as a conjunction of its sentences).
+
+\subsection{Truth tables and classification of formulas}
+Truth tables list all possible assignments and compute the formula value.
+With $n$ propositional symbols, there are $2^n$ rows.
+
+Using a truth table we can classify:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Tautology/valid}: always true (e.g., $p\lor \lnot p$).
+  \item \textbf{Contradiction/unsatisfiable}: always false (e.g., $p\land \lnot p$).
+  \item \textbf{Satisfiable}: true in at least one assignment (has a model).
+  \item \textbf{Unsatisfiable KB}: no assignment satisfies all KB sentences (KB is inconsistent).
+\end{itemize}
+
+\subsection{Implication ($p\rightarrow q$) and common confusions}
+In everyday language, ``if'' sometimes implies causation.
+In propositional logic, implication is purely truth-functional:
+\[
+  (p\rightarrow q) \text{ is false only when $p$ is true and $q$ is false.}
+\]
+The most useful equivalence:
+\[
+  (p\rightarrow q) \equiv (\lnot p \lor q)
+\]
+This equivalence is used in CNF conversion and SAT/resolution methods.
+
+\section{Entailment ($KB \models \alpha$)}
+\subsection{Definition (semantic)}
+$KB$ entails $\alpha$ (written $KB \models \alpha$) iff:
+\begin{quote}
+  In \emph{every} model where $KB$ is true, $\alpha$ is also true.
+\end{quote}
+Equivalently: there is \textbf{no counterexample model} where $KB$ is true and $\alpha$ is false.
+
+\subsection{How to test entailment in propositional logic}
+For propositional logic, the following are equivalent (and can be checked by truth tables for small KBs):
+\begin{itemize}[leftmargin=*]
+  \item $KB \models \alpha$
+  \item $(KB \rightarrow \alpha)$ is valid (a tautology), where $KB$ is treated as a conjunction of its sentences
+  \item $KB \land \lnot \alpha$ is \textbf{unsatisfiable}
+\end{itemize}
+The last form is important because many automated reasoning methods reduce inference to satisfiability.
+
+\subsection{Entailment vs implication vs derivation (do not mix them up)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Implication} ($\rightarrow$) is a connective inside the language.
+  \item \textbf{Entailment} ($\models$) is a semantic relationship (about all models).
+  \item \textbf{Derivation} ($\vdash$) is a syntactic relationship (there exists a proof using rules).
+\end{itemize}
+
+\paragraph{Soundness and completeness (intuition).}
+A proof system is \textbf{sound} if it never proves a sentence that is not entailed.
+It is \textbf{complete} if it can prove every sentence that is entailed.
+
+\subsection{Worked example: model-based reasoning}
+Let:
+\[
+  KB=\{(p\rightarrow q),\; (q\rightarrow r),\; p\},\qquad \alpha=r
+\]
+Reasoning using rules:
+\begin{enumerate}[leftmargin=*]
+  \item From $(p\rightarrow q)$ and $p$, derive $q$ (modus ponens).
+  \item From $(q\rightarrow r)$ and $q$, derive $r$.
+\end{enumerate}
+So every model of $KB$ must make $r$ true, hence $KB \models r$.
+
+If you wanted to check via models (truth table), you would enumerate assignments of $(p,q,r)$, keep those that satisfy all three KB sentences, and verify that in all such rows, $r=T$.
+
+\section{Normal forms and CNF (why we care)}
+\subsection{Literals, clauses, and CNF}
+\begin{itemize}[leftmargin=*]
+  \item A \textbf{literal} is $p$ or $\lnot p$.
+  \item A \textbf{clause} is an OR of literals, e.g., $(\lnot p \lor q \lor r)$.
+  \item \textbf{CNF} is an AND of clauses, e.g.,
+  \[
+    (\lnot p \lor q)\land (p \lor r)\land (\lnot r)
+  \]
+\end{itemize}
+
+\subsection{CNF conversion recipe (propositional)}
+To convert a formula to CNF:
+\begin{enumerate}[leftmargin=*]
+  \item Eliminate $\leftrightarrow$ and $\rightarrow$.
+  \item Push negations inward (De Morgan + double negation).
+  \item Distribute $\lor$ over $\land$ until you get an AND of ORs.
+  \item Flatten nested AND/OR groups.
+\end{enumerate}
+
+\subsection{Worked CNF example (distribution is required)}
+Convert $p \rightarrow (q \land r)$:
+\begin{enumerate}[leftmargin=*]
+  \item Eliminate implication:
+  \[
+    \lnot p \lor (q \land r)
+  \]
+  \item Distribute $\lor$ over $\land$:
+  \[
+    (\lnot p \lor q) \land (\lnot p \lor r)
+  \]
+\end{enumerate}
+This is now in CNF (two clauses).
+
+\section{Limits of propositional logic (preview of predicate logic)}
+Propositional logic is not designed for ``many objects + relations'' worlds.
+It lacks:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{relational structure} (e.g., $Parent(x,y)$),
+  \item \textbf{quantifiers} (``all'' / ``some''),
+  \item \textbf{compact general rules} that apply to arbitrarily many objects.
+\end{itemize}
+Predicate (first-order) logic addresses this by adding objects, predicates, and quantifiers.
+We cover that fully in \textbf{Unit~02 Lecture~02}.
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Mixing up $\models$ and $\rightarrow$:} $KB \models \alpha$ is a semantic relationship (about all models); $KB \rightarrow \alpha$ is a formula inside the language.
+  \item \textbf{Forgetting the meaning of ``model of a KB'':} a model of $KB$ is a truth assignment that makes \emph{every} sentence in $KB$ true (treat $KB$ like a conjunction).
+  \item \textbf{Treating ``satisfiable'' as ``true'':} satisfiable means ``true in at least one assignment''; it does not mean ``true in the real world''.
+  \item \textbf{CNF conversion mistakes:} eliminate $\leftrightarrow$ and $\rightarrow$ first, then push negations inward, \emph{then} distribute $\lor$ over $\land$.
+  \item \textbf{Implication intuition trap:} $p\rightarrow q$ does not mean causation; it is false only when $p$ is true and $q$ is false.
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. Build a truth table and decide if $(p\rightarrow q)\leftrightarrow(\lnot p \lor q)$ is valid.}
+\textbf{Answer:} It is valid. Both expressions have identical truth values for all assignments of $(p,q)$.
+
+\subsection*{P2. Give a satisfying assignment for $(p \lor q)\land (\lnot p \lor r)\land (\lnot r)$.}
+\textbf{Answer:} $r=F$ (from $\lnot r$), then $\lnot p$ must be true so $p=F$, then $q=T$ to satisfy $(p\lor q)$. One model: $(p=F,q=T,r=F)$.
+
+\subsection*{P3. Show that $KB=\{(p\rightarrow q),(q\rightarrow r),p\}$ entails $r$.}
+\textbf{Answer:} Modus ponens yields $q$, then yields $r$, so $KB\models r$.
+
+\subsection*{P4. Convert to CNF: $p \leftrightarrow q$.}
+\textbf{Answer:} $(p\leftrightarrow q)\equiv (p\rightarrow q)\land(q\rightarrow p)\equiv (\lnot p\lor q)\land(\lnot q\lor p)$.
+
+\subsection*{P5. Convert to CNF: $p \rightarrow (q \land r)$.}
+\textbf{Answer:} $(\lnot p\lor q)\land(\lnot p\lor r)$.
+
+\subsection*{P6. Give one limitation of propositional logic in real knowledge bases.}
+\textbf{Answer:} it cannot express general rules like ``all students...'' without writing separate symbols/rules for each object.
+
+\section{Exit questions (with answers)}
+\subsection*{Q1. What does $KB \models \alpha$ mean (in one sentence)?}
+\textbf{Answer:} In every model where all sentences of $KB$ are true, $\alpha$ is also true.
+
+\subsection*{Q2. For a small KB, how can we test entailment using models/truth tables?}
+\textbf{Answer:} Enumerate truth assignments; keep those that satisfy $KB$; check that $\alpha$ is true in all of them (no counterexample).
+
+\subsection*{Q3. What is one common confusion about $p \rightarrow q$?}
+\textbf{Answer:} Confusing it with causation; logically it is false only when $p$ is true and $q$ is false.
+
+\subsection*{Q4. Give one limitation of propositional logic that motivates predicate logic.}
+\textbf{Answer:} Propositional logic cannot compactly express relations and quantifiers (many-object rules).
+
+\section{Summary}
+Propositional logic provides a precise language for facts and rules, and \textbf{entailment} defines what it means for a query to follow from a knowledge base.
+Truth tables provide a brute-force entailment test for small problems.
+CNF is a standard representation that prepares formulas for automated inference procedures.
+\notesources{\AIMLUnitIISources}
+
+\section{Further Reading}
+\begin{itemize}[leftmargin=*]
+  \item Russell and Norvig, \textit{Artificial Intelligence: A Modern Approach} (4e), chapters on logical agents.
+  \item Huth and Ryan, \textit{Logic in Computer Science} (2e), propositional logic chapters.
+\end{itemize}
+\notesources{\AIMLUnitIISources}
+
+\section{Next Lecture Preview}
+\textbf{Next (Unit~02 Lecture~02):} Predicate (first-order) logic --- predicates, quantifiers, translating English to logic, and scope pitfalls.
+
+\end{document}

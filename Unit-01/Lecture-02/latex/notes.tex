@@ -1,0 +1,221 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 01 -- Lecture 02 Notes\\Intelligent Agents \& Learning Agents}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture introduces \textbf{intelligent agents}, the central abstraction used in many AI systems.
+We focus on how to specify an AI task (PEAS), how to describe environments, and how learning agents improve over time.
+\notesources{\AIMLUnitISources}
+
+\section{How to use these notes (self-study)}
+Start by understanding the \textbf{agent view}: an AI system is something that \emph{perceives} and \emph{acts}.
+Then practice writing PEAS and classifying environments for 2--3 familiar systems (navigation app, spam filter, delivery app).
+These two skills make the rest of AI topics easier, because they force you to state assumptions clearly.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Define an agent and an environment in precise terms.
+  \item Construct PEAS descriptions for real tasks.
+  \item Classify environments and explain why classification matters.
+  \item Compare agent types and describe a learning agent architecture.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Agent:} entity that perceives (sensors) and acts (actuators).
+  \item \textbf{Percept:} the agent's input at a time step (observation).
+  \item \textbf{Action:} an output decision that changes the environment.
+  \item \textbf{PEAS:} Performance measure, Environment, Actuators, Sensors.
+  \item \textbf{Rational agent:} chooses actions that maximize expected performance.
+  \item \textbf{Bounded rationality:} rationality constrained by time/compute/information.
+\end{itemize}
+
+\section{Abbreviations and notation}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PEAS}: Performance measure, Environment, Actuators, Sensors.
+  \item \textbf{Percept}: the observation received from sensors.
+  \item \textbf{Percept sequence}: the history of percepts observed so far.
+  \item \textbf{Action}: the operation selected by the agent (through actuators).
+\end{itemize}
+
+\section{Agent and environment}
+\subsection{Definition}
+\textbf{Agent:} an agent maps percept sequences to actions:
+\[
+  f : (percepts)^* \rightarrow actions
+\]
+This does not mean the agent stores the entire history; it means the \emph{behavior} can depend on what has been observed so far.
+
+\subsection{Agent function vs agent program}
+It is useful to distinguish:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Agent function:} the ideal mapping from percept history to action (what we want).
+  \item \textbf{Agent program:} the actual implementation running on hardware (what we build).
+\end{itemize}
+In the real world, the agent program has constraints: limited sensors, noisy data, limited compute, and deadlines. So we often aim for the \textbf{best feasible} behavior rather than perfect behavior.
+
+\subsection{Why agents are useful}
+The agent framework forces us to be explicit about:
+\begin{itemize}[leftmargin=*]
+  \item what the system can observe,
+  \item what it can do,
+  \item how success is measured.
+\end{itemize}
+These choices strongly affect what algorithms are possible.
+
+\subsection{Performance measure vs reward vs utility (intuition)}
+In many AI discussions, three related terms appear:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Performance measure:} external definition of success (what humans truly care about).
+  \item \textbf{Reward:} feedback signal given during interaction (common in reinforcement learning).
+  \item \textbf{Utility:} internal score used by an agent to compare actions (trade-offs).
+\end{itemize}
+Good system design aligns reward/utility with the real performance measure; misalignment can lead to unintended or unsafe behaviors.
+
+\section{PEAS task specification}
+PEAS provides a structured way to describe an agent task.
+
+\subsection{Example 1: spam filter}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Performance:} reduce spam in inbox; avoid blocking important mail.
+  \item \textbf{Environment:} email stream + user preferences + mail server policies.
+  \item \textbf{Actuators:} classify/move to spam, block sender, flag, allow.
+  \item \textbf{Sensors:} email content, metadata, links, user feedback.
+\end{itemize}
+
+\subsection{Example 2: vacuum cleaner}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Performance:} cleanliness, time, energy, collision avoidance.
+  \item \textbf{Environment:} rooms, obstacles, people/pets, dirt distribution.
+  \item \textbf{Actuators:} move, turn, suck, dock/charge.
+  \item \textbf{Sensors:} camera/LiDAR, bump sensor, dirt sensor, battery level.
+\end{itemize}
+
+\section{Environment properties}
+We often classify environments along several dimensions:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Fully observable} vs \textbf{partially observable}: does the agent see the complete state?
+  \item \textbf{Deterministic} vs \textbf{stochastic}: does an action have a predictable outcome?
+  \item \textbf{Episodic} vs \textbf{sequential}: do current decisions affect future states?
+  \item \textbf{Static} vs \textbf{dynamic}: does the world change while the agent deliberates?
+  \item \textbf{Discrete} vs \textbf{continuous}: are states/actions/time steps countable?
+  \item \textbf{Single-agent} vs \textbf{multi-agent}: are there other agents with possibly competing goals?
+\end{itemize}
+
+\subsection{Examples for environment properties}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Chess:} fully observable, deterministic, sequential, static, discrete, multi-agent.
+  \item \textbf{Driving:} partially observable, stochastic, sequential, dynamic, continuous, multi-agent.
+  \item \textbf{Vacuum world (simple):} can be partially observable (if sensor limited), often deterministic in toy models.
+\end{itemize}
+
+\subsection{Why classification matters}
+If an environment is partially observable and stochastic, the agent may need:
+\begin{itemize}[leftmargin=*]
+  \item memory (internal state) and
+  \item probabilistic reasoning / learning
+\end{itemize}
+instead of simple reflex rules.
+
+\section{Rationality and bounded rationality}
+\subsection{Rationality}
+An agent is \textbf{rational} if it selects actions that maximize expected performance given the percept history and the agent's knowledge.
+Key clarifications:
+\begin{itemize}[leftmargin=*]
+  \item Rational $\neq$ omniscient: it cannot know the true state perfectly.
+  \item Rational $\neq$ perfect: limited by sensors, compute, time, and data.
+\end{itemize}
+
+\subsection{Bounded rationality}
+In real systems, decisions must be made under constraints. A bounded-rational agent aims for the best feasible action under limited resources.
+
+\section{Agent types (high level)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Simple reflex agents:} use condition-action rules based only on current percept.
+  \item \textbf{Model-based reflex agents:} keep internal state to deal with partial observability.
+  \item \textbf{Goal-based agents:} select actions based on goal achievement.
+  \item \textbf{Utility-based agents:} maximize a utility function (trade-offs, preferences).
+  \item \textbf{Learning agents:} improve their behavior from experience.
+\end{itemize}
+
+\subsection{Simple reflex vs model-based reflex (expanded)}
+\textbf{Simple reflex} uses rules like:
+\begin{quote}
+IF condition THEN action
+\end{quote}
+This is fast and simple but fails when the right action depends on information not in the current percept.
+
+\textbf{Model-based reflex} maintains an internal state (a simple ``memory'' of the world) so it can act sensibly under partial observability.
+
+\subsection{Goal-based and utility-based agents (expanded)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Goal-based agents} select actions to reach a goal state. They need some representation of the goal and a way to predict action outcomes (a model).
+  \item \textbf{Utility-based agents} handle trade-offs (time vs cost vs risk) by maximizing a utility function. This is practical when there are multiple competing objectives.
+\end{itemize}
+
+\section{Learning agent architecture}
+The learning agent can be described using four components:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Performance element:} produces actions (current policy/behavior).
+  \item \textbf{Critic:} evaluates how well the agent is doing (feedback signal).
+  \item \textbf{Learning element:} updates the performance element using feedback.
+  \item \textbf{Problem generator:} suggests exploratory actions to gain useful experience.
+\end{itemize}
+
+\subsection{Exploration vs exploitation (important intuition)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Exploitation:} choose actions that are currently believed to be best.
+  \item \textbf{Exploration:} try new actions to discover better strategies.
+\end{itemize}
+The problem generator encourages exploration so that the agent does not get stuck with a suboptimal behavior early.
+
+\section{Common pitfalls (read before exams)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Confusing performance measure with reward:} reward is a designed signal; performance measure is what we truly care about. Misalignment causes ``reward hacking''.
+  \item \textbf{Calling an environment deterministic when it is not:} real-world systems (traffic, markets, users) are usually stochastic and dynamic.
+  \item \textbf{Assuming full observability:} most practical agents must act with partial and noisy information.
+  \item \textbf{Forgetting that rational is conditional:} rationality is defined \emph{given} the available percepts, actions, and objectives.
+\end{itemize}
+
+\section{Practice (with answers)}
+
+\subsection*{P1. PEAS design}
+Write a PEAS description for an \textbf{online exam proctoring assistant}.
+\textbf{Answer (example):} P = minimize cheating, minimize false accusations, low latency; E = exam session, candidates, network; A = flag events, record clips, alert human proctor; S = webcam, screen activity logs, keystroke patterns (if allowed), timing.
+
+\subsection*{P2. Environment classification}
+Classify the environment of a \textbf{food delivery rider routing app} (observable? deterministic?).
+\textbf{Answer:} partially observable (limited traffic signals), stochastic (traffic changes), sequential, dynamic, continuous, multi-agent.
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. What is PEAS? Create PEAS for a campus navigation app.}
+\textbf{Answer:} PEAS is Performance, Environment, Actuators, Sensors.
+Campus navigation app: P = minimize travel time, avoid unsafe routes, accuracy; E = campus map, traffic, user constraints; A = route suggestions, notifications; S = GPS, map data, user preferences, traffic updates.
+
+\subsection*{Q2. Explain partially observable vs fully observable environments with examples.}
+\textbf{Answer:} Fully observable: agent can see complete state (e.g., chess board). Partially observable: agent sees only part/noisy view (e.g., driving in fog; medical diagnosis).
+
+\subsection*{Q3. Why is rational not the same as omniscient?}
+\textbf{Answer:} Rationality is about choosing the best action given available information and constraints; omniscience means knowing the true state/outcomes, which is unrealistic.
+
+\subsection*{Q4. Compare any three agent types.}
+\textbf{Answer:} Simple reflex uses immediate rules; model-based adds memory of state; goal-based plans actions to reach a goal; utility-based optimizes trade-offs using utilities.
+
+\section{Summary}
+\begin{itemize}[leftmargin=*]
+  \item Agents perceive and act; PEAS specifies tasks clearly.
+  \item Environment classification helps choose suitable AI methods.
+  \item Learning agents improve behavior through feedback and exploration.
+\end{itemize}
+\notesources{\AIMLUnitISources}
+
+\end{document}

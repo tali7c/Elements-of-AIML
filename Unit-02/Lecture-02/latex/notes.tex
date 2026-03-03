@@ -1,0 +1,258 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 02 -- Lecture 02 Notes\\Predicate Logic (First-Order Logic)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture introduces \textbf{predicate logic} (also called \textbf{first-order logic}, FOL). Compared to propositional logic, FOL can express:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{objects} (Ali, UPES, Course-1),
+  \item \textbf{properties} (Student(x)),
+  \item \textbf{relations} between objects (Enrolled(x,y)),
+  \item and \textbf{general rules} using quantifiers ($\forall$, $\exists$).
+\end{itemize}
+\notesources{\AIMLUnitIISources}
+
+\section{How to use these notes (self-study)}
+When translating English to FOL, write down (1) your domain, (2) your predicate meanings, and (3) the intended quantifier scope.
+Most errors in exams happen because one of these three was implicit in the student's mind but not written in logic.
+Try to translate each practice sentence \emph{before} reading the provided answer.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Explain why propositional logic becomes verbose when there are many objects.
+  \item Write basic FOL sentences with predicates, variables, and quantifiers.
+  \item Interpret the meaning of universal and existential quantifiers.
+  \item Translate simple English statements into FOL and avoid common pitfalls.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Domain:} the set of objects that variables range over.
+  \item \textbf{Constant:} a symbol naming a specific object (e.g., $Ali$).
+  \item \textbf{Predicate:} a relation or property returning True/False (e.g., $Student(x)$).
+  \item \textbf{Function:} maps objects to objects (e.g., $FatherOf(x)$).
+  \item \textbf{Quantifier:} $\forall$ (for all), $\exists$ (there exists).
+  \item \textbf{Scope:} the part of the sentence controlled by a quantifier.
+\end{itemize}
+
+\section{Abbreviations and symbols}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{FOL}: First-Order Logic (predicate logic).
+  \item \textbf{PL}: Propositional Logic.
+  \item $\forall$: universal quantifier (for all).
+  \item $\exists$: existential quantifier (there exists).
+  \item $\lnot,\land,\lor,\rightarrow$: NOT, AND, OR, IMPLIES.
+\end{itemize}
+
+\section{Why predicate logic?}
+In propositional logic, we represent facts as atomic symbols. For example:
+\begin{itemize}[leftmargin=*]
+  \item $p$: ``Ali is a student.''
+  \item $q$: ``Sara is a student.''
+\end{itemize}
+If we have 500 students, we need 500 separate symbols and cannot easily express a rule like:
+\begin{quote}
+``All students are hardworking.''
+\end{quote}
+Predicate logic solves this by introducing variables and quantifiers:
+\[
+  \forall x\; Student(x) \rightarrow WorksHard(x)
+\]
+
+\section{Syntax of FOL}
+\subsection{Terms}
+Terms refer to objects:
+\begin{itemize}[leftmargin=*]
+  \item constants: $Ali$
+  \item variables: $x$
+  \item function applications: $FatherOf(x)$
+\end{itemize}
+
+\subsection{Predicates vs functions (common confusion)}
+\begin{itemize}[leftmargin=*]
+  \item A \textbf{predicate} returns True/False (it is a statement).
+  \item A \textbf{function} returns an object (it is a term-producing operator).
+\end{itemize}
+Example: $Parent(Ali,Sara)$ could be a predicate (True/False). $FatherOf(Ali)$ is a function producing an object.
+
+\subsection{Atomic sentences}
+An atomic sentence is a predicate applied to terms, e.g.:
+\[
+  Student(Ali),\quad Enrolled(Ali, CS101),\quad Likes(x, AI)
+\]
+
+\subsection{Complex sentences}
+Build complex sentences using the same connectives as propositional logic:
+\[
+  \lnot,\; \land,\; \lor,\; \rightarrow,\; \leftrightarrow
+\]
+and include quantifiers:
+\[
+  \forall x\; (Student(x) \rightarrow WorksHard(x))
+\]
+
+\subsection{Free vs bound variables (scope)}
+\begin{itemize}[leftmargin=*]
+  \item A variable is \textbf{bound} if it appears under a quantifier that declares it.
+  \item A variable is \textbf{free} if it is not bound by any quantifier.
+\end{itemize}
+Example: in $\forall x\; Likes(x, AI)$, $x$ is bound. In $Likes(x, AI)$ (alone), $x$ is free and the sentence is not a complete statement unless we specify what $x$ is.
+
+\section{Quantifiers and scope}
+\subsection{Universal quantifier ($\forall$)}
+$\forall x\; P(x)$ means: for every object $x$ in the domain, $P(x)$ holds.
+
+\subsection{Existential quantifier ($\exists$)}
+$\exists x\; P(x)$ means: there exists at least one object $x$ such that $P(x)$ holds.
+
+\subsection{Scope and order}
+The \textbf{order} of quantifiers can change meaning.
+
+\paragraph{Example.}
+``Every student is enrolled in some course'':
+\[
+  \forall x\; (Student(x) \rightarrow \exists y\; (Course(y) \land Enrolled(x,y)))
+\]
+This allows different students to be enrolled in different courses.
+
+``There exists a course that every student is enrolled in'':
+\[
+  \exists y\; (Course(y) \land \forall x\; (Student(x) \rightarrow Enrolled(x,y)))
+\]
+This asserts one shared course for all students.
+
+\subsection{Negating quantifiers (very useful later)}
+Quantifier negations:
+\[
+  \lnot(\forall x\; P(x)) \equiv \exists x\; \lnot P(x)
+\]
+\[
+  \lnot(\exists x\; P(x)) \equiv \forall x\; \lnot P(x)
+\]
+These equivalences are important in clause form conversion and resolution (Unit II Lecture 03).
+
+\section{Semantics: interpreting FOL}
+To evaluate truth, we must choose:
+\begin{itemize}[leftmargin=*]
+  \item a \textbf{domain} (what objects exist),
+  \item an \textbf{interpretation} (what constants, functions, and predicates mean).
+\end{itemize}
+Then sentences can be evaluated as True/False. A \textbf{model} is an interpretation where a set of sentences is true.
+
+\subsection{A tiny semantics example}
+Let the domain be the set $\{Ali, Sara\}$ and predicate $Student(\cdot)$.
+If the interpretation says:
+\[
+  Student(Ali)=T,\quad Student(Sara)=F,
+\]
+then $\exists x\; Student(x)$ is true, while $\forall x\; Student(x)$ is false.
+
+\section{Translation: English $\rightarrow$ FOL}
+\subsection{Practical workflow}
+\begin{enumerate}[leftmargin=*]
+  \item Choose a domain (e.g., people, courses).
+  \item Define predicates/functions clearly (e.g., $Student(x)$, $Enrolled(x,y)$).
+  \item Identify quantifiers and their scope.
+  \item Build the final formula and check if it matches meaning.
+\end{enumerate}
+
+\subsection{Common patterns}
+\begin{itemize}[leftmargin=*]
+  \item ``All A are B'': $\forall x\; A(x) \rightarrow B(x)$
+  \item ``Some A is B'': $\exists x\; A(x) \land B(x)$
+  \item ``No A is B'': $\forall x\; A(x) \rightarrow \lnot B(x)$
+\end{itemize}
+
+\subsection{More patterns (important in practice)}
+\begin{itemize}[leftmargin=*]
+  \item ``Only A are B'': $\forall x\; B(x) \rightarrow A(x)$
+  \item ``At least one A'': $\exists x\; A(x)$
+  \item ``At most one A'' (sketch): $\forall x\forall y\; (A(x)\land A(y) \rightarrow x=y)$
+  \item ``Exactly one A'' (sketch): (at least one) $\land$ (at most one)
+\end{itemize}
+
+\subsection{Practice (with answers)}
+Assume domain: all people and courses in a university.
+
+\paragraph{P1. ``All humans are mortal.''}
+\textbf{Answer:} $\forall x\; Human(x) \rightarrow Mortal(x)$.
+
+\paragraph{P2. ``Some student likes AI.''}
+\textbf{Answer:} $\exists x\; Student(x) \land Likes(x, AI)$.
+
+\paragraph{P3. ``Every student has a mentor who is a faculty member.''}
+\textbf{Answer:}
+\[
+  \forall x\; (Student(x) \rightarrow \exists y\; (Faculty(y) \land MentorOf(y,x)))
+\]
+
+\paragraph{P4. ``No student is both absent and present.''}
+\textbf{Answer:} $\forall x\; Student(x) \rightarrow \lnot(Absent(x) \land Present(x))$.
+
+\paragraph{P5. ``Only students can access the lab.''}
+\textbf{Answer:} $\forall x\; AccessLab(x) \rightarrow Student(x)$.
+
+\paragraph{P6. ``Exactly one student is class representative.''}
+\textbf{Answer (one possible encoding):}
+\[
+  \exists x\; (Student(x)\land Rep(x)) \;\land\;
+  \forall y\; ((Student(y)\land Rep(y)) \rightarrow y=x)
+\]
+
+\section{Bridge to next lecture: unification idea (preview)}
+Resolution in FOL needs \textbf{unification}, which is essentially ``pattern matching'' for terms.
+Example:
+\[
+  Likes(x, AI) \text{ matches } Likes(Ali, AI) \text{ with substitution } \{x/Ali\}.
+\]
+We will study this formally in Lecture 03.
+
+\section{Practice (with answers)}
+
+\subsection*{P7. Translate and explain scope.}
+Translate: ``Every student likes some course.''
+\textbf{Answer:} $\forall x\; (Student(x) \rightarrow \exists y\; (Course(y)\land Likes(x,y)))$.
+This means each student may like a different course.
+
+\subsection*{P8. Quantifier order changes meaning.}
+Translate: ``There exists a course that every student likes.''
+\textbf{Answer:} $\exists y\; (Course(y) \land \forall x\; (Student(x)\rightarrow Likes(x,y)))$.
+This asserts a single course liked by all students.
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Wrong implication direction:} ``All A are B'' is $A(x)\rightarrow B(x)$, not $B(x)\rightarrow A(x)$.
+  \item \textbf{Missing scope parentheses:} always group the part controlled by a quantifier.
+  \item \textbf{Quantifier order confusion:} $\forall x\exists y$ (depends on $x$) vs $\exists y\forall x$ (one $y$ for all).
+  \item \textbf{Forgetting the domain:} the truth of a FOL sentence depends on what objects $x$ ranges over.
+  \item \textbf{Free variables:} a sentence with a free variable is not a complete statement unless you quantify it.
+  \item \textbf{Predicate vs function:} predicates are True/False statements; functions produce objects.
+\end{itemize}
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. Why is propositional logic insufficient for many knowledge bases?}
+\textbf{Answer:} It cannot represent objects and relations compactly; it requires one atom per fact and cannot express general rules using quantifiers.
+
+\subsection*{Q2. Translate: ``All humans are mortal'' and ``Some student likes AI''.}
+\textbf{Answer:} $\forall x\; Human(x) \rightarrow Mortal(x)$ and $\exists x\; Student(x) \land Likes(x, AI)$.
+
+\subsection*{Q3. Why does quantifier order matter?}
+\textbf{Answer:} $\forall x \exists y$ allows $y$ to depend on $x$; $\exists y \forall x$ requires a single $y$ that works for all $x$. The meaning changes.
+
+\subsection*{Q4. Give one ambiguous English sentence without assumptions.}
+\textbf{Answer:} ``Every student solved a problem.'' (same problem for all vs possibly different problems). Without clarifying, there are multiple valid FOL translations.
+
+\section{Summary}
+Predicate logic extends propositional logic by adding objects, relations, and quantifiers, enabling compact and expressive knowledge representation.
+\notesources{\AIMLUnitIISources}
+
+\end{document}

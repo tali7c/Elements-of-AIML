@@ -1,0 +1,176 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 05 -- Lecture 02: ML Applications in Banking, Security \& Healthcare}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: application case studies + risks + evaluation\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:bank}{\beamerbutton{Banking}}\hspace{0.6em}
+  \hyperlink{sec:sec}{\beamerbutton{Security}}\hspace{0.6em}
+  \hyperlink{sec:health}{\beamerbutton{Healthcare}}\hspace{0.6em}
+  \hyperlink{sec:risks}{\beamerbutton{Risks}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Banking}
+\label{sec:bank}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item List typical ML use-cases in banking, security, and healthcare.
+    \item Identify common data sources and labels in these domains.
+    \item Explain domain-specific risks and why evaluation choices matter.
+    \item Describe concept drift and why monitoring is needed.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations \& Keywords}
+  \begin{itemize}[<+->]
+    \item AML: Anti-Money Laundering \hfill KYC: Know Your Customer
+    \item PII: personally identifiable information
+    \item EHR: electronic health record \hfill PHI: protected health information
+    \item Drift: changing patterns over time \hfill Monitoring: ongoing checks
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Banking: Typical ML Tasks}
+  \begin{itemize}[<+->]
+    \item Fraud detection (rare-event classification)
+    \item Credit scoring (risk prediction)
+    \item Customer churn prediction
+    \item Customer support (NLP)
+  \end{itemize}
+  \vspace{0.4em}
+  Key issues: imbalance, costs of false positives/negatives, fairness and regulation.
+\end{frame}
+
+\begin{frame}{Banking: Data and Labels (Examples)}
+  \begin{itemize}[<+->]
+    \item Transaction logs: amount, merchant, time, location, device
+    \item Customer profile: age, income band, account history
+    \item Labels: ``fraud'' confirmed, ``default'' event, churn yes/no
+  \end{itemize}
+  \small Labels may arrive late (fraud confirmed days later), affecting evaluation and monitoring.
+\end{frame}
+
+\section{Security}
+\label{sec:sec}
+
+\begin{frame}{Security: Typical ML Tasks}
+  \begin{itemize}[<+->]
+    \item Spam/phishing detection
+    \item Intrusion detection (anomaly detection)
+    \item Malware classification
+  \end{itemize}
+  \vspace{0.4em}
+  Key issues: adversarial behavior, evolving threats (drift), false alarm fatigue.
+\end{frame}
+
+\begin{frame}{Security: What makes it different?}
+  \begin{itemize}[<+->]
+    \item The data distribution changes because attackers adapt (adversarial drift).
+    \item FP cost: alert fatigue; FN cost: breach goes undetected.
+    \item Evaluation often needs time-based splits and realistic ``red-team'' testing.
+  \end{itemize}
+\end{frame}
+
+\section{Healthcare}
+\label{sec:health}
+
+\begin{frame}{Healthcare: Typical ML Tasks}
+  \begin{itemize}[<+->]
+    \item Risk prediction (readmission, complications)
+    \item Imaging assistance (classification/segmentation)
+    \item Triage and decision support
+  \end{itemize}
+  \vspace{0.4em}
+  Key issues: safety, high cost of false negatives, data privacy, validation and clinical workflow.
+\end{frame}
+
+\begin{frame}{Healthcare: Data and Workflow Constraints}
+  \begin{itemize}[<+->]
+    \item Data: EHR, lab results, imaging, vitals (often missing/noisy)
+    \item Strong privacy and consent constraints (PHI)
+    \item Clinical validation: model must fit workflow and be safe to use
+  \end{itemize}
+  \small ``High accuracy'' is not enough if the model is unsafe or unusable.
+\end{frame}
+
+\section{Risks and monitoring}
+\label{sec:risks}
+
+\begin{frame}{Cross-Domain Risks (Common Themes)}
+  \begin{itemize}[<+->]
+    \item \textbf{Imbalance}: fraud and rare diseases are rare events.
+    \item \textbf{Drift}: patterns change (new fraud strategies, new malware).
+    \item \textbf{Bias/fairness}: historical decisions can create unfair models.
+    \item \textbf{Privacy}: sensitive data; strict governance required.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Concept Drift (Why Monitoring Matters)}
+  \begin{itemize}[<+->]
+    \item Data distribution changes over time.
+    \item Model performance degrades silently.
+    \item Monitoring: track data statistics + performance metrics + alerting.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Monitoring Signals (Examples)}
+  \begin{itemize}[<+->]
+    \item Feature distribution shift (mean/std, missing rates)
+    \item Model score distribution (sudden changes can indicate drift)
+    \item Business metrics: chargebacks, false declines, incident volume
+    \item Periodic ground-truth performance once labels arrive
+  \end{itemize}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Applications differ, but share patterns: classification, regression, anomaly detection.
+    \item Domain risks: imbalance, drift, adversaries, safety and privacy constraints.
+    \item Reliable deployment requires monitoring and careful metric choices.
+  \end{itemize}
+  \slidesources{\AIMLUnitVSources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item Why is class imbalance common in fraud detection?
+    \item Give one example of concept drift in security.
+    \item In healthcare, why can false negatives be more costly than false positives?
+    \item List two monitoring signals you would track after deployment.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

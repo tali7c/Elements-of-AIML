@@ -1,0 +1,189 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 04 -- Lecture 02 Notes\\Supervised Learning (Classification)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture covers \textbf{classification} and the evaluation tools needed to judge classification models correctly, especially under class imbalance.
+\notesources{\AIMLUnitIVSources}
+
+\section{How to use these notes (self-study)}
+Start with the confusion matrix and be sure you can explain TP/FP/TN/FN in a real scenario (medical test, fraud detection).
+Then learn how each metric answers a different question (``How many alarms are correct?'' vs ``How many true cases did we catch?'').
+Finally, study thresholds and imbalance, because most real classification problems have unequal error costs.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Define classification and give examples.
+  \item Understand and use confusion matrix concepts.
+  \item Compute and interpret accuracy, precision, recall, and F1.
+  \item Explain threshold effects and why imbalance changes metric choice.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Classification:} predicting discrete labels.
+  \item \textbf{Confusion matrix:} TP/FP/TN/FN table.
+  \item \textbf{Precision:} correctness among predicted positives.
+  \item \textbf{Recall:} coverage of true positives.
+  \item \textbf{Threshold:} rule to convert score into a class.
+  \item \textbf{Imbalanced data:} class frequencies are highly unequal.
+\end{itemize}
+
+\section{Abbreviations and symbols}
+\begin{itemize}[leftmargin=*]
+  \item TP/FP/TN/FN: true/false positives/negatives.
+  \item Precision $= TP/(TP+FP)$,\; Recall/TPR $= TP/(TP+FN)$.
+  \item FPR $= FP/(FP+TN)$,\; F1: harmonic mean of precision and recall.
+  \item ROC-AUC: area under ROC curve; PR-AUC: area under precision-recall curve.
+  \item Threshold $\tau$: score $\ge \tau \Rightarrow$ predict positive.
+\end{itemize}
+
+\section{Classification basics}
+Classification predicts a label such as spam/not-spam. Models may output:
+\begin{itemize}[leftmargin=*]
+  \item a hard label directly, or
+  \item a score/probability, then a threshold is applied.
+\end{itemize}
+
+\subsection{Common classifiers (high-level overview)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Logistic regression}: linear model that outputs probabilities for classes.
+  \item \textbf{k-Nearest Neighbors (kNN)}: predicts based on majority vote of nearest samples.
+  \item \textbf{Decision trees / Random forests}: learn if-then style splits; handle non-linearity well.
+  \item \textbf{Naive Bayes}: fast probabilistic classifier; often strong on text features.
+  \item \textbf{SVM}: margin-based classifier; powerful with the right kernel/features.
+\end{itemize}
+This course focuses on \textbf{evaluation concepts} rather than algorithm details.
+
+\section{Confusion matrix}
+For binary classification:
+\begin{center}
+\begin{tabular}{c|cc}
+  & Pred + & Pred - \\\hline
+  True + & TP & FN \\
+  True - & FP & TN \\
+\end{tabular}
+\end{center}
+\begin{itemize}[leftmargin=*]
+  \item TP: correctly predicted positive.
+  \item FP: predicted positive but actually negative.
+  \item FN: predicted negative but actually positive (miss).
+  \item TN: correctly predicted negative.
+\end{itemize}
+
+\subsection{Worked example (interpretation)}
+Suppose a disease test model produced: TP=40, FP=10, FN=20, TN=930.
+\begin{itemize}[leftmargin=*]
+  \item Many TNs make accuracy look high.
+  \item FN means \textbf{missed sick} people (can be costly).
+  \item FP means \textbf{false alarm} (unnecessary follow-up tests).
+\end{itemize}
+
+\section{Metrics}
+\subsection{Accuracy}
+\[
+  \text{Accuracy} = \frac{TP + TN}{TP+TN+FP+FN}
+\]
+
+\subsection{Precision, recall, F1}
+\[
+  \text{Precision} = \frac{TP}{TP+FP},\qquad
+  \text{Recall} = \frac{TP}{TP+FN}
+\]
+F1 score:
+\[
+  F1 = 2\cdot \frac{\text{Precision}\cdot\text{Recall}}{\text{Precision}+\text{Recall}}
+\]
+
+\subsection{Mini computation (from the worked confusion matrix)}
+For TP=40, FP=10, FN=20:
+\[
+  \text{Precision}=\frac{40}{50}=0.80,\qquad
+  \text{Recall}=\frac{40}{60}\approx 0.67
+\]
+\[
+  F1 \approx 2\cdot \frac{0.80\cdot 0.67}{0.80+0.67}\approx 0.73
+\]
+
+\subsection{Interpretation}
+\begin{itemize}[leftmargin=*]
+  \item High precision: few false alarms.
+  \item High recall: few missed positives.
+  \item Trade-off depends on domain costs (medical diagnosis vs spam filtering).
+\end{itemize}
+
+\section{Thresholds and ROC-AUC (intuition)}
+If a model outputs probabilities, the threshold controls the precision/recall trade-off.
+ROC curve plots:
+\begin{itemize}[leftmargin=*]
+  \item TPR (same as recall) vs FPR ($FP/(FP+TN)$) across thresholds.
+\end{itemize}
+AUC summarizes ranking quality (probability that a random positive is ranked higher than a random negative).
+
+\subsection{ROC vs PR curves (important note)}
+\begin{itemize}[leftmargin=*]
+  \item ROC curves consider TPR vs FPR and can look optimistic when negatives dominate.
+  \item Precision-Recall curves focus on the positive class and are often more informative for rare-event detection.
+\end{itemize}
+
+\subsection{Choosing a threshold (practical mindset)}
+Choose $\tau$ based on the \textbf{cost of errors}:
+\begin{itemize}[leftmargin=*]
+  \item If FN is very costly (disease screening), lower $\tau$ to increase recall.
+  \item If FP is very costly (blocking legitimate payments), raise $\tau$ to increase precision.
+\end{itemize}
+
+\section{Imbalanced data}
+When one class is rare, accuracy can be very misleading.
+Example: if 99\% are negative, predicting always negative yields 99\% accuracy but 0 recall for positives.
+
+\subsection{What to do?}
+\begin{itemize}[leftmargin=*]
+  \item Use better metrics (precision/recall/F1, PR-AUC).
+  \item Use resampling or class weights (covered in lab Experiment-09).
+  \item Tune threshold based on costs.
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. In fraud detection, which is usually worse: FP or FN?}
+\textbf{Answer:} FN is often worse because it misses fraud. However, FP can also be costly due to blocking real customers; the correct answer depends on business cost.
+
+\subsection*{P2. If a model has very high precision but very low recall, what does it mean?}
+\textbf{Answer:} it predicts positive rarely, but when it does, it is usually correct; it misses many true positives.
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Using accuracy only:} for rare positives, accuracy can hide a useless model.
+  \item \textbf{Forgetting the threshold:} changing $\tau$ changes precision/recall; do not treat it as fixed.
+  \item \textbf{Ignoring the cost of errors:} choose metrics based on real harm (FN vs FP).
+  \item \textbf{Comparing models on different splits:} use consistent splits or CV for fair comparison.
+  \item \textbf{Not checking PR curves in imbalance:} PR-AUC can be more informative than ROC-AUC.
+\end{itemize}
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. Define TP, FP, TN, FN with a medical test.}
+\textbf{Answer:} TP = sick predicted sick; FP = healthy predicted sick; FN = sick predicted healthy; TN = healthy predicted healthy.
+
+\subsection*{Q2. Why is accuracy misleading on imbalanced datasets?}
+\textbf{Answer:} a model can achieve high accuracy by always predicting the majority class while failing on the minority class.
+
+\subsection*{Q3. When is recall more important than precision?}
+\textbf{Answer:} when missing a positive is costly, e.g., disease screening or fraud detection.
+
+\subsection*{Q4. Role of threshold?}
+\textbf{Answer:} it converts model scores to labels and controls precision/recall trade-off.
+
+\section{Summary}
+Classification requires careful evaluation beyond accuracy. Confusion matrix metrics and threshold decisions are central, especially under imbalance.
+\notesources{\AIMLUnitIVSources}
+
+\end{document}

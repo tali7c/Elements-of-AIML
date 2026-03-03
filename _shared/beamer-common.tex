@@ -1,0 +1,43 @@
+% Shared Beamer settings for Elements of AIML lectures (UPES).
+% Keep this file free of \documentclass to allow reuse via \input.
+
+% Allow lecture sources to use shared theme/assets without copying them into each lecture folder.
+% NOTE: These paths are relative to `Unit-xx/Lecture-yy/latex/` (and `Lab/Experiment-xx/latex/`).
+\makeatletter
+\def\input@path{{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+\makeatother
+
+\usetheme{UPES}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
+
+% Code listings (general-purpose).
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  breaklines=true
+}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,calc}
+
+% Per-slide source line (references shown on the slide itself).
+\newcommand{\slidesources}[1]{%
+  \vfill
+  {\tiny\color{gray}\raggedright\sloppy\parbox{\linewidth}{Sources: #1}\par}%
+}
+
+% Unit-wise source strings for this subject (used by slides/notes).
+% Path is relative to the lecture `latex/` folder (the compilation CWD).
+\input{../../../_shared/aiml-sources.tex}

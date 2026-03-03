@@ -1,0 +1,319 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 01 -- Lecture 01 Notes\\AI Overview, Techniques \& Applications}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture introduces the course and answers four practical questions:
+\begin{itemize}[leftmargin=*]
+  \item What do we mean by \textbf{Artificial Intelligence (AI)}?
+  \item How is AI related to \textbf{Machine Learning (ML)} and \textbf{Data Science}?
+  \item What are the \textbf{major technique families} used in AI systems?
+  \item How do we define \textbf{success} for an AI system in the real world?
+\end{itemize}
+\notesources{\AIMLUnitISources}
+
+\section{How to use these notes (self-study)}
+Read the notes in order and pause at each worked example/case to ask: ``What would I do next, and why?''.
+In AI, the important skill is not memorizing definitions but connecting \textbf{problem type} $\rightarrow$ \textbf{technique} $\rightarrow$ \textbf{evaluation}.
+Try the practice questions before reading the answers.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Explain AI using multiple viewpoints (human-like vs rational, thinking vs acting).
+  \item Differentiate AI vs ML vs data science using small examples.
+  \item Identify symbolic, statistical, and hybrid AI techniques at a high level.
+  \item Describe what a model is and list success criteria beyond accuracy.
+\end{itemize}
+
+\section{Keywords (quick definitions)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Artificial Intelligence (AI):} systems that perceive, reason, learn, and act to achieve goals.
+  \item \textbf{Machine Learning (ML):} methods that learn patterns from data to make predictions/decisions.
+  \item \textbf{Model:} a simplified representation of reality used for prediction or reasoning.
+  \item \textbf{Metric:} a quantitative measure of performance (e.g., accuracy, error, latency).
+  \item \textbf{Generalization:} performance on unseen data drawn from the same process as training.
+  \item \textbf{Data leakage:} unintended use of information that would not be available at prediction time.
+\end{itemize}
+
+\section{Course roadmap (how topics connect)}
+This subject is intentionally organized from \textbf{foundations} to \textbf{methods} to \textbf{applications}:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Unit I (this unit):} what AI is, what problems it solves, and what success means in practice.
+  \item \textbf{Unit II:} how to represent knowledge using logic and how to infer new facts (entailment, resolution).
+  \item \textbf{Unit III:} how learning from data works (datasets, splits, cross-validation, dimensionality reduction).
+  \item \textbf{Unit IV:} core ML paradigms (regression, classification, clustering, RL, semi-supervised).
+  \item \textbf{Unit V:} where AI/ML is used and how to think responsibly about impacts and risks.
+\end{itemize}
+
+\section{Abbreviations and terms used in this lecture}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{AI}: Artificial Intelligence
+  \item \textbf{ML}: Machine Learning
+  \item \textbf{DS}: Data Science
+  \item \textbf{EDA}: Exploratory Data Analysis (lab focus)
+  \item \textbf{KB}: Knowledge Base (logic-based AI; Unit II)
+\end{itemize}
+
+\section{Why AI is important now (three drivers)}
+AI has existed for decades, but recent progress is strongly driven by:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Data availability:} many domains are now digital (transactions, text, images, sensors).
+  \item \textbf{Compute availability:} GPUs/accelerators + cloud infrastructure.
+  \item \textbf{Algorithm/tool improvements:} better optimization, architectures, libraries, and evaluation practices.
+\end{itemize}
+Practical takeaway: a strong AI system is rarely ``just the model'' --- it is usually a \textbf{full pipeline} (data + model + monitoring + feedback).
+
+\section{AI task types (how we frame problems)}
+Many AI/ML applications reduce to a small set of task types:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Classification:} predict a label/class (spam vs not spam).
+  \item \textbf{Regression:} predict a number (house price).
+  \item \textbf{Ranking/recommendation:} order items by relevance (top videos).
+  \item \textbf{Clustering:} group similar items (customer segments).
+  \item \textbf{Decision making:} choose actions over time (agent behavior).
+\end{itemize}
+Understanding the task type helps choose the right evaluation metrics and techniques.
+
+\section{What is Artificial Intelligence?}
+AI can be described using different (equally valid) perspectives. A common framing (popularized in many AI textbooks) is the 2D view:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Thinking vs acting} (internal reasoning vs external behavior),
+  \item \textbf{Human-like vs rational} (imitate humans vs do the ``right'' thing).
+\end{itemize}
+This gives four informal viewpoints:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Thinking humanly:} model human cognition (cognitive science).
+  \item \textbf{Acting humanly:} produce human-like behavior (e.g., Turing Test style).
+  \item \textbf{Thinking rationally:} reason correctly using logic.
+  \item \textbf{Acting rationally:} choose actions that maximize goal achievement.
+\end{itemize}
+
+\subsection{A practical course definition}
+For this course, a useful working definition is:
+\begin{quote}
+AI is the study and engineering of systems that \textbf{perceive, reason, learn, and act} to achieve goals under uncertainty.
+\end{quote}
+This definition is deliberately broad: it includes both logic-based reasoning (Unit II) and data-driven learning (Units III--IV).
+
+\subsection{Turing Test (short note)}
+The \textbf{Turing Test} is a historic proposal to judge whether a machine can exhibit human-like conversational behavior.
+It is influential, but it does not capture all goals of AI (for example, an AI system can be useful without being human-like).
+
+\subsection{Rationality (preview)}
+In modern AI, a central theme is \textbf{rational behavior}: choosing actions that achieve goals given limited information and resources.
+We study this using the \textbf{agent} framework in Unit I Lecture 02.
+
+\section{AI vs ML vs Data Science}
+These terms are related but not identical.
+
+\subsection{AI}
+AI is the \emph{goal}: building intelligent behavior. It includes:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Knowledge representation and reasoning} (logic, inference, planning),
+  \item \textbf{Learning} (ML),
+  \item \textbf{Perception} (vision, speech),
+  \item \textbf{Decision making} under uncertainty.
+\end{itemize}
+
+\subsection{Machine Learning (ML)}
+ML is a \emph{toolbox} inside AI. Instead of hand-coding rules, we learn a function from data. Example tasks:
+\begin{itemize}[leftmargin=*]
+  \item Regression (predict a number), classification (predict a class), clustering (group data).
+\end{itemize}
+ML is powerful but depends heavily on data quality and correct evaluation.
+
+\subsection{Data science}
+Data science focuses on extracting insights/value from data:
+\begin{itemize}[leftmargin=*]
+  \item Data cleaning and exploration (EDA),
+  \item Visualization and communication,
+  \item Experimentation and reporting.
+\end{itemize}
+Often, a real project includes all three: data science to understand the problem, ML to build a predictor, and AI system design to deploy decisions safely.
+
+\section{AI Techniques (high level)}
+At a high level, techniques can be grouped into:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Symbolic AI:} explicit representations (facts/rules), logic, search, planning.
+  \item \textbf{Statistical AI / ML:} learning from data (probabilistic and optimization-based).
+  \item \textbf{Hybrid:} combinations (very common in practice).
+\end{itemize}
+
+\subsection{Symbolic AI (examples)}
+Symbolic AI is useful when:
+\begin{itemize}[leftmargin=*]
+  \item the domain has clear rules/constraints (business policies, logic constraints),
+  \item interpretability/auditability is important.
+\end{itemize}
+Examples of symbolic techniques:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Logic and inference} (Unit II): represent facts/rules and infer consequences.
+  \item \textbf{Search and planning}: explore actions to reach goals (e.g., route planning).
+  \item \textbf{Constraint satisfaction}: satisfy many rules simultaneously.
+\end{itemize}
+
+\subsection{Statistical AI / ML (examples)}
+ML is useful when:
+\begin{itemize}[leftmargin=*]
+  \item rules are unknown or too complex,
+  \item labeled examples are available (supervised learning), or structure exists in data (unsupervised).
+\end{itemize}
+Examples:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Regression/classification} (Unit IV): predict values/labels.
+  \item \textbf{Clustering} (Unit IV): discover groups.
+  \item \textbf{Dimensionality reduction} (Unit III): compress and visualize data.
+\end{itemize}
+
+\subsection{Hybrid systems}
+Hybrid systems combine constraints/rules with learning. Examples:
+\begin{itemize}[leftmargin=*]
+  \item A fraud detection model whose decisions are filtered by business rules.
+  \item A medical model that produces suggestions but must obey safety constraints and thresholds.
+\end{itemize}
+
+\subsection{When do we choose which?}
+A helpful rule of thumb:
+\begin{itemize}[leftmargin=*]
+  \item If domain rules are known and stable, symbolic methods can be clean and interpretable.
+  \item If rules are unknown or too complex, ML can learn patterns from examples.
+  \item If you need both (constraints + learning), hybrid approaches are effective.
+\end{itemize}
+
+\section{Models and criteria of success}
+\subsection{What is a model? (levels)}
+The word ``model'' is used in multiple ways. It helps to separate levels:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Conceptual model:} assumptions and simplified story of the world (whiteboard).
+  \item \textbf{Mathematical model:} equations/objective (e.g., loss function).
+  \item \textbf{Algorithmic model:} training and inference procedure.
+  \item \textbf{System model:} full pipeline (data collection, preprocessing, monitoring).
+\end{itemize}
+
+\subsection{Criteria of success}
+In real deployments, accuracy alone is insufficient. Typical success criteria include:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Quality:} accuracy/error rates/calibration.
+  \item \textbf{Cost:} compute, memory, energy, annotation effort.
+  \item \textbf{Speed:} response time (latency) and throughput.
+  \item \textbf{Robustness:} stability to noise and distribution shifts.
+  \item \textbf{Fairness and safety:} bias, privacy, harmful outputs.
+  \item \textbf{Maintainability:} monitoring, retraining, drift handling.
+\end{itemize}
+
+\subsection{Common failure modes}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Bad data:} missing values, mislabeled examples, sampling bias.
+  \item \textbf{Leakage:} using information not available at decision time.
+  \item \textbf{Train/deploy mismatch:} users and environment change.
+  \item \textbf{Wrong metric:} optimizing a metric that does not reflect real cost.
+  \item \textbf{No monitoring:} silent degradation due to drift.
+\end{itemize}
+
+\section{Common misconceptions (quick fixes)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{``AI = ML''}: ML is important, but AI also includes reasoning, planning, and agents.
+  \item \textbf{``High accuracy = success''}: metric choice must match real costs and constraints.
+  \item \textbf{``More data always solves it''}: data quality, bias, and leakage can still break systems.
+  \item \textbf{``Model is the product''}: production systems require pipelines, monitoring, and updates.
+\end{itemize}
+
+\section{Worked example: spam filtering (rules vs learning)}
+Consider the task: classify emails as \textbf{spam} or \textbf{not spam}.
+
+\subsection{Rule-based approach (symbolic)}
+We can write human-designed rules such as:
+\begin{quote}
+IF subject contains ``win money'' AND sender is unknown THEN spam.
+\end{quote}
+Strengths:
+\begin{itemize}[leftmargin=*]
+  \item Interpretable and easy to audit.
+\end{itemize}
+Weaknesses:
+\begin{itemize}[leftmargin=*]
+  \item Brittle: spammers adapt; rules become large and hard to maintain.
+\end{itemize}
+
+\subsection{Learning-based approach (ML)}
+We collect labeled emails and learn a classifier. A typical feature set might include:
+\begin{itemize}[leftmargin=*]
+  \item word counts (bag-of-words), number of links, sender reputation, etc.
+\end{itemize}
+Strengths:
+\begin{itemize}[leftmargin=*]
+  \item Learns patterns that are hard to hand-code; can adapt with retraining.
+\end{itemize}
+Weaknesses:
+\begin{itemize}[leftmargin=*]
+  \item Requires data and careful evaluation; can inherit bias from labels/data.
+\end{itemize}
+
+\subsection{How do we measure success here?}
+Accuracy may hide the real cost. For example:
+\begin{itemize}[leftmargin=*]
+  \item False positives (normal email marked as spam) can be very costly.
+  \item False negatives (spam missed) are annoying but sometimes less costly.
+\end{itemize}
+So we might prioritize precision/recall or a cost-weighted metric (covered later in Unit IV).
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Treating AI, ML, and data science as the same thing:} AI is the broad goal, ML is one method family, and data science focuses on analysis/insight. Mixing them makes it harder to choose the right approach.
+  \item \textbf{Thinking a model is ``just an algorithm'':} a deployed system includes data pipelines, preprocessing, monitoring, and feedback loops --- the model is only one component.
+  \item \textbf{Optimizing only accuracy:} in many real tasks (fraud, medical screening, spam) different errors have different costs; choose metrics that reflect the real objective.
+  \item \textbf{Ignoring generalization and leakage:} evaluation must reflect unseen data; leakage can make numbers look good and then fail in practice.
+  \item \textbf{Assuming ``more complex is always better'':} simpler models can be cheaper, easier to explain, and easier to maintain (important in high-stakes domains).
+\end{itemize}
+
+\section{Practice (with answers)}
+
+\subsection*{P1. Classify the task type.}
+Decide whether each is classification, regression, clustering, or ranking:
+\begin{itemize}[leftmargin=*]
+  \item Predicting tomorrow's temperature.
+  \item Grouping customers into segments based on purchase behavior.
+  \item Ordering search results for a query.
+  \item Detecting whether a transaction is fraudulent.
+\end{itemize}
+\textbf{Answer:} temperature = regression; customer segments = clustering; search results = ranking; fraud detection = classification (often imbalanced).
+
+\subsection*{P2. Symbolic vs ML choice.}
+Give one example where symbolic AI is a good fit and one where ML is a good fit.
+\textbf{Answer:} symbolic: verifying compliance with explicit rules (policy constraints); ML: classifying spam emails from examples.
+
+\subsection*{P3. Metric trap.}
+Explain why ``accuracy'' may be a poor metric for a medical screening model.
+\textbf{Answer:} because missing a true disease case (false negative) can be far more costly than a false positive; metrics like recall/sensitivity and cost-weighted measures are more appropriate.
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. Give two definitions/views of AI.}
+\textbf{Answer:} One view is \emph{acting rationally} (choose actions that best achieve goals). Another is \emph{thinking rationally} (reason correctly using logic). Other valid views include acting/thinking humanly.
+
+\subsection*{Q2. Differentiate AI vs ML vs Data Science with one example each.}
+\textbf{Answer:} AI is the broad goal (e.g., a rule-based expert system). ML is learning from data (e.g., a trained spam classifier). Data science is extracting insight (e.g., analyzing spam trends and presenting a report/dashboard).
+
+\subsection*{Q3. List five criteria of success beyond accuracy.}
+\textbf{Answer:} Examples: latency, compute cost/energy, robustness to shift/noise, fairness/bias, privacy/safety, maintainability/monitoring.
+
+\subsection*{Q4. Describe one failure mode caused by data issues.}
+\textbf{Answer:} Data leakage: using features that indirectly encode the label (e.g., including a post-event field that is only known after the outcome), causing unrealistically high test performance and failure in real deployment.
+
+\section{Summary}
+\begin{itemize}[leftmargin=*]
+  \item AI is broad; ML is a key subset; data science supports understanding and communication.
+  \item AI techniques include symbolic reasoning, ML, and hybrid approaches.
+  \item Real success includes accuracy \emph{and} cost, speed, robustness, fairness, safety, and maintenance.
+\end{itemize}
+\notesources{\AIMLUnitISources}
+
+\end{document}

@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 05 -- Lecture 03 Notes\\Applications in Education, Insurance, Retail, Transport \& Energy (Wrap-up)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This final lecture completes Unit V by surveying additional application domains and providing:
+\begin{itemize}[leftmargin=*]
+  \item a practical deployment checklist (what can go wrong),
+  \item a revision set that connects Units I--V.
+\end{itemize}
+\notesources{\AIMLUnitVSources}
+
+\section{How to use these notes (self-study)}
+Use this lecture as an integration lesson.
+Pick one domain (education/insurance/retail/transport/energy) and apply the checklist: define the task, pick metrics, identify risks, and propose a monitoring plan.
+Then use the revision questions to connect logic (Unit II) with evaluation (Unit III) and modeling (Unit IV).
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item List use-cases in education, insurance, retail/supply chain, transport, and energy.
+  \item Explain domain constraints (metrics, drift, safety, privacy).
+  \item Apply a checklist to evaluate deployment risks.
+  \item Answer revision questions across the course.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Drift:} changing patterns over time.
+  \item \textbf{Feedback loop:} model outputs influence future data (recommendations).
+  \item \textbf{Checklist:} structured risk review for deployment.
+\end{itemize}
+
+\section{Abbreviations and key terms}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{KPI}: key performance indicator (business success measure).
+  \item \textbf{ETA}: estimated time of arrival (transport).
+  \item \textbf{SLA}: service-level agreement (latency/uptime requirements).
+  \item \textbf{Objective mismatch}: optimizing the wrong metric for the real-world goal.
+\end{itemize}
+
+\section{Applications across domains}
+\subsection{Education}
+\begin{itemize}[leftmargin=*]
+  \item personalization and recommendation,
+  \item early warning for dropout risk,
+  \item analysis of learning outcomes.
+\end{itemize}
+Important constraints: privacy, fairness, transparency.
+
+\paragraph{Typical data/labels (examples).}
+Learning activity logs, assessment scores, attendance, and engagement signals.
+Labels could be ``dropout'' or ``course completion''.
+Metrics must consider fairness (avoid disadvantaging groups) and privacy of student data.
+
+\subsection{Insurance}
+\begin{itemize}[leftmargin=*]
+  \item risk modeling and pricing support,
+  \item claim triage and fraud detection,
+  \item customer support automation.
+\end{itemize}
+Important constraints: explainability, fairness, regulation.
+
+\paragraph{Typical tasks and risks.}
+Fraud detection is imbalanced; pricing models require transparency and governance.
+Proxy features can create unfair outcomes, and models must support audit/appeals.
+
+\subsection{Retail and supply chain}
+\begin{itemize}[leftmargin=*]
+  \item demand forecasting and inventory management,
+  \item recommendation systems,
+  \item logistics optimization.
+\end{itemize}
+Important constraints: seasonality/drift, feedback loops, data quality.
+
+\paragraph{Feedback loop example.}
+If recommendations increase exposure of some products, the data collected reflects the system's own choices, which can amplify popularity bias unless corrected.
+
+\subsection{Transportation and logistics}
+\begin{itemize}[leftmargin=*]
+  \item ETA prediction, routing,
+  \item predictive maintenance,
+  \item safety monitoring.
+\end{itemize}
+Important constraints: real-time requirements, safety, sensor errors.
+
+\paragraph{Metrics.}
+ETA uses MAE/RMSE (minutes). Routing/dispatch may optimize cost/time subject to safety and SLAs.
+Sensor failures and drift require monitoring and fallback strategies.
+
+\subsection{Energy and utilities}
+\begin{itemize}[leftmargin=*]
+  \item load forecasting,
+  \item fault detection,
+  \item demand-response optimization.
+\end{itemize}
+Important constraints: reliability, rare events, monitoring.
+
+\paragraph{Rare-event issue.}
+Fault detection resembles imbalanced classification/anomaly detection: most time is normal operation, so accuracy can be misleading.
+
+\section{What could go wrong? (deployment checklist)}
+Use this checklist before and after deployment:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Objective mismatch:} are we optimizing the right metric/cost?
+  \item \textbf{Data problems:} leakage, bias, missing values, non-representative data.
+  \item \textbf{Fairness/privacy:} are there subgroup gaps? are we compliant?
+  \item \textbf{Drift:} what changes over time? what is the monitoring plan?
+  \item \textbf{Security/misuse:} adversarial inputs, abuse, unauthorized access.
+\end{enumerate}
+
+\section{Common pitfalls (course wrap-up)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Thinking ``accuracy is everything'':} real systems require the right metric, fairness checks, and cost-aware decisions.
+  \item \textbf{Ignoring feedback loops:} recommendations and policies change user behavior, which changes the future data.
+  \item \textbf{No monitoring/retraining plan:} drift is normal; lack of monitoring turns small issues into failures.
+  \item \textbf{Skipping documentation:} without documentation, auditing and debugging deployed models becomes very difficult.
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. Give one KPI for an education recommender system.}
+\textbf{Answer:} improvement in course completion rate, or increased engagement time, while ensuring fairness across groups.
+
+\subsection*{P2. Why are time-based splits important for forecasting tasks?}
+\textbf{Answer:} the model will be used on future data; random shuffling can leak future patterns into training and produce overly optimistic estimates.
+
+\section{Revision questions (with answers)}
+
+\subsection*{R1. What is entailment and how can we test it using refutation?}
+\textbf{Answer:} entailment $KB \models \alpha$ means $\alpha$ is true in every model of $KB$. Refutation test: check if $KB \land \lnot \alpha$ is unsatisfiable (derive contradiction via resolution).
+
+\subsection*{R2. Why do we need train/validation/test splits?}
+\textbf{Answer:} to measure generalization honestly. Train fits parameters, validation tunes choices, test gives an unbiased final evaluation. Reusing test for tuning causes optimistic bias.
+
+\subsection*{R3. Regression vs classification (and metrics)?}
+\textbf{Answer:} regression predicts continuous values (MAE/RMSE/$R^2$). Classification predicts labels (precision/recall/F1/ROC-AUC). Metric choice depends on error costs and imbalance.
+
+\subsection*{R4. What does PCA optimize and why standardize first?}
+\textbf{Answer:} PCA finds orthogonal directions of maximum variance. Standardization prevents large-scale features from dominating the covariance and components.
+
+\subsection*{R5. Give two examples of drift and one monitoring method.}
+\textbf{Answer:} fraud patterns change; customer behavior changes seasonally; spam tactics evolve. Monitoring: track feature distributions and performance metrics over time with alerts.
+
+\subsection*{R6. What is class imbalance and why is accuracy misleading?}
+\textbf{Answer:} imbalance means one class is rare. Accuracy can be high by predicting the majority class; use precision/recall/F1 and cost-aware evaluation.
+
+\subsection*{R7. What is unification used for in logic inference?}
+\textbf{Answer:} unification finds substitutions to match FOL literals so resolution can be applied with variables (e.g., $Human(x)$ with $Human(Socrates)$).
+
+\subsection*{R8. Give one example of a feedback loop in recommendations.}
+\textbf{Answer:} if a recommender shows certain products more, users click them more, which produces data that further reinforces recommending the same products, potentially reducing diversity and increasing bias.
+
+\subsection*{R9. Why is explainability important in insurance?}
+\textbf{Answer:} decisions affect people financially; regulations and trust require understandable reasons; explainability supports auditing and contesting errors.
+
+\subsection*{R10. What are two responsible AI checks before deployment?}
+\textbf{Answer:} fairness evaluation across subgroups and privacy/security review (data governance, access control), plus monitoring plan for drift.
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. Pick one domain and propose an ML task + suitable metric.}
+\textbf{Answer:} retail demand forecasting (regression) with RMSE/MAE; fraud detection (classification) with precision/recall; healthcare screening with high recall.
+
+\subsection*{Q2. List three checklist items.}
+\textbf{Answer:} objective mismatch, data leakage/bias, drift and monitoring, fairness/privacy, security/misuse (any three).
+
+\subsection*{Q3. Why explainability in insurance?}
+\textbf{Answer:} accountability and regulation; decisions must be justified and audited.
+
+\subsection*{Q4. One example of feedback loop in retail recommendations.}
+\textbf{Answer:} popular items get more exposure, then more clicks, then even more exposure, causing self-reinforcing popularity bias.
+
+\section{Summary}
+This course combined logic-based reasoning and data-driven learning, with emphasis on evaluation and responsible application in real domains.
+\notesources{\AIMLUnitVSources}
+
+\end{document}

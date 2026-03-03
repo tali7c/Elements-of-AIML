@@ -1,0 +1,184 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 01 -- Lecture 03: AI Techniques, Limitations \& Impact}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: \textbf{what AI can do}, where it fails, and why it matters\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitISources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:tech}{\beamerbutton{Techniques}}\hspace{0.6em}
+  \hyperlink{sec:limits}{\beamerbutton{Limitations}}\hspace{0.6em}
+  \hyperlink{sec:impact}{\beamerbutton{Impact}}\hspace{0.6em}
+  \hyperlink{sec:case}{\beamerbutton{Case}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Techniques recap}
+\label{sec:tech}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item Recall core AI technique families and typical use-cases.
+    \item Explain major limitations (data, robustness, bias, explainability).
+    \item Discuss the impact of AI on society and key application domains.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations (Used in This Lecture)}
+  \begin{itemize}[<+->]
+    \item \textbf{OOD}: out-of-distribution (data unlike training data)
+    \item \textbf{Drift}: changing patterns over time (a type of shift)
+    \item \textbf{PII}: personally identifiable information (privacy)
+    \item \textbf{KPI}: key performance indicator (business/operational metric)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Technique Families (Big Picture)}
+  \begin{itemize}[<+->]
+    \item \textbf{Search and optimization}: explore possible actions/solutions (planning, games).
+    \item \textbf{Knowledge and logic}: facts + rules + inference (Unit II).
+    \item \textbf{Machine learning}: learn patterns from data (Units III--IV).
+    \item \textbf{Perception}: vision/speech/NLP (beyond this course, but important).
+  \end{itemize}
+\end{frame}
+
+\section{Limitations}
+\label{sec:limits}
+
+\begin{frame}{Why AI Systems Fail (Common Reasons)}
+  \begin{itemize}[<+->]
+    \item \textbf{Data limitations}: missing values, bias, low coverage, noisy labels
+    \item \textbf{Distribution shift}: real world differs from training data
+    \item \textbf{Robustness}: small changes cause large errors (adversarial/noise)
+    \item \textbf{Explainability}: hard to justify decisions in high-stakes settings
+    \item \textbf{Safety \& security}: harmful outputs, model misuse, privacy leakage
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Distribution Shift: Common Types (Intuition)}
+  \begin{itemize}[<+->]
+    \item \textbf{Covariate shift}: input distribution changes ($P(X)$ changes).
+    \item \textbf{Label shift}: class proportions change ($P(Y)$ changes).
+    \item \textbf{Concept drift}: relationship changes ($P(Y|X)$ changes).
+  \end{itemize}
+  \vspace{0.4em}
+  Practical effect: your model can silently degrade even if the code is unchanged.
+\end{frame}
+
+\begin{frame}{Robustness vs Security (Short)}
+  \begin{itemize}[<+->]
+    \item \textbf{Robustness}: handle natural noise/variation (lighting, typos, sensor noise).
+    \item \textbf{Security}: handle intentional attacks/misuse (adversarial inputs, fraudsters).
+  \end{itemize}
+  Both require testing beyond a single static test set.
+\end{frame}
+
+\begin{frame}{A Simple Deployment Checklist}
+  \begin{enumerate}[<+->]
+    \item What is the \textbf{goal} and what are the real costs of errors?
+    \item Is the training data \textbf{representative} of deployment?
+    \item Are we tracking \textbf{fairness} and \textbf{privacy} constraints?
+    \item Do we have \textbf{monitoring} and retraining triggers (drift)?
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{What to Monitor After Deployment}
+  \begin{itemize}[<+->]
+    \item \textbf{Data drift signals}: feature distributions, missing values, outlier rates.
+    \item \textbf{Model signals}: prediction score distribution, confidence, calibration.
+    \item \textbf{Outcome signals}: error rates when labels arrive; subgroup gaps (fairness).
+    \item \textbf{Operational signals}: latency, cost, uptime, user feedback.
+  \end{itemize}
+\end{frame}
+
+\section{Impact and domains}
+\label{sec:impact}
+
+\begin{frame}{Impact of AI (Balanced View)}
+  \begin{itemize}[<+->]
+    \item Benefits: automation, personalization, decision support, new capabilities
+    \item Risks: bias amplification, surveillance/privacy loss, unsafe automation, job shifts
+    \item Responsible practice: measure, audit, monitor, and communicate limits
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Application Domains (Examples)}
+  \begin{itemize}[<+->]
+    \item Finance (fraud, credit), healthcare (risk/imaging), education (personalization)
+    \item Security (anomaly detection), retail (recommendation), logistics (forecasting/routing)
+    \item Energy/utilities (demand forecasting), public services (resource allocation)
+  \end{itemize}
+\end{frame}
+
+\section{Mini case}
+\label{sec:case}
+
+\begin{frame}{Mini Case: Credit Scoring Model}
+  Suppose a model predicts whether to approve a loan.
+  \vspace{0.4em}
+  \begin{itemize}[<+->]
+    \item Quality: accuracy is not enough --- false negatives/positives have different costs.
+    \item Fairness: are outcomes similar across groups? are proxies used?
+    \item Explainability: can we justify why an application was rejected?
+    \item Monitoring: economic changes can cause drift (model becomes outdated).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Mini Case: Recommendation Feedback Loop}
+  A recommender system can change the data it later trains on:
+  \begin{itemize}[<+->]
+    \item showing some items more $\rightarrow$ more clicks $\rightarrow$ even more exposure
+    \item can reduce diversity and amplify bias/popularity
+  \end{itemize}
+  \vspace{0.4em}
+  Mitigation ideas: exploration, diversity constraints, and monitoring.
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item AI includes multiple technique families: search, logic, learning.
+    \item Real limitations: data quality, shift, robustness, bias, explainability, safety.
+    \item AI has large impact --- use case-by-case evaluation and responsible practices.
+  \end{itemize}
+  \slidesources{\AIMLUnitISources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item List four reasons why AI systems fail in deployment.
+    \item Give two examples of distribution shift.
+    \item In a credit scoring system, why is explainability important?
+    \item Name five application domains of AI and one task in each.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

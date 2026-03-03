@@ -1,0 +1,228 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 01 -- Lecture 03 Notes\\AI Techniques, Limitations \& Impact}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture consolidates Unit I by revisiting major AI technique families, discussing real-world limitations, and exploring how AI impacts society and application domains.
+\notesources{\AIMLUnitISources}
+
+\section{How to use these notes (self-study)}
+This lecture is most useful if you treat it like a \textbf{real deployment review}.
+For each example system, ask: (1) what is the task, (2) what data is used, (3) what can go wrong, and (4) what should we monitor after release.
+Try to answer the practice questions without looking at the solutions first.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Recall core AI technique families and typical use cases.
+  \item Explain major AI limitations in practice (data, drift, robustness, bias, explainability).
+  \item Discuss AI's impact (benefits and risks) and identify application domains.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Distribution shift:} when data in deployment differs from training distribution.
+  \item \textbf{Robustness:} stability of performance under noise/perturbations.
+  \item \textbf{Bias:} systematic error that disadvantages some groups or situations.
+  \item \textbf{Explainability:} ability to provide understandable reasons for outputs.
+  \item \textbf{Monitoring:} tracking model/data behavior in production for drift/failure.
+\end{itemize}
+
+\section{Abbreviations used in this lecture}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{OOD}: out-of-distribution (inputs unlike training data).
+  \item \textbf{PII}: personally identifiable information (privacy-sensitive data).
+  \item \textbf{KPI}: key performance indicator (business/operational metric).
+  \item \textbf{Drift}: changing data patterns over time (often a form of distribution shift).
+\end{itemize}
+
+\section{AI technique families (recap)}
+\subsection{Search and optimization}
+Many AI problems can be framed as searching a space of possible solutions:
+\begin{itemize}[leftmargin=*]
+  \item path planning, scheduling, game playing, constraint satisfaction.
+\end{itemize}
+
+\subsection{A quick mental model: problem $\rightarrow$ technique}
+\begin{itemize}[leftmargin=*]
+  \item If you have \textbf{rules/constraints}: use logic/constraints/search.
+  \item If you have \textbf{labeled data}: use supervised learning.
+  \item If you have \textbf{unlabeled data}: use clustering/dimensionality reduction.
+  \item If you have \textbf{interaction + reward}: use reinforcement learning.
+\end{itemize}
+
+\subsection{Knowledge and logic}
+Logic-based AI stores explicit knowledge (facts and rules) and uses inference. This is the focus of Unit II.
+
+\subsection{Machine learning}
+ML learns patterns from data, which is the focus of Units III--IV. ML is powerful when rules are hard to write but examples are available.
+
+\section{Limitations and failure modes}
+\subsection{Data limitations}
+Practical AI/ML systems rely on data that may be:
+\begin{itemize}[leftmargin=*]
+  \item incomplete (missing values), noisy, biased, or incorrectly labeled,
+  \item not representative of real deployment.
+\end{itemize}
+
+\subsection{Data quality checklist (practical)}
+\begin{itemize}[leftmargin=*]
+  \item Are there missing values? Are they random or systematic?
+  \item Are labels reliable? Who labeled the data and with what guideline?
+  \item Are there duplicates/near-duplicates that can leak into the test set?
+  \item Do some groups/users/regions appear rarely (representation gaps)?
+\end{itemize}
+
+\subsection{Distribution shift}
+Even if a model performs well on a test set, it may fail later when the world changes:
+\begin{itemize}[leftmargin=*]
+  \item new user behavior, new policies, new markets, or adversarial changes.
+\end{itemize}
+
+\subsection{Types of distribution shift (intuition)}
+It helps to distinguish:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Covariate shift:} input distribution changes ($P(X)$ changes), e.g., different camera conditions.
+  \item \textbf{Label shift:} class proportions change ($P(Y)$ changes), e.g., fraud rate increases during a festival.
+  \item \textbf{Concept drift:} relationship changes ($P(Y|X)$ changes), e.g., attackers change strategies so the same features mean different things.
+\end{itemize}
+
+\subsection{Robustness and adversarial behavior}
+Small changes in input can sometimes cause large output changes. In security settings, attackers may deliberately manipulate inputs to fool a system.
+
+\subsection{Robustness vs security}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Robustness} is about natural variation/noise: typos, lighting changes, sensor noise.
+  \item \textbf{Security} is about intentional manipulation: adversarial inputs, fraudsters, prompt injection/misuse.
+\end{itemize}
+Both require test cases beyond the standard i.i.d. (independent and identically distributed) assumption.
+
+\subsection{Explainability and accountability}
+In high-stakes decisions (loans, healthcare, admissions), stakeholders often require:
+\begin{itemize}[leftmargin=*]
+  \item reasons for decisions,
+  \item ability to contest errors,
+  \item documented limitations.
+\end{itemize}
+
+\subsection{Explainability vs interpretability (short)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Interpretability:} the model is inherently understandable (e.g., small decision tree, linear model).
+  \item \textbf{Explainability:} tools that provide reasons/attributions for a model's outputs (even if model is complex).
+\end{itemize}
+In practice, we often use a combination: interpretable baselines + explanation tools + documentation.
+
+\subsection{Safety, privacy, and misuse}
+AI can cause harm if used without safeguards:
+\begin{itemize}[leftmargin=*]
+  \item privacy leakage, unsafe automation, surveillance misuse.
+\end{itemize}
+
+\subsection{Privacy: data and model}
+Privacy risks are not only about datasets:
+\begin{itemize}[leftmargin=*]
+  \item datasets may contain \textbf{PII} (names, IDs, medical information),
+  \item models can leak information about training data (membership inference/memorization),
+  \item logs and analytics can unintentionally expose sensitive data.
+\end{itemize}
+
+\section{Deployment checklist (practical)}
+\begin{enumerate}[leftmargin=*]
+  \item Define the goal and the real cost of errors (who is harmed by mistakes?).
+  \item Validate that training data matches deployment and identify shift risks.
+  \item Evaluate fairness across relevant groups and document limitations.
+  \item Plan monitoring: drift detection, retraining cadence, and rollback strategy.
+\end{enumerate}
+
+\subsection{What to monitor (concrete signals)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Data drift:} missing rate, min/max/mean changes, outlier frequency, category frequency changes.
+  \item \textbf{Prediction drift:} score distributions, confidence, class proportions predicted by the model.
+  \item \textbf{Performance:} accuracy/precision/recall when labels arrive (possibly delayed).
+  \item \textbf{Operational:} latency, cost, error logs, user feedback.
+\end{itemize}
+
+\section{Impact and application domains}
+AI has broad impact:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Benefits:} improved decision support, efficiency, personalization, new services.
+  \item \textbf{Risks:} bias amplification, privacy loss, over-reliance, job changes.
+\end{itemize}
+Application domains include finance, healthcare, security, education, retail, logistics, energy, and more.
+
+\subsection{Responsible practice mindset}
+Responsible use is not ``one extra checkbox''; it is a set of ongoing practices:
+\begin{itemize}[leftmargin=*]
+  \item define stakeholders and harms,
+  \item choose metrics that reflect real costs,
+  \item test across groups and scenarios,
+  \item document assumptions and limitations,
+  \item monitor and update after deployment.
+\end{itemize}
+
+\section{Mini case study: credit scoring}
+Consider an ML model for loan approval.
+\subsection{What can go wrong?}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Metric trap:} optimizing accuracy while ignoring unequal costs of errors.
+  \item \textbf{Bias:} training data encodes historical unfairness.
+  \item \textbf{Proxy features:} some variables correlate with protected attributes.
+  \item \textbf{Drift:} economy changes, making the model outdated.
+\end{itemize}
+\subsection{What to do?}
+\begin{itemize}[leftmargin=*]
+  \item use cost-aware metrics, validate fairness, add monitoring, and document decisions.
+\end{itemize}
+
+\section{Common pitfalls (exam-focused)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Wrong metric:} optimizing accuracy when the real cost is dominated by false negatives or false positives.
+  \item \textbf{Assuming ``train = real world'':} ignoring distribution shift (OOD inputs, drift, seasonality).
+  \item \textbf{No monitoring plan:} treating deployment as the end, not the beginning (no drift/performance tracking).
+  \item \textbf{Robustness vs security confusion:} robustness is about noise/shift; security includes adversarial behavior and misuse.
+\end{itemize}
+
+\section{Practice (with answers)}
+
+\subsection*{P1. Identify shift type.}
+Give the shift type for each scenario:
+\begin{itemize}[leftmargin=*]
+  \item New camera sensor changes brightness distribution for a vision model.
+  \item Fraud becomes more common during a holiday season.
+  \item Attackers change wording to bypass a spam classifier.
+\end{itemize}
+\textbf{Answer:} camera brightness change $\rightarrow$ covariate shift; fraud rate change $\rightarrow$ label shift; attackers changing strategy $\rightarrow$ concept drift.
+
+\subsection*{P2. Monitoring design.}
+List two signals you would monitor for a deployed spam classifier.
+\textbf{Answer:} predicted spam rate over time; distribution of top features (e.g., URL count); user ``not spam'' feedback rate; latency and error logs.
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. List four reasons why AI systems fail in deployment.}
+\textbf{Answer:} bad/non-representative data, distribution shift, robustness issues, leakage, wrong metric for the goal, no monitoring, bias/fairness issues.
+
+\subsection*{Q2. Give two examples of distribution shift.}
+\textbf{Answer:} (1) user behavior changes after a new policy; (2) fraud patterns evolve; (3) sensor changes or new device types.
+
+\subsection*{Q3. In a credit scoring system, why is explainability important?}
+\textbf{Answer:} decisions affect people; stakeholders need justification and accountability; regulations and trust require understandable reasons and error correction.
+
+\subsection*{Q4. Name five AI domains and one task in each.}
+\textbf{Answer:} healthcare (risk prediction), finance (fraud detection), security (anomaly detection), education (recommendation), logistics (route optimization), retail (demand forecasting), energy (load forecasting), public services (resource allocation).
+
+\section{Summary}
+\begin{itemize}[leftmargin=*]
+  \item AI combines search, logic, and learning.
+  \item Real-world success requires careful evaluation and responsible deployment.
+\end{itemize}
+\notesources{\AIMLUnitISources}
+
+\end{document}

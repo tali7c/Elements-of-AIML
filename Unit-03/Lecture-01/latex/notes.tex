@@ -1,0 +1,248 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 03 -- Lecture 01 Notes\\Introduction to Machine Learning \& Datasets}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture introduces \textbf{machine learning} and the basic dataset concepts needed for the rest of the course and the labs.
+We focus on: tasks, datasets, features/labels, and common data quality issues.
+\notesources{\AIMLUnitIIISources}
+
+\section{How to use these notes (self-study)}
+When you study ML, always keep the full pipeline in mind:
+problem definition $\rightarrow$ dataset $\rightarrow$ features/labels $\rightarrow$ training $\rightarrow$ evaluation.
+Most beginner mistakes happen because one of these steps is skipped or assumed.
+Try the practice questions after each major section.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Define ML and list key task categories.
+  \item Explain datasets in terms of rows/examples and columns/variables.
+  \item Distinguish features from labels and identify common feature data types.
+  \item Recognize common dataset issues and why they matter.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Example/instance:} one row (one data point).
+  \item \textbf{Feature:} input variable used for prediction (column in $X$).
+  \item \textbf{Label/target:} output variable to predict (vector $y$).
+  \item \textbf{Supervised learning:} learn from labeled examples.
+  \item \textbf{Unsupervised learning:} find structure without labels.
+  \item \textbf{Generalization:} performance on unseen but similar data.
+\end{itemize}
+
+\section{Abbreviations and symbols}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{ML}: machine learning.
+  \item \textbf{EDA}: exploratory data analysis.
+  \item $X$: feature matrix (inputs), usually written as $X \in \mathbb{R}^{n \times d}$ after encoding.
+  \item $y$: target/label vector (outputs), e.g., $y \in \mathbb{R}^n$ (regression) or $y \in \{1,\dots,K\}^n$ (classification).
+  \item $n$: number of examples (rows), $d$: number of features (columns), $K$: number of classes.
+  \item $\hat{y}$: prediction produced by a model, $f(\cdot)$.
+\end{itemize}
+
+\section{What is machine learning?}
+ML builds models from data. A common view is:
+\begin{itemize}[leftmargin=*]
+  \item you provide examples,
+  \item you choose a learning method (algorithm),
+  \item you train a model to minimize some error,
+  \item you evaluate on unseen data.
+\end{itemize}
+
+\subsection{A standard definition (Mitchell)}
+A classic textbook definition:
+\begin{quote}
+  A computer program is said to learn from \textbf{experience} $E$ with respect to some \textbf{task} $T$ and \textbf{performance measure} $P$ if its performance at task $T$, as measured by $P$, improves with experience $E$.
+\end{quote}
+
+Example:
+\begin{itemize}[leftmargin=*]
+  \item $T$: classify emails as spam/ham
+  \item $E$: labeled emails from the past
+  \item $P$: accuracy/F1 on new (unseen) emails
+\end{itemize}
+
+\subsection{Algorithm vs model (important distinction)}
+\begin{itemize}[leftmargin=*]
+  \item A \textbf{learning algorithm} is the procedure we run (e.g., ``fit linear regression'').
+  \item A \textbf{model} is what we get after training (e.g., the learned weights $w$).
+\end{itemize}
+During \textbf{training}, the model parameters are estimated from data.
+During \textbf{inference/prediction}, the model is used to produce $\hat{y}$ for a new input $x$.
+
+\subsection{Why not just write rules?}
+Rules are often:
+\begin{itemize}[leftmargin=*]
+  \item too complex to specify (vision, language),
+  \item brittle when the world changes,
+  \item incomplete in edge cases.
+\end{itemize}
+ML can learn patterns directly from data, but it introduces new responsibilities:
+\begin{itemize}[leftmargin=*]
+  \item collecting and cleaning datasets,
+  \item choosing appropriate evaluation (so we do not fool ourselves),
+  \item monitoring models after deployment (data can change over time).
+\end{itemize}
+
+\section{ML task types}
+\subsection{Supervised learning}
+We learn from labeled examples $(x_i, y_i)$.
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Regression:} $y$ is numeric (price, temperature).
+  \item \textbf{Classification:} $y$ is a class label (spam/ham, disease/no disease).
+\end{itemize}
+\paragraph{Typical outputs.}
+In regression, $y \in \mathbb{R}$.
+In classification, $y \in \{1,\dots,K\}$ for $K$ classes (binary classification is the case $K=2$).
+
+\subsection{Unsupervised learning}
+We use only $x_i$ (no labels).
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Clustering:} group similar examples.
+  \item \textbf{Dimensionality reduction:} compress/represent data in fewer variables.
+\end{itemize}
+
+\subsection{Other task families (brief preview)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Semi-supervised learning:} a small labeled set + a larger unlabeled set.
+  \item \textbf{Anomaly detection:} find rare/abnormal points (fraud, faults).
+  \item \textbf{Ranking/recommendation:} order items for a user (feeds, products).
+\end{itemize}
+
+\subsection{Reinforcement learning (preview)}
+An agent interacts with an environment and learns from rewards. We cover an overview later in Unit IV.
+
+\section{Dataset basics}
+\subsection{Tabular representation}
+Many problems can be represented as a table:
+\begin{itemize}[leftmargin=*]
+  \item rows = examples/instances,
+  \item columns = features + (optional) label column.
+\end{itemize}
+We typically denote:
+\[
+  X \in \mathbb{R}^{n \times d},\quad y \in \mathbb{R}^{n} \text{ or } y \in \{1,\dots,K\}^{n}
+\]
+where $n$ is the number of examples and $d$ is the number of features.
+
+\subsection{What does ``$X \in \mathbb{R}^{n \times d}$'' really mean?}
+Even if your raw dataset has text/categorical columns, most ML models require numeric inputs.
+So we perform \textbf{encoding} (e.g., one-hot for categories, TF-IDF for text) to convert raw values into numerical feature vectors.
+After encoding, we can treat $X$ as a real-valued matrix.
+
+\subsection{Data types}
+Features can be:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{numerical} (int/float),
+  \item \textbf{categorical} (city, category),
+  \item \textbf{ordinal} (ordered categories),
+  \item \textbf{text/images/time series} (need a feature representation).
+\end{itemize}
+
+\subsection{Dataset quality checklist (what can go wrong?)}
+Common issues that strongly affect ML results:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Missing values:} empty/NaN cells; need imputation or removal.
+  \item \textbf{Outliers:} extreme values; may be errors or rare but real cases.
+  \item \textbf{Duplicates:} repeated rows can bias training and evaluation.
+  \item \textbf{Label noise:} incorrect target values (wrong ground truth).
+  \item \textbf{Class imbalance:} one class dominates, making accuracy misleading.
+  \item \textbf{Data leakage:} information that would not exist at prediction time gets included.
+\end{itemize}
+Most lab experiments (EDA, missing values, outliers, scaling, imbalance) are designed to give hands-on practice with these.
+
+\section{Feature sets and representation}
+\subsection{Why representation matters}
+Two models can differ more due to \textbf{features} than due to the choice of algorithm.
+For example, a ``location'' feature may need \textbf{one-hot encoding} before it can be used by many models.
+
+\subsection{Common feature transformations}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{One-hot encoding}: convert a categorical value into a 0/1 vector.
+  \item \textbf{Scaling/standardization}: make numerical features comparable (mean 0, std 1).
+  \item \textbf{Log transforms}: handle skewed distributions (income, counts).
+  \item \textbf{Binning}: convert continuous features into buckets (sometimes useful for interpretation).
+\end{itemize}
+
+\subsection{Preprocessing mindset (ties to labs)}
+In the labs you will practice:
+\begin{itemize}[leftmargin=*]
+  \item importing/exporting data (Pandas),
+  \item basic summaries and EDA,
+  \item missing values and outlier handling,
+  \item scaling and encoding.
+\end{itemize}
+
+\section{Worked example: house price prediction}
+Suppose we want to predict house price:
+\begin{itemize}[leftmargin=*]
+  \item target $y$ = price,
+  \item features $X$ = area, rooms, location, age.
+\end{itemize}
+If ``location'' is categorical, we cannot directly treat it as a number (that would add fake ordering). We encode it using one-hot encoding (lab experiment on encoding).
+
+\subsection{Worked example: spam classification (conceptual)}
+\begin{itemize}[leftmargin=*]
+  \item Task: classify email as \{spam, ham\}.
+  \item Raw input: text; label: spam/ham.
+  \item Features: bag-of-words counts, TF-IDF vectors, or embeddings.
+  \item Key challenge: new spam patterns appear over time (data drift), so evaluation and monitoring matter.
+\end{itemize}
+
+\section{A minimal Pandas inspection snippet (illustrative)}
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+df = pd.read_csv("data.csv")
+print(df.shape)        # (rows, columns)
+print(df.head())       # first 5 rows
+print(df.isna().sum()) # missing values per column
+\end{lstlisting}
+This basic habit catches many problems early.
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Treating categories as numbers:} encoding city as 1/2/3 creates a fake ordering; use one-hot (or other encodings).
+  \item \textbf{Ignoring leakage:} features that contain future information make evaluation meaningless.
+  \item \textbf{Confusing model and algorithm:} training procedure is the algorithm; the trained parameters are the model.
+  \item \textbf{Assuming more features always helps:} irrelevant/noisy features can hurt generalization (dimensionality issues).
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. A dataset has 1,000 rows and 25 columns. If 1 column is the label, what is $n$ and $d$?}
+\textbf{Answer:} $n=1000$. If there are 25 total columns and 1 is the label, then $d=24$ features.
+
+\subsection*{P2. Give one example of a categorical feature and how you would encode it.}
+\textbf{Answer:} Feature: city=\{Delhi, Dehradun, Mumbai\}. Encode using one-hot: three binary columns, one per city.
+
+\subsection*{P3. Why can accuracy be misleading on imbalanced data?}
+\textbf{Answer:} If 95\% examples are class 0, a model that always predicts 0 gets 95\% accuracy but is useless for detecting class 1.
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. Define ML in your own words.}
+\textbf{Answer:} ML is a set of methods that learn patterns from data to make predictions or decisions, rather than being explicitly programmed with rules.
+
+\subsection*{Q2. Features vs labels?}
+\textbf{Answer:} Features are input variables ($X$). Labels/targets are outputs ($y$) that the model predicts.
+
+\subsection*{Q3. Give two supervised and two unsupervised tasks.}
+\textbf{Answer:} Supervised: spam classification, house price regression. Unsupervised: customer clustering, PCA for dimensionality reduction.
+
+\subsection*{Q4. Name three common dataset issues.}
+\textbf{Answer:} missing values, outliers, noisy/incorrect labels, duplicates, inconsistent formatting, class imbalance.
+
+\section{Summary}
+ML depends on datasets and good feature representations. The next lecture focuses on splitting and evaluation to avoid misleading results.
+\notesources{\AIMLUnitIIISources}
+
+\end{document}

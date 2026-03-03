@@ -1,0 +1,184 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Elements of AIML (B.Tech)}
+\rhead{Assignment: Units 01--02}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{March 8, 2026}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Assignment -- Units 01 \& 02}}\\[0.25em]
+  {\large Elements of AIML}\\[0.25em]
+  \normalsize (Unit 01: Introduction to AI; Unit 02: Logic for AI)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item Answer \textbf{all} questions. Use clear reasoning and show key steps for logic problems.
+  \item Submission format: submit a single ZIP containing:
+    \begin{itemize}[leftmargin=*]
+      \item \texttt{notebook.ipynb} (typed solutions; Markdown + LaTeX equations allowed)
+      \item \texttt{README.md} (1-page summary + references/links used)
+      \item optional \texttt{assets/} folder (diagrams/screenshots if used)
+    \end{itemize}
+  \item Use standard symbols consistently: $\lnot, \land, \lor, \rightarrow, \leftrightarrow, \forall, \exists$.
+  \item You may use tools for verification (optional), but your notebook must show reasoning steps.
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=E\arabic*., leftmargin=*]
+  \item \textbf{AI definition:} Define AI in 2--3 lines and give one real example system.
+
+  \item \textbf{AI techniques:} Name three broad AI technique categories and give one example for each.
+
+  \item \textbf{Success criteria:} Give three success criteria (beyond accuracy) for an AI-based \textbf{loan approval support} system.
+
+  \item \textbf{Agent basics:} Define an \textbf{agent}. Give one example and list its sensors and actuators.
+
+  \item \textbf{PEAS:} Write a PEAS description for a \textbf{spam filter}.
+
+  \item \textbf{PL translation:} Let $P$ = ``It is raining'' and $Q$ = ``Ground is wet''.
+    Translate: ``If it is raining then the ground is wet, and it is raining.'' Write the formula and state what it entails.
+
+  \item \textbf{Truth table (core):} Write the truth table for $P \rightarrow Q$ and state when it is false.
+
+  \item \textbf{Validity/satisfiability:} Define \textbf{valid} and \textbf{satisfiable} (one example each).
+
+  \item \textbf{Entailment vs implication:} Explain (6--10 lines) the difference between $KB \models \alpha$ and $KB \rightarrow \alpha$.
+
+  \item \textbf{FOL basics:} In $Teaches(Prof, Course)$ identify: predicate symbol, constants, and variables (if any).
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=M\arabic*., leftmargin=*]
+  \item \textbf{Environment properties:} Classify the environment of \textbf{self-driving in traffic} using at least five properties
+    (observable, deterministic, episodic, static, discrete, etc.). Justify briefly.
+
+  \item \textbf{Learning agent:} List the four main components of a learning agent and explain the role of the critic (6--8 lines).
+
+  \item \textbf{Agent selection:} Choose an agent type (simple reflex / model-based / goal-based / utility-based / learning)
+    for a \textbf{campus navigation assistant}. Justify in 8--12 lines.
+
+  \item \textbf{Limits and mitigation:} List four deployment-time limitations of AI systems and one mitigation for each.
+
+  \item \textbf{Model checking:} Let $KB=\{P \rightarrow Q,\ Q \rightarrow R,\ P\}$.
+    Check whether $KB \models R$ using a truth table or model enumeration. Show the key steps.
+
+  \item \textbf{CNF conversion:} Convert $\lnot(P \rightarrow Q)$ to CNF (show steps).
+
+  \item \textbf{CNF (pipeline):} Convert $(P \rightarrow Q) \land (Q \rightarrow R)$ to CNF.
+
+  \item \textbf{Resolution (one proof):} Using resolution refutation, prove:
+    \[
+      \{P \rightarrow Q,\ Q \rightarrow R,\ P\} \models R.
+    \]
+    (Show clauses and the main resolution steps.)
+
+  \item \textbf{English $\rightarrow$ FOL:} Domain: students and courses. Translate into FOL:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item Every student studies at least one course.
+      \item Some course is studied by every student.
+    \end{enumerate}
+
+  \item \textbf{Unification (MGU):} Find an MGU if it exists:
+    \[
+      Knows(John, x)\ \text{and}\ Knows(y, Bill).
+    \]
+    Show the substitution.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=H\arabic*., leftmargin=*]
+  \item \textbf{Knowledge-based agent:} Describe a knowledge-based agent for a \textbf{smart home security} scenario.
+    Provide: PEAS, 6--10 propositional symbols, at least 6 rules/facts, and one query the agent should answer using entailment.
+
+  \item \textbf{Integrated reasoning:} A campus assistant must decide whether to send an alert.
+    Create a propositional KB (at least 6 sentences) that models: fire alarm, smoke detected, system fault, and manual override.
+    Ask two queries and answer using model checking or resolution.
+
+  \item \textbf{Resolution proof (chain):} Prove using resolution refutation:
+    \[
+      \{A \rightarrow B,\ B \rightarrow C,\ C \rightarrow D,\ A\} \models D.
+    \]
+
+  \item \textbf{Non-trivial CNF:} Convert to CNF:
+    \[
+      \lnot(P \leftrightarrow Q) \rightarrow (R \lor P).
+    \]
+    Show key steps, including handling $\leftrightarrow$.
+
+  \item \textbf{Clause form (FOL):} Convert to clause form (show Skolemization):
+    \[
+      \forall x\ (Student(x) \rightarrow \exists y\ Mentors(y,x)).
+    \]
+
+  \item \textbf{FOL resolution (mini proof):} From
+    \[
+      \forall x\ (Human(x) \rightarrow Mortal(x)),\quad Human(Socrates)
+    \]
+    prove $Mortal(Socrates)$ using resolution (convert to clauses and refute $\lnot Mortal(Socrates)$).
+
+  \item \textbf{Quantifier scope ambiguity:} Write two FOL translations for:
+    ``Every student likes a course.''
+    Explain the meaning difference (10--12 lines).
+
+  \item \textbf{Occurs-check:} Explain (6--10 lines) why unifying $x$ with $f(x)$ should fail.
+    What could go wrong in inference if we allow it?
+
+  \item \textbf{Countermodel:} Provide a small KB and show a countermodel to prove $KB \not\models \alpha$.
+    (Write the interpretation/assignment clearly.)
+
+  \item \textbf{Reflection (logic in AI):} In 12--16 lines, explain how entailment, satisfiability, CNF, and resolution
+    fit together to support automated reasoning in AI systems (knowledge bases, rule engines, verification, etc.).
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assignment}
+
+\end{document}

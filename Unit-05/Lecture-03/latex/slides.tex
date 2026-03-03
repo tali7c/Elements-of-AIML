@@ -1,0 +1,168 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 05 -- Lecture 03: Applications in Education, Insurance, Retail, Transport \& Energy (Wrap-up)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: broad application map + deployment checklist + revision\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:domains}{\beamerbutton{Domains}}\hspace{0.6em}
+  \hyperlink{sec:check}{\beamerbutton{Checklist}}\hspace{0.6em}
+  \hyperlink{sec:wrap}{\beamerbutton{Wrap-up}}\hspace{0.6em}
+  \hyperlink{sec:rev}{\beamerbutton{Revision}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Domains}
+\label{sec:domains}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item List ML use-cases in education, insurance, retail/supply chain, transport, and energy.
+    \item Explain why domain constraints change metric choice and deployment strategy.
+    \item Apply a simple ``what could go wrong'' checklist to an AI system.
+    \item Answer key revision questions across Units I--V.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations \& Keywords}
+  \begin{itemize}[<+->]
+    \item KPI: key performance indicator \hfill ETA: estimated time of arrival
+    \item Drift: patterns change over time \hfill Feedback loop: model affects data
+    \item SLA: service-level agreement (latency/uptime constraints)
+    \item Objective mismatch: wrong metric for the real goal
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Education}
+  \begin{itemize}[<+->]
+    \item personalization / recommendations
+    \item automated feedback and assessment support
+    \item dropout risk prediction
+  \end{itemize}
+  Key concerns: fairness, privacy of student data, transparency.
+\end{frame}
+
+\begin{frame}{Insurance}
+  \begin{itemize}[<+->]
+    \item risk modeling and pricing support
+    \item claim triage and fraud detection
+    \item customer support automation
+  \end{itemize}
+  Key concerns: explainability, regulatory expectations, fairness.
+\end{frame}
+
+\begin{frame}{Retail \& Supply Chain}
+  \begin{itemize}[<+->]
+    \item demand forecasting
+    \item recommendation systems
+    \item inventory optimization
+  \end{itemize}
+  Key concerns: drift (seasonality), feedback loops, data quality.
+\end{frame}
+
+\begin{frame}{Transportation \& Logistics}
+  \begin{itemize}[<+->]
+    \item route optimization
+    \item ETA prediction
+    \item predictive maintenance
+  \end{itemize}
+  Key concerns: safety, real-time constraints, sensor reliability.
+\end{frame}
+
+\begin{frame}{Energy \& Utilities}
+  \begin{itemize}[<+->]
+    \item load forecasting
+    \item fault detection
+    \item demand-response optimization
+  \end{itemize}
+  Key concerns: reliability, rare-event detection, monitoring.
+\end{frame}
+
+\section{Checklist}
+\label{sec:check}
+
+\begin{frame}{What Could Go Wrong? (Checklist)}
+  \begin{enumerate}[<+->]
+    \item Wrong objective/metric for the real goal
+    \item Data leakage or non-representative data
+    \item Bias/fairness issues across groups
+    \item Drift after deployment (no monitoring)
+    \item Security/privacy risks and misuse
+  \end{enumerate}
+\end{frame}
+
+\section{Wrap-up}
+\label{sec:wrap}
+
+\begin{frame}{Course Wrap-up (Big Picture)}
+  \begin{itemize}[<+->]
+    \item Unit I: what AI is + agents + impact
+    \item Unit II: logic and inference (entailment, FOL, resolution)
+    \item Unit III: ML fundamentals + evaluation + dimensionality reduction
+    \item Unit IV: supervised/unsupervised/RL/semi-supervised
+    \item Unit V: applications + responsible AI practices
+  \end{itemize}
+\end{frame}
+
+\section{Revision}
+\label{sec:rev}
+
+\begin{frame}{Revision Questions (Sample)}
+  \begin{enumerate}
+    \item What is entailment and how is it tested using refutation?
+    \item Why do we need train/validation/test splits?
+    \item Compare regression vs classification and their metrics.
+    \item What does PCA optimize and why standardize before PCA?
+    \item Give two examples of drift and how to monitor it.
+  \end{enumerate}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item AI/ML applications are everywhere, but success depends on evaluation and constraints.
+    \item Use a deployment checklist: metric, data, fairness, drift, security.
+    \item Revision: connect logic + learning + applications.
+  \end{itemize}
+  \slidesources{\AIMLUnitVSources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item Pick one domain and propose an ML task + suitable metric.
+    \item List three items from the ``what could go wrong'' checklist.
+    \item Why is explainability often required in insurance applications?
+    \item Give one example of a feedback loop in retail recommendations.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

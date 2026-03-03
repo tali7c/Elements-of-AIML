@@ -1,0 +1,71 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 05: EDA in Python (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints}.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Perform exploratory data analysis (EDA) to understand data quality and patterns.
+  \item Create a minimum set of plots and write observations based on evidence.
+  \item Recommend preprocessing actions for later experiments.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Use the dataset from Experiment~04 (preferred) or another instructor-approved dataset.
+  \item Report basic structure: rows/columns, types, missing values, duplicates (if any).
+  \item Produce at least \textbf{three} plots:
+  \begin{itemize}[leftmargin=*]
+    \item one distribution plot (e.g., histogram/KDE) for a numeric feature,
+    \item one boxplot for a numeric feature,
+    \item one relationship plot (e.g., scatter plot or correlation heatmap).
+  \end{itemize}
+  \item For each plot, write 2--3 lines of observation (what you see and what it suggests).
+  \item Write an EDA summary with 5--8 bullet observations and 2--3 recommended preprocessing actions.
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Typical Pandas functions used in EDA: \texttt{df.info}, \texttt{df.describe}, \texttt{df.isna().sum}, \texttt{df.duplicated().sum}.
+  \item Typical plotting tools: Matplotlib + Seaborn (choose plot type based on variable types).
+  \item EDA is incomplete without written observations (plots alone are not enough).
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: EDA notebook with plots and observations.
+  \item \texttt{README.md}: dataset link/source, list of plots produced, and a short EDA summary.
+  \item \texttt{assets/} (optional): exported plot images if you saved them separately.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item At least 3 required plot types included with observations.
+  \item Missing values and duplicates are reported.
+  \item EDA summary includes actions recommended for later labs.
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Creating plots without any written interpretation.
+  \item Using wrong plot types (e.g., histogram for categories).
+  \item Not checking missingness/duplicates before plotting and summarizing.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}

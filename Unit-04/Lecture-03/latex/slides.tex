@@ -1,0 +1,209 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 04 -- Lecture 03: Clustering, Reinforcement Learning \& Semi-Supervised ML}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: \textbf{unsupervised} and \textbf{interaction-based} learning paradigms\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitIVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:cluster}{\beamerbutton{Clustering}}\hspace{0.6em}
+  \hyperlink{sec:kmeans}{\beamerbutton{k-means}}\hspace{0.6em}
+  \hyperlink{sec:rl}{\beamerbutton{RL Basics}}\hspace{0.6em}
+  \hyperlink{sec:semi}{\beamerbutton{Semi-Supervised}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Clustering}
+\label{sec:cluster}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item Explain clustering and where it is used.
+    \item Describe the k-means algorithm and its objective.
+    \item Explain RL terminology (state, action, reward, policy) at a high level.
+    \item Describe semi-supervised learning and when it is helpful.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations \& Symbols}
+  \begin{itemize}[<+->]
+    \item Clustering: $k$ clusters,\; $\mu_j$ centroid of cluster $j$
+    \item Objective (inertia): $\sum_i \|x_i-\mu_{c(i)}\|^2$
+    \item RL: $s$ state,\; $a$ action,\; $r$ reward,\; $\pi$ policy,\; $\gamma$ discount
+    \item $Q(s,a)$: action-value (Q-function)
+    \item Semi-supervised: labeled set $L$, unlabeled set $U$, pseudo-labels
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What is Clustering?}
+  \begin{block}{Clustering}
+    Group data points into clusters such that points in the same cluster are more similar.
+  \end{block}
+  \vspace{0.4em}
+  Examples:
+  \begin{itemize}[<+->]
+    \item customer segmentation
+    \item document grouping
+    \item anomaly detection (as ``far from clusters'')
+  \end{itemize}
+\end{frame}
+
+\section{k-means}
+\label{sec:kmeans}
+
+\begin{frame}{k-means (Algorithm Sketch)}
+  \begin{enumerate}[<+->]
+    \item Choose $k$ cluster centers (initialize).
+    \item Assign each point to the nearest center.
+    \item Update each center as the mean of its assigned points.
+    \item Repeat until convergence.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{k-means Objective}
+  k-means minimizes within-cluster squared distance:
+  \[
+    \sum_{i=1}^{n}\left\|x_i - \mu_{c(i)}\right\|^2
+  \]
+  where $\mu_{c(i)}$ is the center of the cluster assigned to $x_i$.
+\end{frame}
+
+\begin{frame}{Mini Worked Example (k-means intuition)}
+  Points in 1D: $[1,2,8,9]$, choose $k=2$.
+  \begin{itemize}[<+->]
+    \item Initialize centers: $\mu_1=2$, $\mu_2=9$
+    \item Assign: $\{1,2\}\rightarrow \mu_1$ and $\{8,9\}\rightarrow \mu_2$
+    \item Update: $\mu_1=\text{mean}(1,2)=1.5$, $\mu_2=\text{mean}(8,9)=8.5$
+  \end{itemize}
+  Repeat until assignments stop changing.
+\end{frame}
+
+\begin{frame}{Choosing k (Practical)}
+  \begin{itemize}[<+->]
+    \item Elbow method (plot objective vs $k$)
+    \item Domain knowledge
+    \item Stability across runs (k-means depends on initialization)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Clustering Evaluation (Intuition)}
+  \begin{itemize}[<+->]
+    \item Internal metrics (no labels): inertia (k-means objective), silhouette score
+    \item Visual check (2D/3D after PCA) can reveal separation
+    \item Beware: ``best'' clustering depends on the business goal
+  \end{itemize}
+\end{frame}
+
+\section{Reinforcement Learning}
+\label{sec:rl}
+
+\begin{frame}{Reinforcement Learning (High Level)}
+  \begin{itemize}[<+->]
+    \item Agent interacts with environment: \textbf{state} $\rightarrow$ \textbf{action} $\rightarrow$ \textbf{reward}
+    \item Goal: learn a \textbf{policy} that maximizes cumulative reward
+    \item Feedback is delayed and noisy (harder than supervised learning)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Return and Discounting (Key RL Idea)}
+  \begin{itemize}[<+->]
+    \item Goal is not just immediate reward, but \textbf{total return}:
+    \[
+      G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots
+    \]
+    \item $\gamma \in [0,1)$ discounts future rewards.
+    \item Higher $\gamma$ values emphasize long-term planning.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Q-Learning (One-line Update)}
+  \begin{itemize}[<+->]
+    \item Learn an action-value function $Q(s,a)$.
+    \item Update rule:
+    \[
+      Q(s,a) \leftarrow Q(s,a) + \alpha\bigl(r + \gamma \max_{a'}Q(s',a') - Q(s,a)\bigr)
+    \]
+    \item $\alpha$ is learning rate; $s'$ is next state after taking action $a$ in state $s$.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Toy Example: Grid World}
+  \begin{itemize}[<+->]
+    \item State: agent position on a grid
+    \item Actions: up/down/left/right
+    \item Reward: +1 at goal, -1 at trap, small penalty per step
+    \item Learn a policy to reach goal quickly
+  \end{itemize}
+\end{frame}
+
+\section{Semi-supervised learning}
+\label{sec:semi}
+
+\begin{frame}{Semi-Supervised Learning (Idea)}
+  \begin{itemize}[<+->]
+    \item Use a small labeled dataset + large unlabeled dataset.
+    \item Useful when labeling is expensive but unlabeled data is abundant.
+    \item Example approach: \textbf{self-training} (pseudo-label confident predictions).
+  \end{itemize}
+  \vspace{0.4em}
+  Risks: error reinforcement if pseudo-labels are wrong.
+\end{frame}
+
+\begin{frame}{Semi-Supervised Methods (Examples)}
+  \begin{itemize}[<+->]
+    \item \textbf{Self-training}: add confident pseudo-labels iteratively
+    \item \textbf{Co-training}: two ``views'' of features teach each other (when applicable)
+    \item \textbf{Graph-based label propagation}: spread labels to neighbors
+  \end{itemize}
+  \vspace{0.3em}
+  \small Use validation to avoid reinforcing mistakes.
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Clustering finds structure without labels; k-means is a common baseline.
+    \item RL learns from reward signals in interaction.
+    \item Semi-supervised learning combines labeled and unlabeled data.
+  \end{itemize}
+  \slidesources{\AIMLUnitIVSources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item What is the k-means objective function (in words)?
+    \item Why can k-means give different clusters on different runs?
+    \item Define state, action, reward, and policy in RL.
+    \item Give one benefit and one risk of semi-supervised learning.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

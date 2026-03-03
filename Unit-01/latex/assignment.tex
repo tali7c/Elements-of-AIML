@@ -1,0 +1,193 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Elements of AIML (B.Tech)}
+\rhead{Unit 01: Introduction to AI}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{March 8, 2026}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Assignment -- Unit 01}}\\[0.25em]
+  {\large Elements of AIML}\\[0.25em]
+  \normalsize (AI overview, applications, techniques, success criteria, intelligent agents, environments, learning agents, limitations)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item Answer \textbf{all} questions. Use your own examples and clearly state assumptions.
+  \item Submission format: submit a single ZIP containing:
+    \begin{itemize}[leftmargin=*]
+      \item \texttt{notebook.ipynb} (typed answers in Markdown + equations; insert diagrams/screenshots if used)
+      \item \texttt{README.md} (1-page summary: what you learned + references/links you used)
+      \item optional \texttt{assets/} folder for images
+    \end{itemize}
+  \item Write concise answers, but do not skip reasoning. Bullet points are allowed.
+  \item Use simple, clear language (assume a non-expert reader).
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=E\arabic*., leftmargin=*]
+  \item \textbf{Define AI:} Give a 2--3 line definition of Artificial Intelligence in your own words.
+    Mention \textbf{one} key goal (e.g., decision-making, perception, language, planning).
+
+  \item \textbf{AI applications:} List \textbf{five} AI applications across different domains.
+    For each, write: \emph{input} $\rightarrow$ \emph{output} (one line each).
+
+  \item \textbf{AI vs ML vs Data Science:} Write 6--10 lines comparing \textbf{AI}, \textbf{Machine Learning}, and \textbf{Data Science}.
+    Give one example project for each.
+
+  \item \textbf{Techniques (high-level):} Name \textbf{three} broad categories of AI techniques and give one example of each:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item Search / planning
+      \item Knowledge / logic (reasoning)
+      \item Learning (data-driven)
+    \end{enumerate}
+
+  \item \textbf{Criteria of success:} For each scenario, write \textbf{two} success criteria beyond accuracy:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item A medical triage assistant
+      \item A spam filter
+      \item A campus navigation app
+      \item An AI-based loan approval support tool
+    \end{enumerate}
+
+  \item \textbf{Agent basics:} What is an \textbf{agent}? Give one example and list its \textbf{sensors} and \textbf{actuators}.
+
+  \item \textbf{PEAS:} Create a PEAS description for a \textbf{spam filter}.
+    (Performance measure, Environment, Actuators, Sensors)
+
+  \item \textbf{Environment properties (intro):} Classify each environment as best as you can:
+    \emph{(fully/partially observable), (deterministic/stochastic), (episodic/sequential), (static/dynamic)}.
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item Chess
+      \item Online shopping recommendation
+    \end{enumerate}
+    Justify in 2--3 lines each.
+
+  \item \textbf{Rationality:} Define a \textbf{rational agent} in 3--5 lines.
+    Explain the difference between a \textbf{performance measure} and a \textbf{reward} (one paragraph).
+
+  \item \textbf{Limitations:} List \textbf{four} real-world limitations of AI systems (deployment-time issues).
+    For each, write one possible mitigation idea (one line).
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=M\arabic*., leftmargin=*]
+  \item \textbf{PEAS (design):} Create a PEAS description for an \textbf{online exam proctoring system}.
+    Include at least 5 items for Performance measure and Sensors.
+
+  \item \textbf{Environment classification:} Consider a \textbf{smart thermostat} in a hostel room.
+    Classify the environment using at least \textbf{five} properties (observable, deterministic, episodic, static, discrete, etc.).
+    Explain in 6--10 lines.
+
+  \item \textbf{Agent types:} Compare (in a table) the following agent types:
+    \textbf{simple reflex}, \textbf{model-based reflex}, \textbf{goal-based}, \textbf{utility-based}, \textbf{learning agent}.
+    For each, write one example task.
+
+  \item \textbf{Choosing an agent:} You must build an \textbf{elevator controller} for a 10-floor academic building.
+    Choose one agent type from M3 and justify your choice in 8--12 lines.
+
+  \item \textbf{System success vs model accuracy:} A face-recognition attendance system reports 95\% accuracy,
+    but students complain about frequent false rejections for some groups.
+    Write 8--12 lines explaining why \emph{system success} can still be low and what you would measure instead.
+
+  \item \textbf{Bias sources:} List three ways bias can enter an AI system (data, measurement, deployment, etc.).
+    For each, write a practical mitigation.
+
+  \item \textbf{Sensors matter:} Give one example where adding a new sensor changes the environment from \emph{less observable} to \emph{more observable}.
+    Explain how it changes the agent design (6--10 lines).
+
+  \item \textbf{Applications + risks table:} Create a table with 6 AI domains (e.g., healthcare, finance, education, security, retail, transport).
+    For each: one typical task + one major risk/failure mode.
+
+  \item \textbf{Limitations in deployment:} Write a short ``deployment checklist'' (8--12 bullets) for releasing an AI feature in a university app.
+    Include: data privacy, monitoring, human override, and failure handling.
+
+  \item \textbf{Impact:} Choose one domain (education / healthcare / banking / security).
+    Write 10--14 lines covering: benefits, harms, stakeholders, and what ``responsible use'' means.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=H\arabic*., leftmargin=*]
+  \item \textbf{Full case design:} Design an AI system for \textbf{waste collection optimization} in a city.
+    Provide: agent description, PEAS, success criteria, and 3 key limitations/risks with mitigations (1--2 pages).
+
+  \item \textbf{Self-driving environment analysis:} Explain why self-driving is a difficult AI task using environment properties.
+    Classify it using at least 6 properties and justify each (12--18 lines). Mention sensors/actuators briefly.
+
+  \item \textbf{Learning agent decomposition:} For a \textbf{news recommendation system}, describe the components of a learning agent:
+    performance element, learning element, critic, problem generator.
+    Draw a simple block diagram and explain each component's role (12--18 lines).
+
+  \item \textbf{Failure postmortem:} An AI chatbot for admissions gave incorrect scholarship rules.
+    Write a postmortem report (1 page) including: what failed, why, user impact, and a prevention plan (data + process + monitoring).
+
+  \item \textbf{Rule-based vs learning-based:} Compare rule-based and learning-based approaches for a spam filter.
+    Give one situation where a rule-based approach is still preferable and justify (10--14 lines).
+
+  \item \textbf{Evaluation plan:} Propose an evaluation plan for an AI feature that suggests course electives to students.
+    Include offline evaluation, user feedback, monitoring after launch, and a rollback plan (10--16 bullets).
+
+  \item \textbf{Ethics and governance:} Create a 1-page ``Responsible AI'' policy note for a student-facing AI tool.
+    Include fairness, privacy, transparency, accountability, and safety.
+
+  \item \textbf{Explainability scenario:} Choose one AI application where explainability is required.
+    Explain (10--14 lines) what kind of explanation is needed and for whom (student/admin/regulator).
+
+  \item \textbf{AI limitations case:} Give a real or realistic example of an AI system failing due to distribution shift (data changes over time).
+    Explain what changed and how to detect/handle it (12--18 lines).
+
+  \item \textbf{Mini reflection:} Write a short reflection (12--18 lines):
+    ``Where is AI overhyped today, and where is it genuinely useful?'' Support with examples.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assignment}
+
+\end{document}

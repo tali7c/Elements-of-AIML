@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 04 -- Lecture 01 Notes\\Supervised Learning (Regression)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture introduces \textbf{regression}, a supervised learning task where the target is a continuous value.
+We discuss linear regression, loss functions, evaluation metrics, and overfitting/regularization.
+\notesources{\AIMLUnitIVSources}
+
+\section{How to use these notes (self-study)}
+For regression, always separate three things: (1) the model form ($\hat{y}=f(x)$), (2) the loss used for training (e.g., MSE), and (3) the metric used for evaluation (MAE/RMSE/$R^2$).
+Work through the mini metric computation example and then attempt the practice questions.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Define regression and give real-world examples.
+  \item Explain linear regression and the role of a loss function.
+  \item Compute and interpret MAE, RMSE, and $R^2$.
+  \item Explain overfitting and the purpose of regularization.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Regression:} predicting a continuous target.
+  \item \textbf{Loss function:} objective minimized during training (e.g., MSE).
+  \item \textbf{MAE/RMSE:} error metrics in target units.
+  \item \textbf{$R^2$:} variance-explained metric (relative measure).
+  \item \textbf{Overfitting:} fits training noise; poor generalization.
+  \item \textbf{Regularization:} penalty term to control complexity.
+\end{itemize}
+
+\section{Abbreviations and symbols}
+\begin{itemize}[leftmargin=*]
+  \item $X$: feature matrix, $y$: true targets, $\hat{y}$: predictions.
+  \item $n$: number of training examples, $d$: number of features.
+  \item $w$: weight vector (parameters), $w_0$: intercept (bias term).
+  \item $e_i = y_i - \hat{y}_i$: residual/error for example $i$.
+  \item MAE/MSE/RMSE: regression metrics; $R^2$: coefficient of determination.
+  \item $\lambda$: regularization strength (Ridge/Lasso).
+\end{itemize}
+
+\section{Regression basics}
+In regression, we learn a function $f$ so that:
+\[
+  \hat{y} = f(x)
+\]
+where $y$ is continuous (e.g., price). Regression is used in forecasting, estimation, and prediction problems.
+
+\subsection{Regression vs classification (quick reminder)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Regression}: output is a real number (temperature, price).
+  \item \textbf{Classification}: output is a class label (spam/ham).
+\end{itemize}
+
+\section{Linear regression}
+\subsection{Model}
+For $d$ features:
+\[
+  \hat{y} = w_0 + \sum_{j=1}^{d} w_j x_j
+\]
+The goal is to find weights $w$ that minimize prediction error on training data.
+
+\subsection{Vector/matrix form (compact notation)}
+If we add a constant ``1'' feature for the intercept, we can write:
+\[
+  \hat{y} = X w
+\]
+where $X \in \mathbb{R}^{n \times (d+1)}$ and $w \in \mathbb{R}^{(d+1)}$.
+This form is useful for reasoning about optimization and implementation.
+
+\subsection{Loss functions}
+A common loss is mean squared error (MSE):
+\[
+  \text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(y_i - \hat{y}_i)^2
+\]
+RMSE is $\sqrt{\text{MSE}}$ and is easier to interpret because it is in the same units as $y$.
+MAE uses absolute values:
+\[
+  \text{MAE} = \frac{1}{n}\sum_{i=1}^{n}|y_i - \hat{y}_i|
+\]
+
+\subsection{MAE vs MSE (why do we have both?)}
+\begin{itemize}[leftmargin=*]
+  \item MSE/RMSE penalizes large errors strongly (squares the error), so it is sensitive to outliers.
+  \item MAE penalizes errors linearly, often more robust to outliers.
+  \item In practice, choose based on the cost of large mistakes (domain-dependent).
+\end{itemize}
+
+\section{Evaluation metrics}
+\subsection{MAE vs RMSE}
+\begin{itemize}[leftmargin=*]
+  \item MAE treats all errors linearly.
+  \item RMSE penalizes large errors more strongly.
+\end{itemize}
+Choice depends on whether large errors are especially costly.
+
+\subsection{$R^2$ (coefficient of determination)}
+One common definition:
+\[
+  R^2 = 1 - \frac{\sum_i (y_i-\hat{y}_i)^2}{\sum_i (y_i-\bar{y})^2}
+\]
+$R^2$ is relative to a baseline that predicts the mean $\bar{y}$.
+It can be misleading when:
+\begin{itemize}[leftmargin=*]
+  \item comparing across datasets with different variance,
+  \item evaluating non-linear relationships with a poor model,
+  \item using it without checking residual patterns.
+\end{itemize}
+
+\subsection{Mini worked example (compute MAE/RMSE)}
+Suppose:
+\[
+  y=[50,60,80],\quad \hat{y}=[55,58,70]
+\]
+Residuals: $e = y-\hat{y}=[-5,2,10]$.
+\begin{itemize}[leftmargin=*]
+  \item MAE $= \frac{|{-5}|+|2|+|10|}{3} = \frac{17}{3} \approx 5.67$
+  \item MSE $= \frac{25+4+100}{3} = 43$, so RMSE $=\sqrt{43}\approx 6.56$
+\end{itemize}
+
+\section{Underfitting, overfitting, and regularization}
+\subsection{Underfitting vs overfitting}
+\begin{itemize}[leftmargin=*]
+  \item Underfitting: too simple; high error on train and test.
+  \item Overfitting: too complex; low train error, high test error.
+\end{itemize}
+Always evaluate using proper splits/cross-validation (Unit III).
+
+\subsection{Residual analysis (basic sanity check)}
+Even if metrics look good, we should inspect residuals:
+\begin{itemize}[leftmargin=*]
+  \item If residuals show patterns (e.g., curve shape), a linear model may be misspecified.
+  \item If residual spread increases with $x$, variance is not constant (heteroscedasticity).
+  \item Large residuals may indicate outliers or missing features.
+\end{itemize}
+
+\subsection{Regularization idea}
+Regularization adds a penalty to control complexity. Example (Ridge):
+\[
+  \text{Loss} = \text{MSE} + \lambda \|w\|^2
+\]
+Lasso uses $\|w\|_1$ and can push weights to zero.
+
+\subsection{Ridge vs Lasso (high-level)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Ridge (L2)}: shrinks weights smoothly; helps with multicollinearity.
+  \item \textbf{Lasso (L1)}: can set some weights to exactly zero; acts like feature selection.
+\end{itemize}
+Regularization reduces variance (overfitting) at the cost of some bias.
+
+\section{Minimal Python example (illustrative)}
+\begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+import numpy as np
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+model = LinearRegression().fit(X_train, y_train)
+pred = model.predict(X_test)
+
+mae = mean_absolute_error(y_test, pred)
+rmse = np.sqrt(mean_squared_error(y_test, pred))
+print(mae, rmse)
+\end{lstlisting}
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Evaluating on training data:} this hides overfitting; always use proper splits/CV.
+  \item \textbf{Ignoring units:} RMSE is in the same units as $y$; MSE is in squared units.
+  \item \textbf{Over-trusting $R^2$:} check residuals and absolute error; $R^2$ can be misleading across datasets.
+  \item \textbf{Forgetting preprocessing:} outliers, scaling, and feature encoding can dominate performance.
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. When would you prefer MAE over RMSE?}
+\textbf{Answer:} when you want robustness to outliers or when large errors should not dominate the metric too strongly.
+
+\subsection*{P2. What does $\lambda$ do in Ridge regression?}
+\textbf{Answer:} it controls the penalty strength; larger $\lambda$ shrinks weights more (simpler model), often reducing overfitting.
+
+\subsection*{P3. Give one reason why $R^2$ can be misleading.}
+\textbf{Answer:} it depends on variance of $y$; a model can have a high $R^2$ but still have large errors in absolute terms, or a low $R^2$ even when RMSE is acceptable.
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. Regression vs classification?}
+\textbf{Answer:} regression predicts a continuous value; classification predicts a discrete class label.
+
+\subsection*{Q2. Why is RMSE easier to interpret than MSE?}
+\textbf{Answer:} RMSE has the same units as the target variable (MSE is squared units).
+
+\subsection*{Q3. What does $R^2$ measure and when is it misleading?}
+\textbf{Answer:} $R^2$ measures variance explained relative to predicting the mean; it can be misleading across datasets, with non-linear patterns, or without residual analysis.
+
+\subsection*{Q4. Overfitting mitigation strategies?}
+\textbf{Answer:} regularization, more data, simpler model, better features, cross-validation, early stopping (for iterative models).
+
+\section{Summary}
+Regression is a core supervised learning task. Correct evaluation and controlling overfitting are essential for reliable predictions.
+\notesources{\AIMLUnitIVSources}
+
+\end{document}

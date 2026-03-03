@@ -1,0 +1,207 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 03 -- Lecture 02 Notes\\Train/Test/Validation Split \& Cross-Validation}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture focuses on \textbf{evaluation methodology}: how to split data, how to tune models, and how to avoid common mistakes that produce misleading performance numbers.
+\notesources{\AIMLUnitIIISources}
+
+\section{How to use these notes (self-study)}
+Whenever you see an evaluation number (accuracy/F1/RMSE), ask: ``Which data was this computed on, and was any information from test leaking into training?''.
+This lecture gives you a repeatable workflow for honest evaluation that you should follow in labs and projects.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Explain train/validation/test splits and what decisions each supports.
+  \item Describe k-fold cross-validation and stratified splitting.
+  \item Identify data leakage and explain why it is dangerous.
+  \item Use a basic scikit-learn split pattern correctly.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Overfitting:} model fits noise in training data; poor generalization.
+  \item \textbf{Train set:} used to fit model parameters.
+  \item \textbf{Validation set:} used to tune hyperparameters / select model.
+  \item \textbf{Test set:} used for final unbiased evaluation.
+  \item \textbf{Cross-validation:} repeated train/validate splits to estimate performance.
+  \item \textbf{Leakage:} information from outside training-time availability enters the model.
+\end{itemize}
+
+\section{Abbreviations and symbols}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{CV}: cross-validation; $k$: number of folds in k-fold CV.
+  \item \textbf{Train/Val/Test}: training, validation, and test datasets.
+  \item \textbf{Metric}: a number summarizing performance (accuracy, F1, RMSE, etc.).
+  \item $\hat{y}$: model predictions; $y$: true labels/targets.
+  \item \textbf{Hyperparameter}: setting chosen by us (e.g., depth, $C$, $\lambda$), not directly learned as weights.
+\end{itemize}
+
+\section{Why splits are necessary}
+If we evaluate on training data, we measure how well the model memorized the data, not how well it generalizes.
+Splits simulate the ``future unseen'' setting.
+
+\subsection{Generalization gap (quick intuition)}
+Often training error is lower than test error:
+\[
+  \text{Train error} < \text{Test error}
+\]
+The difference is the \textbf{generalization gap}. Good evaluation tries to estimate test performance \emph{before} we deploy the model.
+
+\section{Train/validation/test}
+\subsection{Train set}
+Used to learn parameters (e.g., weights in regression). We can run the training algorithm many times on the train set.
+
+\subsection{Parameters vs hyperparameters}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Parameters} are learned from training data (e.g., weights $w$ in linear regression).
+  \item \textbf{Hyperparameters} are chosen by us and control learning (e.g., number of neighbors $k$ in kNN, regularization $\lambda$, tree depth).
+\end{itemize}
+We typically tune hyperparameters using validation (or CV), not using the test set.
+
+\subsection{Validation set}
+Used for \textbf{model selection} and \textbf{hyperparameter tuning}. Examples of tuning decisions:
+\begin{itemize}[leftmargin=*]
+  \item choose model type (tree vs SVM),
+  \item choose hyperparameters (regularization strength, depth),
+  \item choose preprocessing options.
+\end{itemize}
+
+\subsection{Test set}
+The test set is used \textbf{once} for the final report. If you repeatedly look at test results while tuning, the test set becomes part of training decisions and the estimate becomes optimistic.
+
+\subsection{Typical split ratios (rule of thumb)}
+There is no single best ratio, but common choices are:
+\begin{itemize}[leftmargin=*]
+  \item 80/20 (train/test) for quick experiments,
+  \item 60/20/20 or 70/15/15 (train/val/test) when you need an explicit validation set.
+\end{itemize}
+When data is small, k-fold CV is often better than holding out a large validation set.
+
+\section{k-fold cross-validation}
+Cross-validation uses multiple train/validation splits to reduce variance in the estimate.
+In k-fold CV:
+\begin{itemize}[leftmargin=*]
+  \item split data into $k$ folds,
+  \item train on $k-1$ folds and validate on the remaining fold,
+  \item repeat $k$ times and average.
+\end{itemize}
+
+\subsection{What CV is used for (two different goals)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Model selection}: choose the best hyperparameters/model family.
+  \item \textbf{Performance estimation}: estimate how well the chosen model will generalize.
+\end{itemize}
+In practice, we often do model selection with CV and then train one final model on the full training set.
+
+\subsection{Stratified k-fold (classification)}
+Stratification preserves class proportions across folds to avoid folds with too few positive examples.
+
+\subsection{Other splitting variants (when needed)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Group split / GroupKFold}: keep samples from the same person/customer in one split (avoids ``same-user'' leakage).
+  \item \textbf{Time-series split}: training uses past, validation uses future (no shuffling).
+  \item \textbf{Nested CV (concept)}: outer CV estimates generalization, inner CV tunes hyperparameters (reduces optimistic bias).
+\end{itemize}
+
+\section{Data leakage (examples)}
+Leakage can happen in subtle ways:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Post-event features:} a column that is only known after the outcome.
+  \item \textbf{Preprocessing leakage:} scaling/encoding computed on the full dataset.
+  \item \textbf{Duplicate leakage:} same or near-identical examples in train and test.
+\end{itemize}
+
+\subsection{More leakage patterns to watch for}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Target leakage}: a feature is a direct proxy for the label (e.g., ``total\_payment\_received'' to predict ``loan default'').
+  \item \textbf{Feature selection leakage}: selecting features using the whole dataset before CV (the validation folds influenced feature choice).
+  \item \textbf{Preprocessing order mistake}: ``fit scaler'' on all data, then split.
+\end{itemize}
+
+\subsection{Correct preprocessing rule}
+Fit preprocessing only on training data:
+\begin{itemize}[leftmargin=*]
+  \item compute mean/std for scaling on train,
+  \item apply the same transformation to validation/test.
+\end{itemize}
+
+\section{Minimal code patterns}
+\subsection{Train-test split}
+\begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+\end{lstlisting}
+
+\subsection{Stratified k-fold}
+\begin{lstlisting}[language=Python]
+from sklearn.model_selection import StratifiedKFold
+
+cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+for train_idx, val_idx in cv.split(X, y):
+    X_tr, X_val = X[train_idx], X[val_idx]
+    y_tr, y_val = y[train_idx], y[val_idx]
+\end{lstlisting}
+
+\subsection{Leakage-safe pipelines (recommended)}
+Use a pipeline so that preprocessing is learned only from training folds:
+\begin{lstlisting}[language=Python]
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+
+pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("clf", LogisticRegression())
+])
+\end{lstlisting}
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Tuning on the test set:} if you look at test repeatedly, it stops being unbiased.
+  \item \textbf{Preprocessing before splitting:} scaling/encoding on full data leaks information into test folds.
+  \item \textbf{Wrong split strategy:} time-series and grouped data need special splits (no random shuffle).
+  \item \textbf{Feature selection outside CV:} choosing features using all data leaks information into validation.
+  \item \textbf{Reporting only one run:} randomness can change results; use CV or repeat splits when appropriate.
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. If you tune hyperparameters using the test set, what happens?}
+\textbf{Answer:} the test set is no longer unbiased; you indirectly overfit to it, so the reported test score becomes overly optimistic.
+
+\subsection*{P2. Give one example where time-series splitting is required.}
+\textbf{Answer:} predicting next week's sales from past sales. Shuffling would mix future information into training.
+
+\subsection*{P3. Why is GroupKFold useful?}
+\textbf{Answer:} it prevents samples from the same group/person appearing in both train and validation/test, avoiding identity-based leakage.
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. Why should the test set be used only at the end?}
+\textbf{Answer:} because otherwise tuning decisions indirectly depend on test performance, causing optimistic bias; the test set is no longer an unbiased estimate.
+
+\subsection*{Q2. What is cross-validation and when is it useful?}
+\textbf{Answer:} CV repeats training/validation on multiple folds to get a more stable estimate; useful when data is limited or we want robust model selection.
+
+\subsection*{Q3. Give two leakage examples.}
+\textbf{Answer:} using a future field to predict the outcome; scaling using the full dataset before splitting; duplicates across train/test.
+
+\subsection*{Q4. What is stratification?}
+\textbf{Answer:} ensuring each split/fold has approximately the same class distribution as the full dataset, important for classification metrics.
+
+\section{Summary}
+Correct evaluation requires clean separation between training and final testing. Cross-validation and careful leakage prevention are core skills for reliable ML.
+\notesources{\AIMLUnitIIISources}
+
+\end{document}

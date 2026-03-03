@@ -1,0 +1,213 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Elements of AIML (B.Tech)}
+\rhead{Unit 02: Diagnostic Assessment}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{March 8, 2026}
+
+% Marks per question (total = 100)
+\newcommand{\EMarks}{\textbf{[2 marks]} }
+\newcommand{\MMarks}{\textbf{[3 marks]} }
+\newcommand{\HMarks}{\textbf{[5 marks]} }
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Diagnostic Assessment -- Unit 02}}\\[0.25em]
+  {\large Elements of AIML}\\[0.25em]
+  \normalsize (Logic for AI; designed to identify learning gaps)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Time Limit:} None\\
+\textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{This is a diagnostic assessment, not a quiz/test.} The goal is to identify learning gaps so you know what to revise next.
+  \item \textbf{Total marks: 100.} Easy: 10 $\times$ 2 = 20, Medium: 10 $\times$ 3 = 30, Hard: 10 $\times$ 5 = 50.
+  \item \textbf{No time limit.} Submit on or before \textbf{\SubmissionDeadline}.
+  \item \textbf{Important (70\% rule): To have your assignment marks counted, you must score at least 70\% (70/100 or more) in this assessment.}
+    If you score below 70\%, you may reattempt and resubmit. Your latest submission will be considered.
+  \item \textbf{Marking policy (honest attempt):} Marks are deducted only for (i) not attempting a question and (ii) high similarity with other submissions (copying).
+    Correctness is \textbf{not} the main focus; your reasoning and effort matter more.
+  \item \textbf{Show your real effort:} if you tried multiple approaches for any question, write them all (Attempt 1, Attempt 2, ...). Partial/incorrect attempts are acceptable.
+  \item \textbf{Many questions are open-ended by design:} multiple solutions/variants are acceptable. Use your own example data and explain your choices.
+  \item Unless specified, you may choose your own symbols/assumptions (e.g., domain, predicate names), but you must clearly mention your choices.
+  \item Submission format: submit a single ZIP containing \texttt{notebook.ipynb} and \texttt{README.md} (plus optional \texttt{assets/}).
+  \item Show key steps for logic problems (truth tables, CNF steps, resolvents, substitutions).
+  \item Round final numeric answers to \textbf{2 decimal places} (when applicable).
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=\textbf{E\arabic*.}, leftmargin=*]
+  \item \EMarks \textbf{[Subjective]} Define a \textbf{model} in propositional logic (2--4 lines).
+
+  \item \EMarks \textbf{[MCQ -- Select one]} A sentence is \textbf{valid} if it is:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item true in at least one model
+      \item true in all models
+      \item false in all models
+      \item neither true nor false
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Write the truth table for $P \rightarrow Q$ and state when it is false.
+
+  \item \EMarks \textbf{[Subjective]} Explain (in 4--6 lines): $KB \models \alpha$ vs $KB \rightarrow \alpha$.
+
+  \item \EMarks \textbf{[Subjective]} Convert $P \rightarrow Q$ into an equivalent expression using only $\lnot$ and $\lor$.
+
+  \item \EMarks \textbf{[Subjective]} Convert $\lnot(P \rightarrow Q)$ into CNF.
+
+  \item \EMarks \textbf{[Subjective]} Perform one resolution step on:
+    \[
+      (P \lor Q),\ (\lnot P \lor R).
+    \]
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which symbols are \textbf{quantifiers} in FOL?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item $\forall$
+      \item $\exists$
+      \item $\land$
+      \item $\rightarrow$
+      \item $\lor$
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} In $Teaches(Prof, Course)$ identify predicate symbol, constants, and variables (if any).
+
+  \item \EMarks \textbf{[Subjective]} State the difference between a \textbf{function symbol} and a \textbf{predicate symbol} (4--6 lines).
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=\textbf{M\arabic*.}, leftmargin=*]
+  \item \MMarks \textbf{[Subjective]} Let $KB=\{P \rightarrow Q,\ P\}$.
+    Check whether $KB \models Q$ using truth tables or model checking.
+
+  \item \MMarks \textbf{[Subjective]} Determine whether the set is satisfiable:
+    \[
+      (P \lor Q),\ (\lnot P \lor Q),\ (P \lor \lnot Q).
+    \]
+    Provide one satisfying assignment if it exists.
+
+  \item \MMarks \textbf{[Subjective]} Convert to CNF:
+    \[
+      (P \rightarrow Q) \land (Q \rightarrow R).
+    \]
+
+  \item \MMarks \textbf{[Subjective]} Use resolution refutation to show:
+    \[
+      \{P \rightarrow Q,\ Q \rightarrow R,\ P\} \models R.
+    \]
+    (Show clauses and at least the main resolution steps.)
+
+  \item \MMarks \textbf{[Subjective]} Translate into FOL (domain: students and courses):
+    ``Every student studies at least one course.''
+
+  \item \MMarks \textbf{[Subjective]} Explain (6--8 lines) why we convert formulas into CNF before applying resolution.
+
+  \item \MMarks \textbf{[Subjective]} Find an MGU (if it exists):
+    \[
+      Knows(John, x)\ \text{and}\ Knows(y, Bill).
+    \]
+
+  \item \MMarks \textbf{[Subjective]} Explain occurs-check with the example $x$ vs $f(x)$ (6--8 lines).
+
+  \item \MMarks \textbf{[Subjective]} Resolve with unification:
+    \[
+      (P(x) \lor Q(x)),\ (\lnot P(a)).
+    \]
+    Show the substitution used.
+
+  \item \MMarks \textbf{[Subjective]} Explain in 8--10 lines: why propositional logic is not enough for representing relations like ``Parent(x,y)''.
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=\textbf{H\arabic*.}, leftmargin=*]
+  \item \HMarks \textbf{[Subjective]} Prove using resolution refutation:
+    \[
+      \{A \rightarrow B,\ B \rightarrow C,\ C \rightarrow D,\ A\} \models D.
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Convert to CNF:
+    \[
+      \lnot(P \leftrightarrow Q) \rightarrow (R \lor P).
+    \]
+    Show key steps.
+
+  \item \HMarks \textbf{[Subjective]} Convert to clause form (show Skolemization):
+    \[
+      \forall x\ \exists y\ \forall z\ (Loves(x,y) \rightarrow Loves(z,y)).
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Using resolution, prove $Mortal(Socrates)$ from:
+    \[
+      \forall x\ (Human(x) \rightarrow Mortal(x)),\quad Human(Socrates).
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Write two FOL translations for:
+    ``Every student likes a course.''
+    Explain the difference in meaning (10--12 lines).
+
+  \item \HMarks \textbf{[Subjective]} Perform a unification trace:
+    \[
+      P(g(x), f(y), y)\ \text{and}\ P(g(a), f(z), z).
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Construct an unsatisfiable clause set (at least 5 clauses) and derive the empty clause by resolution.
+
+  \item \HMarks \textbf{[Subjective]} Give a small KB and show a countermodel to demonstrate $KB \not\models \alpha$.
+    (Write the assignment/interpretation clearly.)
+
+  \item \HMarks \textbf{[Subjective]} Build a small propositional KB for a security system (alarm/burglary/earthquake)
+    with at least 4 rules/facts and ask one entailment query. Solve using models or resolution.
+
+  \item \HMarks \textbf{[Subjective]} Short reflective question (logic in AI):
+    In 12--16 lines, explain how entailment, satisfiability, and resolution connect to automated reasoning in AI systems.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assessment}
+
+\end{document}

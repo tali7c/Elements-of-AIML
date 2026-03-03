@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 05 -- Lecture 02 Notes\\ML Applications in Banking, Security \& Healthcare}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture uses three domains (banking, security, healthcare) to show:
+\begin{itemize}[leftmargin=*]
+  \item how ML tasks map to real products,
+  \item why evaluation is domain-specific,
+  \item how drift, privacy, and safety constraints change deployment decisions.
+\end{itemize}
+\notesources{\AIMLUnitVSources}
+
+\section{How to use these notes (self-study)}
+Treat each domain as a case study.
+For each one, identify: (1) the ML task type (classification/regression/anomaly), (2) the most important metric (based on cost of errors), and (3) the main deployment risks (drift, adversaries, privacy, safety).
+This is the same checklist you will use in projects and interviews.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item List common ML tasks in banking, security, and healthcare.
+  \item Identify common data sources and labeling challenges.
+  \item Explain key risks: imbalance, adversaries, drift, privacy, and safety.
+  \item Describe monitoring needs for deployed models.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Fraud detection:} rare-event classification.
+  \item \textbf{Anomaly detection:} detect unusual behavior relative to normal patterns.
+  \item \textbf{Concept drift:} changing data patterns over time.
+  \item \textbf{False alarm fatigue:} too many false positives reduce trust and response quality.
+  \item \textbf{Clinical validation:} testing model effectiveness in real clinical workflow.
+\end{itemize}
+
+\section{Abbreviations and key terms}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{AML}: Anti-Money Laundering; \textbf{KYC}: Know Your Customer.
+  \item \textbf{PII}: personally identifiable information.
+  \item \textbf{EHR}: electronic health record; \textbf{PHI}: protected health information.
+  \item \textbf{Drift}: change in data/label patterns over time; \textbf{monitoring}: ongoing checks in production.
+\end{itemize}
+
+\section{Banking applications}
+\subsection{Fraud detection}
+Fraud is usually rare, so datasets are imbalanced. Key considerations:
+\begin{itemize}[leftmargin=*]
+  \item Use precision/recall and cost-based evaluation.
+  \item False positives annoy customers; false negatives lose money.
+  \item Drift occurs as fraudsters adapt.
+\end{itemize}
+
+\subsection{Typical data sources}
+\begin{itemize}[leftmargin=*]
+  \item transaction history (amount, merchant category, time, location),
+  \item device/browser signals (fraud often correlates with device patterns),
+  \item customer/account history (age of account, past chargebacks).
+\end{itemize}
+Labels can be delayed (fraud confirmed after investigation), so training/evaluation pipelines must handle late-arriving ground truth.
+
+\subsection{Credit scoring}
+Credit scoring predicts default risk. Consider:
+\begin{itemize}[leftmargin=*]
+  \item fairness and regulatory constraints,
+  \item explainability (users may request reasons),
+  \item monitoring for economic shifts.
+\end{itemize}
+
+\subsection{What can go wrong (banking)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Proxy bias}: using features that strongly correlate with protected attributes.
+  \item \textbf{Policy mismatch}: model optimized for accuracy but business cost is different (e.g., false declines are very costly).
+  \item \textbf{Drift}: sudden economic changes can invalidate older patterns.
+\end{itemize}
+
+\section{Security applications}
+\subsection{Spam/phishing detection}
+Classic classification problem with adversarial adaptation.
+Attackers may change wording and links to bypass detection.
+
+\subsection{Intrusion/anomaly detection}
+Often framed as anomaly detection:
+\begin{itemize}[leftmargin=*]
+  \item learn patterns of normal behavior,
+  \item flag deviations as suspicious.
+\end{itemize}
+Trade-off: too sensitive $\rightarrow$ too many alerts; too insensitive $\rightarrow$ missed attacks.
+
+\subsection{What makes security different?}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Adversaries}: attackers intentionally try to evade detection (adaptive behavior).
+  \item \textbf{Feedback loops}: once defenses change, attacker behavior shifts.
+  \item \textbf{Operational constraints}: security teams must handle alerts; too many FP can cause ``alert fatigue''.
+\end{itemize}
+
+\section{Healthcare applications}
+\subsection{Risk prediction and decision support}
+Predicting risk (e.g., readmission) can support clinicians. Key issues:
+\begin{itemize}[leftmargin=*]
+  \item privacy and consent,
+  \item careful validation to avoid harm,
+  \item transparency and workflow integration.
+\end{itemize}
+
+\subsection{Data challenges (healthcare)}
+\begin{itemize}[leftmargin=*]
+  \item missing/noisy measurements (not every test is done for every patient),
+  \item label ambiguity (diagnoses can be revised),
+  \item distribution shift across hospitals, devices, and populations.
+\end{itemize}
+
+\subsection{Imaging assistance}
+Models may classify or segment images. Evaluation must consider:
+\begin{itemize}[leftmargin=*]
+  \item sensitivity (recall) for critical conditions,
+  \item false negatives can be dangerous,
+  \item dataset shift across hospitals/devices.
+\end{itemize}
+
+\subsection{Clinical validation (why ``offline accuracy'' is not enough)}
+Healthcare models should be validated in realistic settings:
+\begin{itemize}[leftmargin=*]
+  \item prospective/retrospective validation with appropriate splits,
+  \item evaluation of workflow impact (time saved, reduced errors),
+  \item human factors (interpretability, trust, escalation).
+\end{itemize}
+
+\section{Concept drift and monitoring}
+Across these domains, drift is common:
+\begin{itemize}[leftmargin=*]
+  \item fraud patterns change,
+  \item malware evolves,
+  \item clinical populations and protocols change.
+\end{itemize}
+Monitoring includes:
+\begin{itemize}[leftmargin=*]
+  \item tracking data statistics (feature distributions),
+  \item tracking performance metrics (when labels are available),
+  \item alerting and rollback/retraining strategies.
+\end{itemize}
+
+\section{Practice (with answers)}
+\subsection*{P1. Give one monitoring signal that does not require labels.}
+\textbf{Answer:} feature distribution shift (e.g., missing rate, mean/std), or model score distribution changes.
+
+\subsection*{P2. Why does ``false alarm fatigue'' happen in security systems?}
+\textbf{Answer:} if a system generates too many false positives, humans stop trusting alerts and may ignore real incidents.
+
+\section{Common pitfalls (and how to avoid them)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Using the wrong metric:} fraud and intrusion are imbalanced; accuracy is rarely enough.
+  \item \textbf{Ignoring delayed labels:} in fraud/healthcare, ground truth can arrive late; plan evaluation accordingly.
+  \item \textbf{Assuming threats are stationary:} in security, attackers adapt; drift is adversarial and continuous.
+  \item \textbf{Deploying without workflow fit:} in healthcare, a model must be validated and usable in the clinical workflow.
+  \item \textbf{Neglecting privacy constraints:} banking/healthcare data often includes PII/PHI; access and governance are mandatory.
+\end{itemize}
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. Why is class imbalance common in fraud detection?}
+\textbf{Answer:} fraud events are rare compared to normal transactions, so positive class examples are much fewer.
+
+\subsection*{Q2. One example of drift in security.}
+\textbf{Answer:} attackers change phishing email wording, domains, or tactics; malware signatures evolve; network behavior changes after new software updates.
+
+\subsection*{Q3. In healthcare, why can false negatives be more costly?}
+\textbf{Answer:} missing a critical condition can directly lead to harm, delayed treatment, or death; therefore recall is often prioritized.
+
+\subsection*{Q4. Two monitoring signals after deployment.}
+\textbf{Answer:} distribution shift in key features; false positive rate; model score distribution; latency; and periodic ground-truth performance once labels arrive.
+
+\section{Summary}
+Applications differ by constraints, but successful deployment requires correct metrics, robust evaluation, drift monitoring, and privacy/safety controls.
+\notesources{\AIMLUnitVSources}
+
+\end{document}

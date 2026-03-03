@@ -1,0 +1,183 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Unit 04 -- Lecture 02: Supervised Learning (Classification)}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Topic focus: predicting \textbf{class labels} and evaluating with proper metrics\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLUnitIVSources}
+\end{frame}
+
+\begin{frame}{Quick Links}
+  \centering
+  \hyperlink{sec:cls}{\beamerbutton{Classification}}\hspace{0.6em}
+  \hyperlink{sec:cm}{\beamerbutton{Confusion}}\hspace{0.6em}
+  \hyperlink{sec:metrics}{\beamerbutton{Metrics}}\hspace{0.6em}
+  \hyperlink{sec:imb}{\beamerbutton{Imbalance}}\hspace{0.6em}
+  \hyperlink{sec:summary}{\beamerbutton{Summary}}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Classification basics}
+\label{sec:cls}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item Define classification and give examples.
+    \item Understand the confusion matrix and the meaning of TP/FP/TN/FN.
+    \item Compute and interpret accuracy, precision, recall, and F1.
+    \item Explain thresholds, ROC-AUC intuition, and why imbalance matters.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Abbreviations \& Symbols}
+  \begin{itemize}[<+->]
+    \item TP/FP/TN/FN: true/false positives/negatives
+    \item Precision $=TP/(TP+FP)$,\; Recall/TPR $=TP/(TP+FN)$
+    \item FPR $=FP/(FP+TN)$,\; F1: harmonic mean of precision and recall
+    \item ROC: TPR vs FPR,\; AUC: area under curve
+    \item Threshold $\tau$: score $\ge \tau \Rightarrow$ predict positive
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What is Classification?}
+  \begin{block}{Classification}
+    Predict a \textbf{discrete class label} (binary or multi-class).
+  \end{block}
+  Examples:
+  \begin{itemize}[<+->]
+    \item spam vs not spam
+    \item disease vs healthy
+    \item handwritten digit (0--9)
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Common Classification Models (Overview)}
+  \begin{itemize}[<+->]
+    \item \textbf{Logistic regression}: linear decision boundary + probabilities
+    \item \textbf{kNN}: classify by nearest neighbors (distance-based)
+    \item \textbf{Decision trees / Random forests}: rule-like splits, non-linear
+    \item \textbf{Naive Bayes}: probabilistic model (works well for text)
+    \item \textbf{SVM}: margin-based classifier (good with clear separation)
+  \end{itemize}
+  \vspace{0.3em}
+  \small Model choice depends on data size, feature type, interpretability, and accuracy needs.
+\end{frame}
+
+\section{Confusion matrix}
+\label{sec:cm}
+
+\begin{frame}{Confusion Matrix (Binary)}
+  \centering
+  \begin{tabular}{c|cc}
+    & Pred + & Pred - \\\hline
+    True + & TP & FN \\
+    True - & FP & TN \\
+  \end{tabular}
+  \vspace{0.4em}
+  \begin{itemize}
+    \item TP: correct positive, FP: false alarm
+    \item FN: missed positive, TN: correct negative
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example (Compute Metrics)}
+  Suppose: TP=40,\; FP=10,\; FN=20,\; TN=930 (rare positives).
+  \begin{itemize}[<+->]
+    \item Accuracy $= (TP+TN)/(TP+TN+FP+FN)$
+    \item Precision $= TP/(TP+FP)=40/50=0.80$
+    \item Recall $= TP/(TP+FN)=40/60\approx 0.67$
+    \item F1 $= 2\cdot \frac{0.80\cdot 0.67}{0.80+0.67}\approx 0.73$
+  \end{itemize}
+  \vspace{0.3em}
+  \small High accuracy is easy with many TNs; precision/recall reveal minority-class performance.
+\end{frame}
+
+\section{Metrics}
+\label{sec:metrics}
+
+\begin{frame}{Key Metrics}
+  \begin{itemize}[<+->]
+    \item Accuracy: $(TP+TN)/(TP+TN+FP+FN)$
+    \item Precision: $TP/(TP+FP)$ (how many predicted positives are correct?)
+    \item Recall: $TP/(TP+FN)$ (how many true positives did we find?)
+    \item F1: harmonic mean of precision and recall
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Thresholds and ROC-AUC (Intuition)}
+  \begin{itemize}[<+->]
+    \item Many classifiers output a score/probability.
+    \item A \textbf{threshold} converts a score into a class.
+    \item ROC curve shows TPR vs FPR as threshold changes.
+    \item AUC summarizes ranking quality (higher is better).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{ROC vs PR (When imbalance is high)}
+  \begin{itemize}[<+->]
+    \item ROC curve can look good even when positives are rare.
+    \item Precision-Recall (PR) curve focuses on the positive class.
+    \item For imbalanced problems, PR-AUC is often more informative than ROC-AUC.
+  \end{itemize}
+\end{frame}
+
+\section{Imbalance}
+\label{sec:imb}
+
+\begin{frame}{Imbalanced Data: Why Accuracy Fails}
+  \begin{exampleblock}{Example}
+    If 99\% emails are not spam, a classifier that always predicts ``not spam'' gets 99\% accuracy.
+  \end{exampleblock}
+  \vspace{0.4em}
+  \begin{itemize}[<+->]
+    \item Accuracy can be misleading in imbalance.
+    \item Use precision/recall, F1, and domain-specific costs.
+    \item Lab Experiment-09 focuses on imbalance handling techniques.
+  \end{itemize}
+\end{frame}
+
+\section{Summary}
+\label{sec:summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Classification predicts labels; evaluate with confusion matrix metrics.
+    \item Precision/recall trade-offs depend on error costs.
+    \item Threshold choice matters; ROC-AUC provides a ranking view.
+    \item Imbalance requires careful metrics and techniques.
+  \end{itemize}
+  \slidesources{\AIMLUnitIVSources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item Define TP, FP, TN, FN with a medical test example.
+    \item Why is accuracy misleading on imbalanced datasets?
+    \item When is recall more important than precision (give one scenario)?
+    \item What is the role of a classification threshold?
+  \end{enumerate}
+\end{frame}
+
+\end{document}

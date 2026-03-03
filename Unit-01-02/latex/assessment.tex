@@ -1,0 +1,201 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Elements of AIML (B.Tech)}
+\rhead{Units 01--02: Diagnostic Assessment}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{March 8, 2026}
+
+% Marks per question (total = 100)
+\newcommand{\EMarks}{\textbf{[2 marks]} }
+\newcommand{\MMarks}{\textbf{[3 marks]} }
+\newcommand{\HMarks}{\textbf{[5 marks]} }
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Diagnostic Assessment -- Units 01 \& 02}}\\[0.25em]
+  {\large Elements of AIML}\\[0.25em]
+  \normalsize (Intro to AI + Logic for AI; designed to identify learning gaps)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Time Limit:} None\\
+\textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{This is a diagnostic assessment, not a quiz/test.} The goal is to identify learning gaps so you know what to revise next.
+  \item \textbf{Total marks: 100.} Easy: 10 $\times$ 2 = 20, Medium: 10 $\times$ 3 = 30, Hard: 10 $\times$ 5 = 50.
+  \item \textbf{No time limit.} Submit on or before \textbf{\SubmissionDeadline}.
+  \item \textbf{Important (70\% rule): To have your assignment marks counted, you must score at least 70\% (70/100 or more) in this assessment.}
+    If you score below 70\%, you may reattempt and resubmit. Your latest submission will be considered.
+  \item \textbf{Marking policy (honest attempt):} Marks are deducted only for (i) not attempting a question and (ii) high similarity with other submissions (copying).
+    Correctness is \textbf{not} the main focus; your reasoning and effort matter more.
+  \item \textbf{Show your real effort:} if you tried multiple approaches for any question, write them all (Attempt 1, Attempt 2, ...). Partial/incorrect attempts are acceptable.
+  \item \textbf{Many questions are open-ended by design:} multiple solutions/variants are acceptable. Use your own example data and explain your choices.
+  \item Unless specified, you may choose your own symbols/assumptions (e.g., domain, predicate names), but you must clearly mention your choices.
+  \item Submission format: submit a single ZIP containing \texttt{notebook.ipynb} and \texttt{README.md} (plus optional \texttt{assets/}).
+  \item For logic questions, show key steps (truth tables, CNF, resolvents, substitutions).
+  \item Round final numeric answers to \textbf{2 decimal places} (when applicable).
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=\textbf{E\arabic*.}, leftmargin=*]
+  \item \EMarks \textbf{[Subjective]} Define AI in one sentence and mention one common limitation in deployment.
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are parts of PEAS?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Performance measure
+      \item Environment
+      \item Actuators
+      \item Sensors
+      \item Training dataset
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Classify chess as (fully/partially observable) and (deterministic/stochastic). Justify in 2--3 lines.
+
+  \item \EMarks \textbf{[MCQ -- Select one]} A sentence is \textbf{valid} if it is:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item true in at least one model
+      \item true in all models
+      \item false in all models
+      \item neither true nor false
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Write the truth table for $P \rightarrow Q$ and state when it is false.
+
+  \item \EMarks \textbf{[Subjective]} Convert $P \rightarrow Q$ into an equivalent expression using only $\lnot$ and $\lor$.
+
+  \item \EMarks \textbf{[Subjective]} Explain $KB \models \alpha$ in plain words (2--4 lines).
+
+  \item \EMarks \textbf{[Subjective]} Perform one resolution step on:
+    \[
+      (P \lor Q),\ (\lnot P \lor R).
+    \]
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are quantifiers in first-order logic?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item $\forall$
+      \item $\exists$
+      \item $\land$
+      \item $\rightarrow$
+      \item $\lor$
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} State the difference between a function symbol and predicate symbol (4--6 lines).
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=\textbf{M\arabic*.}, leftmargin=*]
+  \item \MMarks \textbf{[Subjective]} Give a PEAS description for a \textbf{campus navigation assistant}.
+
+  \item \MMarks \textbf{[Subjective]} List the four learning-agent components and explain the critic (6--8 lines).
+
+  \item \MMarks \textbf{[Subjective]} Give three success criteria beyond accuracy for an AI system in healthcare (6--8 lines).
+
+  \item \MMarks \textbf{[Subjective]} Let $KB=\{P \rightarrow Q,\ P\}$. Check if $KB \models Q$ by truth table/model checking.
+
+  \item \MMarks \textbf{[Subjective]} Determine satisfiability of:
+    \[
+      (P \lor Q),\ (\lnot P \lor Q),\ (P \lor \lnot Q).
+    \]
+    Provide one satisfying assignment if it exists.
+
+  \item \MMarks \textbf{[Subjective]} Convert $(P \rightarrow Q) \land (Q \rightarrow R)$ to CNF.
+
+  \item \MMarks \textbf{[Subjective]} Explain why CNF is required for resolution (6--8 lines).
+
+  \item \MMarks \textbf{[Subjective]} Translate to FOL (students/courses):
+    ``Every student studies at least one course.''
+
+  \item \MMarks \textbf{[Subjective]} Find an MGU if it exists: $Knows(John, x)$ and $Knows(y, Bill)$.
+
+  \item \MMarks \textbf{[Subjective]} Explain occurs-check with $x$ vs $f(x)$ (6--8 lines).
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=\textbf{H\arabic*.}, leftmargin=*]
+  \item \HMarks \textbf{[Subjective]} Design a knowledge-based agent for a smart home security scenario.
+    Provide propositional symbols, at least 6 rules/facts, and one query to be answered using entailment.
+
+  \item \HMarks \textbf{[Subjective]} Use resolution refutation to show:
+    \[
+      \{P \rightarrow Q,\ Q \rightarrow R,\ P\} \models R.
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Prove using resolution refutation:
+    \[
+      \{A \rightarrow B,\ B \rightarrow C,\ C \rightarrow D,\ A\} \models D.
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Convert to CNF:
+    \[
+      \lnot(P \leftrightarrow Q) \rightarrow (R \lor P).
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Convert to clause form (show Skolemization):
+    \[
+      \forall x\ (Student(x) \rightarrow \exists y\ Mentors(y,x)).
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Prove $Mortal(Socrates)$ using resolution from:
+    \[
+      \forall x\ (Human(x) \rightarrow Mortal(x)),\ Human(Socrates).
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Write two FOL translations for ``Every student likes a course'' and explain the difference.
+
+  \item \HMarks \textbf{[Subjective]} Provide a countermodel to show $KB \not\models \alpha$ for a small KB of your choice.
+
+  \item \HMarks \textbf{[Subjective]} Write an 8--12 bullet deployment checklist for releasing an AI feature in a university app
+    (privacy, monitoring, fallback, human override, failure handling, etc.).
+
+  \item \HMarks \textbf{[Subjective]} In 12--16 lines explain how logic (entailment/resolution) supports AI reasoning in knowledge-based systems.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assessment}
+
+\end{document}

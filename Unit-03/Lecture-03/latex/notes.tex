@@ -1,0 +1,204 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Unit 03 -- Lecture 03 Notes\\Dimensionality Reduction (PCA, LDA, ICA)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This lecture introduces \textbf{dimensionality reduction} and focuses on PCA, with conceptual overviews of LDA and ICA.
+Dimensionality reduction is important for:
+\begin{itemize}[leftmargin=*]
+  \item faster training/inference,
+  \item reducing noise and redundancy,
+  \item visualization of high-dimensional datasets.
+\end{itemize}
+\notesources{\AIMLUnitIIISources}
+
+\section{How to use these notes (self-study)}
+First, build intuition: PCA finds directions of maximum variance and projects data onto them.
+Then study the step-by-step pipeline (centering, covariance, eigenvectors, projection) and work through the practice questions.
+When using PCA in code, remember the evaluation rule: fit PCA on training data only to avoid leakage.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Explain the curse of dimensionality at an intuitive level.
+  \item Describe PCA and interpret principal components and explained variance.
+  \item Outline PCA steps and apply PCA using Python.
+  \item Distinguish PCA vs LDA vs ICA conceptually.
+\end{itemize}
+
+\section{Keywords}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Dimensionality:} number of features ($d$).
+  \item \textbf{Principal component:} direction capturing maximum variance, orthogonal to previous.
+  \item \textbf{Explained variance:} variance captured by a component (often ratio).
+  \item \textbf{Projection:} mapping data to a lower-dimensional space.
+  \item \textbf{Covariance matrix:} captures relationships between features.
+\end{itemize}
+
+\section{Abbreviations and symbols}
+\begin{itemize}[leftmargin=*]
+  \item $n$: number of samples (rows), $d$: original number of features, $k$: reduced number of components.
+  \item $X \in \mathbb{R}^{n \times d}$: data matrix; $X_c$: mean-centered data.
+  \item $C$: covariance matrix; $\lambda_i$: eigenvalues; $v_i$: eigenvectors.
+  \item $V_k$: matrix of top-$k$ eigenvectors; $Z = X_c V_k$: projected data.
+  \item \textbf{EVR}: explained variance ratio $r_i = \lambda_i / \sum_j \lambda_j$.
+\end{itemize}
+
+\section{Why dimensionality reduction?}
+\subsection{Curse of dimensionality (intuition)}
+As dimensionality increases:
+\begin{itemize}[leftmargin=*]
+  \item data becomes sparse (needs more samples to cover space),
+  \item distances can become less informative,
+  \item models can overfit more easily.
+\end{itemize}
+Reducing dimensions can improve generalization and computational efficiency.
+
+\subsection{When should you reduce dimensions?}
+Common reasons:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Speed}: fewer features $\Rightarrow$ faster training and prediction.
+  \item \textbf{Noise reduction}: remove low-variance directions that often contain noise.
+  \item \textbf{Visualization}: project to 2D/3D for plots and intuition.
+  \item \textbf{Redundancy}: features may be highly correlated; PCA compresses them.
+\end{itemize}
+
+\subsection{Dimensionality reduction vs feature selection}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Feature selection}: keep a subset of original features (easier to interpret).
+  \item \textbf{Feature extraction}: create new features (components) from combinations of originals (e.g., PCA).
+\end{itemize}
+
+\section{Principal Component Analysis (PCA)}
+\subsection{Idea}
+PCA finds a new coordinate system where:
+\begin{itemize}[leftmargin=*]
+  \item the first axis captures the maximum variance,
+  \item the second captures the next maximum variance while being orthogonal, etc.
+\end{itemize}
+Then we keep only the top $k$ axes and drop the rest.
+
+\subsection{What is being optimized? (important intuition)}
+PCA can be motivated in two equivalent ways:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Max-variance view:} choose a unit vector $v$ that maximizes the variance of the projection $X_c v$.
+  \item \textbf{Min-reconstruction-error view:} choose a $k$-dimensional subspace that minimizes squared reconstruction error.
+\end{itemize}
+Both lead to the same principal components.
+
+\subsection{Steps (more detail)}
+Given data matrix $X$ with $n$ samples and $d$ features:
+\begin{enumerate}[leftmargin=*]
+  \item (Often) standardize features: subtract mean and divide by std.
+  \item Mean-center: $X_c = X - \mu$ (where $\mu$ is the mean of each feature).
+  \item Compute covariance matrix:
+  \[
+    C = \frac{1}{n-1} X_c^\top X_c
+  \]
+  \item Compute eigenvalues $\lambda_i$ and eigenvectors $v_i$ of $C$.
+  \item Sort eigenvectors by decreasing eigenvalues.
+  \item Choose top-$k$ eigenvectors and project: $Z = X_c V_k$.
+\end{enumerate}
+
+\subsection{Explained variance}
+Eigenvalue $\lambda_i$ corresponds to variance captured by component $i$.
+Explained variance ratio:
+\[
+  r_i = \frac{\lambda_i}{\sum_j \lambda_j}
+\]
+We often choose $k$ such that $\sum_{i=1}^k r_i$ exceeds a threshold (e.g., 0.90), depending on the application.
+
+\subsection{How to choose $k$ in practice}
+Three common approaches:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Cumulative EVR}: pick smallest $k$ reaching 90\%, 95\%, etc.
+  \item \textbf{Scree plot (elbow)}: choose $k$ where additional components add little.
+  \item \textbf{Downstream performance}: treat $k$ as a hyperparameter and validate it (careful: do this inside CV to avoid leakage).
+\end{itemize}
+
+\subsection{Why standardize?}
+If features have different scales (e.g., income in thousands vs age in years), PCA may focus on the largest-scale feature. Standardization makes PCA reflect correlation structure rather than raw scale.
+
+\subsection{A tiny geometric example (2D $\rightarrow$ 1D)}
+Suppose (after centering) the points lie roughly on the line $x_2 \approx x_1$.
+Then the first principal component is approximately:
+\[
+  v_1 = \frac{1}{\sqrt{2}}\begin{bmatrix}1\\1\end{bmatrix}
+\]
+Projecting a point $x$ to 1D gives the scalar coordinate:
+\[
+  z = x^\top v_1
+\]
+Intuition: we keep the ``diagonal direction'' and drop the perpendicular direction, losing little information if points are tightly clustered around the diagonal.
+
+\subsection{PCA and SVD (brief note)}
+Many software libraries compute PCA using \textbf{SVD} (singular value decomposition) for numerical stability.
+You do not need to compute SVD by hand, but it explains why PCA works well for large matrices.
+
+\subsection{Common pitfalls}
+\begin{itemize}[leftmargin=*]
+  \item PCA is \textbf{linear}: it cannot capture complex non-linear structure (for that, methods like t-SNE/UMAP exist).
+  \item Components can be hard to interpret; they are combinations of features.
+  \item Always fit PCA on \textbf{training data only} (otherwise you leak information from validation/test).
+\end{itemize}
+
+\section{LDA and ICA (conceptual)}
+\subsection{LDA}
+Linear Discriminant Analysis is supervised: it uses class labels and tries to find a projection that separates classes.
+\paragraph{How it differs from PCA.}
+PCA ignores labels and maximizes variance overall.
+LDA uses labels and tries to maximize between-class separation while minimizing within-class spread.
+
+\subsection{ICA}
+Independent Component Analysis tries to find components that are statistically independent. A classic intuition is separating mixed signals into original sources.
+\paragraph{Where ICA is used.}
+Blind source separation (signals), artifact removal, and some feature extraction tasks.
+ICA assumes the underlying sources are independent and non-Gaussian.
+
+\section{Python example (PCA)}
+\begin{lstlisting}[language=Python]
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
+X_scaled = StandardScaler().fit_transform(X)
+pca = PCA(n_components=2)
+Z = pca.fit_transform(X_scaled)
+print(pca.explained_variance_ratio_)
+\end{lstlisting}
+
+\section{Practice (with answers)}
+\subsection*{P1. Why is it incorrect to apply PCA on the full dataset before splitting into train/test?}
+\textbf{Answer:} PCA learns directions from data. If you fit PCA using test data, information from test influences the representation used in training, causing leakage and optimistic evaluation.
+
+\subsection*{P2. PCA vs feature selection: which is easier to interpret and why?}
+\textbf{Answer:} Feature selection is easier to interpret because it keeps original features. PCA creates components that mix features, which can be harder to explain.
+
+\subsection*{P3. If EVR values are $[0.60, 0.25, 0.10, 0.05]$, what is cumulative EVR for $k=2$?}
+\textbf{Answer:} $0.60 + 0.25 = 0.85$ (85\%).
+
+\section{Exit questions (with answers)}
+
+\subsection*{Q1. What does PCA optimize?}
+\textbf{Answer:} PCA chooses orthogonal directions that maximize variance of the projected data (sequentially), thus capturing as much variability as possible in fewer dimensions.
+
+\subsection*{Q2. Why standardize before PCA?}
+\textbf{Answer:} to avoid features with larger numeric scales dominating the covariance and the principal components.
+
+\subsection*{Q3. Compare PCA and LDA.}
+\textbf{Answer:} PCA is unsupervised and maximizes variance; LDA is supervised and aims to separate classes by maximizing between-class separation relative to within-class scatter.
+
+\subsection*{Q4. What is explained variance?}
+\textbf{Answer:} the amount (or proportion) of total variance in the data captured by a principal component; used to choose the number of components.
+
+\section{Summary}
+PCA is a core dimensionality reduction tool. LDA and ICA provide alternative projections depending on whether labels are available (LDA) or independence is desired (ICA).
+\notesources{\AIMLUnitIIISources}
+
+\end{document}

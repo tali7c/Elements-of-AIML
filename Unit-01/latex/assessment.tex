@@ -1,0 +1,199 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Elements of AIML (B.Tech)}
+\rhead{Unit 01: Diagnostic Assessment}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{March 8, 2026}
+
+% Marks per question (total = 100)
+\newcommand{\EMarks}{\textbf{[2 marks]} }
+\newcommand{\MMarks}{\textbf{[3 marks]} }
+\newcommand{\HMarks}{\textbf{[5 marks]} }
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Diagnostic Assessment -- Unit 01}}\\[0.25em]
+  {\large Elements of AIML}\\[0.25em]
+  \normalsize (Introduction to AI; designed to identify learning gaps)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Time Limit:} None\\
+\textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{Roll No.:} \_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{This is a diagnostic assessment, not a quiz/test.} The goal is to identify learning gaps so you know what to revise next.
+  \item \textbf{Total marks: 100.} Easy: 10 $\times$ 2 = 20, Medium: 10 $\times$ 3 = 30, Hard: 10 $\times$ 5 = 50.
+  \item \textbf{No time limit.} Submit on or before \textbf{\SubmissionDeadline}.
+  \item \textbf{Important (70\% rule): To have your assignment marks counted, you must score at least 70\% (70/100 or more) in this assessment.}
+    If you score below 70\%, you may reattempt and resubmit. Your latest submission will be considered.
+  \item \textbf{Marking policy (honest attempt):} Marks are deducted only for (i) not attempting a question and (ii) high similarity with other submissions (copying).
+    Correctness is \textbf{not} the main focus; your reasoning and effort matter more.
+  \item \textbf{Show your real effort:} if you tried multiple approaches for any question, write them all (Attempt 1, Attempt 2, ...). Partial/incorrect attempts are acceptable.
+  \item \textbf{Many questions are open-ended by design:} multiple solutions/variants are acceptable. Use your own example data and explain your choices.
+  \item Unless specified, you may choose your own symbols/assumptions (e.g., how you name predicates), but you must clearly mention your choices.
+  \item Submission format: submit a single ZIP containing \texttt{notebook.ipynb} and \texttt{README.md} (plus optional \texttt{assets/}).
+  \item Round final numeric answers to \textbf{2 decimal places} (when applicable).
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (10 Questions)}
+\begin{enumerate}[label=\textbf{E\arabic*.}, leftmargin=*]
+  \item \EMarks \textbf{[Subjective]} Define AI in one sentence and give one example application.
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which of the following are \textbf{AI tasks} (as commonly defined in Unit~01)?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Sorting numbers in ascending order
+      \item Face recognition in a photo
+      \item Route planning with changing traffic
+      \item A calculator computing $23 \times 47$
+      \item Spam detection in emails
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Write 2--3 lines each: AI vs ML vs Data Science.
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which items belong to PEAS?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Performance measure
+      \item Environment
+      \item Algorithm
+      \item Actuators
+      \item Sensors
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Create a PEAS description for a \textbf{smart vacuum cleaner} (2--4 bullets per PEAS item).
+
+  \item \EMarks \textbf{[MCQ -- Select one]} Chess is best described as:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Fully observable and deterministic
+      \item Partially observable and stochastic
+      \item Fully observable and stochastic
+      \item Partially observable and deterministic
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} What is a \textbf{rational agent}? (3--5 lines)
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which environments are typically \textbf{dynamic}?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Playing chess (during your move)
+      \item Driving a car in traffic
+      \item Solving a static Sudoku puzzle
+      \item Stock trading during market hours
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} List the four main components of a \textbf{learning agent}.
+    Write one line about the role of the \textbf{critic}.
+
+  \item \EMarks \textbf{[Subjective]} List two limitations of AI in real deployments and one practical mitigation for each.
+\end{enumerate}
+
+\section*{Medium (10 Questions)}
+\begin{enumerate}[label=\textbf{M\arabic*.}, leftmargin=*]
+  \item \MMarks \textbf{[Subjective]} Create a PEAS description for a \textbf{navigation app} that suggests routes on campus.
+
+  \item \MMarks \textbf{[Subjective]} Classify the environment of an \textbf{online shopping recommender} using at least five properties
+    (observable, deterministic, episodic, static, discrete, etc.). Justify briefly.
+
+  \item \MMarks \textbf{[Subjective]} Choose an agent type (simple reflex / model-based / goal-based / utility-based / learning)
+    for a \textbf{smart thermostat}. Justify in 6--8 lines.
+
+  \item \MMarks \textbf{[Subjective]} For a \textbf{fraud detection} system, write 3 success criteria beyond accuracy
+    (e.g., cost, safety, fairness, false alarms). Explain in 6--8 lines.
+
+  \item \MMarks \textbf{[Subjective]} Explain performance measure vs reward with a concrete example (6--8 lines).
+
+  \item \MMarks \textbf{[Subjective]} Give one realistic example of bias in an AI system.
+    Mention the data source and one mitigation (8--10 lines).
+
+  \item \MMarks \textbf{[Subjective]} Give one example of distribution shift that can break an AI system.
+    Propose 2 monitoring signals you would track after deployment.
+
+  \item \MMarks \textbf{[Subjective]} Make a table with 3 technique categories (search/planning, knowledge/logic, learning)
+    and 2 examples for each.
+
+  \item \MMarks \textbf{[Subjective]} Consider an AI-based proctoring tool.
+    List 3 risks (privacy/fairness/safety) and one control for each.
+
+  \item \MMarks \textbf{[Subjective]} ``Model accuracy can be high but system success can be low.'' Explain with one example (8--10 lines).
+\end{enumerate}
+
+\section*{Hard (10 Questions)}
+\begin{enumerate}[label=\textbf{H\arabic*.}, leftmargin=*]
+  \item \HMarks \textbf{[Subjective]} Design an AI agent for an \textbf{autonomous delivery robot} inside a campus.
+    Provide PEAS, environment properties, and success criteria.
+
+  \item \HMarks \textbf{[Subjective]} A face-recognition attendance system performs poorly for some groups.
+    Write a short analysis: what could be the causes, how to measure the issue, and how to improve it.
+
+  \item \HMarks \textbf{[Subjective]} Write an 8--12 bullet deployment checklist for a student-facing AI feature
+    (privacy, monitoring, fallback, human override, logging, etc.).
+
+  \item \HMarks \textbf{[Subjective]} Compare rule-based vs learning-based approaches for two tasks:
+    (i) spam filtering, (ii) timetable scheduling. Explain trade-offs (10--12 lines).
+
+  \item \HMarks \textbf{[Subjective]} Write a 1-page Responsible AI note for a university AI tool
+    including fairness, privacy, transparency, accountability, and safety.
+
+  \item \HMarks \textbf{[Subjective]} Explain why self-driving is difficult using environment properties
+    (at least 6 properties with justification).
+
+  \item \HMarks \textbf{[Subjective]} Describe the learning agent components for a recommendation system.
+    Draw a block diagram and explain the feedback loop.
+
+  \item \HMarks \textbf{[Subjective]} Choose one AI application where explainability is necessary.
+    Explain what kind of explanation is needed and who needs it.
+
+  \item \HMarks \textbf{[Subjective]} Write a short impact analysis (1 page) of AI in one domain:
+    education / healthcare / banking / security. Include both benefits and harms.
+
+  \item \HMarks \textbf{[Subjective]} Write a short reflection (12--16 lines):
+    ``Where is AI overhyped today, and where is it genuinely useful?'' Support with examples.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assessment}
+
+\end{document}
