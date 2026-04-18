@@ -180,6 +180,22 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Entailment First: What Are We Trying to Show?}
+  \begin{itemize}[<+->]
+    \item Before converting anything to CNF, clarify the goal:
+    \[
+      KB \models \alpha
+    \]
+    means every model that satisfies $KB$ must also satisfy $\alpha$.
+    \item Example:
+    \[
+      KB = \{p \rightarrow q,\; p\}, \qquad \alpha = q
+    \]
+    \item Intuition: CNF is a \textbf{format for automated reasoning}, not the meaning itself.
+    \item First understand the question semantically; then choose a proof method.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Normal Forms: CNF vs DNF}
   \begin{itemize}[<+->]
     \item \textbf{CNF} (Conjunctive Normal Form): AND of OR-clauses
@@ -206,10 +222,11 @@
   This is the standard form used for many automated checks.
 \end{frame}
 
-\begin{frame}{Inference: Entailment vs Derivation}
+\begin{frame}{After CNF: Entailment vs Derivation}
   \begin{itemize}[<+->]
     \item \textbf{Semantic entailment}: $KB \models \alpha$ (meaning-based, via models).
     \item \textbf{Syntactic derivation}: $KB \vdash \alpha$ (proof-based, via rules).
+    \item CNF helps mostly on the \textbf{proof side} when we use procedures such as resolution.
     \item Example (Modus Ponens):
     \[
       (p \rightarrow q),\; p \;\;\vdash\;\; q

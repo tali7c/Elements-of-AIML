@@ -1,0 +1,112 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 03 (After-submission Reference): WEKA for Clustering}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This document is meant to be shared \textbf{after you submit} Experiment~03.
+Use it to cross-check that your work demonstrates:
+\begin{itemize}[leftmargin=*]
+  \item clustering as an \textbf{unsupervised} task,
+  \item at least two clusterers compared on the \textbf{same} dataset,
+  \item the effect of \textbf{scaling/normalization} on distance-based clustering,
+  \item an interpretation of what each cluster might represent.
+\end{itemize}
+
+\section{Quick recap: what clustering is (and is not)}
+Clustering groups similar instances \textbf{without labels}.
+Clusters are \textbf{not guaranteed} to match human categories; they are patterns discovered from the features.
+
+\subsection{Why scaling matters}
+Many clustering methods use distances (e.g., Euclidean distance).
+If one feature has a much larger range, it dominates the distance and can change the cluster structure.
+
+\section{Worked example in WEKA (end-to-end)}
+\subsection{Dataset choice (example)}
+If you need a dataset, WEKA often ships sample datasets under \texttt{data/}.
+Numeric datasets work well for k-means.
+If your dataset includes a label column, you may keep it for \emph{interpretation only} (clustering itself does not use it).
+
+\subsection{Step 1: load data and remove obvious IDs}
+\begin{enumerate}[leftmargin=*]
+  \item WEKA $\rightarrow$ \textbf{Explorer} $\rightarrow$ \textbf{Preprocess} $\rightarrow$ \textbf{Open file...}
+  \item Inspect attributes and remove ID-like columns (if any).
+\end{enumerate}
+
+\subsection{Step 2: run k-means once without scaling}
+\begin{enumerate}[leftmargin=*]
+  \item Go to \textbf{Cluster} tab.
+  \item \textbf{Choose} $\rightarrow$ \texttt{SimpleKMeans}.
+  \item Set \textbf{NumClusters} (choose a reasonable $k$, e.g., 3 for a first run).
+  \item Click \textbf{Start}.
+\end{enumerate}
+Record:
+\begin{itemize}[leftmargin=*]
+  \item chosen $k$,
+  \item cluster sizes,
+  \item centroid summaries (if shown),
+  \item any available within-cluster error measure reported by WEKA.
+\end{itemize}
+
+\subsection{Step 3: apply scaling and rerun k-means}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Preprocess} tab $\rightarrow$ \textbf{Filter}.
+  \item Try \texttt{unsupervised/attribute/Standardize} (or \texttt{Normalize}).
+  \item Apply the filter.
+  \item Return to \textbf{Cluster} tab and run \texttt{SimpleKMeans} again (same $k$ first).
+\end{enumerate}
+\textbf{Cross-check:} cluster sizes/centroids often change after scaling if feature ranges differ.
+
+\subsection{Step 4: run a second clusterer (comparison)}
+Choose one more:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{EM} (probabilistic),
+  \item \texttt{HierarchicalClusterer} (hierarchical).
+\end{itemize}
+Run it on the same (preferably scaled) dataset and compare:
+\begin{itemize}[leftmargin=*]
+  \item cluster sizes,
+  \item stability/interpretability,
+  \item whether the grouping aligns with your domain intuition.
+\end{itemize}
+
+\subsection{Step 5: visualize cluster assignments}
+If available, use:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Visualize cluster assignments} to view 2D projections.
+\end{itemize}
+Take at least one screenshot and write 2--3 lines describing what the visualization suggests.
+
+\section{How to write interpretations (examples)}
+Good interpretation connects clusters to real meaning:
+\begin{itemize}[leftmargin=*]
+  \item ``Cluster~1 has high income and low spending score; likely \emph{savers}. Cluster~2 has moderate income and high spending score; likely \emph{active shoppers}.'' (example pattern)
+  \item ``After scaling, clusters became more balanced; before scaling, the largest-range feature dominated grouping.''
+\end{itemize}
+
+\section{Troubleshooting (common issues and fixes)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Meaningless clusters:} remove IDs, scale numeric features, and re-check $k$.
+  \item \textbf{Choosing $k$ randomly:} justify using a simple heuristic (try multiple $k$ values and compare within-cluster error + interpretability).
+  \item \textbf{Treating clusters as labels:} clusters are exploratory; report them as patterns, not truth.
+\end{itemize}
+
+\section{Report structure (1--2 pages)}
+\begin{enumerate}[leftmargin=*]
+  \item Dataset (features used, rows/columns, any preprocessing).
+  \item Clusterer~1 results (k-means): $k$, cluster sizes, centroid summary highlights.
+  \item Scaling comparison: what changed after \texttt{Standardize/Normalize}.
+  \item Clusterer~2 results (EM/hierarchical) and comparison.
+  \item Interpretation: what each cluster could represent.
+\end{enumerate}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

@@ -1,0 +1,107 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 04 (After-submission Reference): Pandas Import/Export and Summaries}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This reference is meant to be shared \textbf{after you submit} Experiment~04.
+It provides a complete, readable walkthrough of the \textbf{import $\rightarrow$ inspect $\rightarrow$ clean $\rightarrow$ export} cycle.
+
+\section{What this experiment is really testing}
+Before we build ML models, we must be able to answer:
+\begin{itemize}[leftmargin=*]
+  \item What are the columns and data types?
+  \item How many rows/columns do we have?
+  \item Are there missing values, duplicates, impossible values?
+  \item Can we export a processed dataset for later experiments?
+\end{itemize}
+
+\section{Worked example (self-contained)}
+\subsection{Step 0: create a small example CSV (only for demonstration)}
+If you already used a real dataset, skip to Step~1. The code below creates an example file.
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+df_demo = pd.DataFrame({
+    "age": [21, 22, None, 24, 24],
+    "city": ["Dehradun", "Delhi", "Delhi", None, "Mumbai"],
+    "marks": [78, 85, 66, 92, 92],
+})
+df_demo.to_csv("demo.csv", index=False)
+\end{lstlisting}
+
+\subsection{Step 1: import the dataset}
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+df = pd.read_csv("demo.csv")   # replace with your dataset path
+\end{lstlisting}
+If your CSV uses a different separator, try \texttt{sep=";"} (or check the file).
+
+\subsection{Step 2: basic inspection (what each command tells you)}
+\begin{lstlisting}[language=Python]
+print("Shape:", df.shape)     # (rows, columns)
+print(df.head())              # preview
+print(df.info())              # dtypes + non-null counts
+\end{lstlisting}
+\textbf{How to interpret:}
+\begin{itemize}[leftmargin=*]
+  \item \texttt{shape}: helps you confirm import success (not empty, not truncated).
+  \item \texttt{head}: checks if columns look correct (no shifted columns due to commas).
+  \item \texttt{info}: shows types; if a numeric column appears as \texttt{object}, it may contain strings like ``--''.
+\end{itemize}
+
+\subsection{Step 3: missing values and duplicates}
+\begin{lstlisting}[language=Python]
+missing = df.isna().sum().sort_values(ascending=False)
+print("Missing per column:\n", missing)
+print("Duplicates:", df.duplicated().sum())
+\end{lstlisting}
+\textbf{Interpretation:} columns with high missingness may require imputation or removal in later experiments.
+
+\subsection{Step 4: descriptive summaries}
+\begin{lstlisting}[language=Python]
+print(df.describe())                  # numeric columns
+print(df.describe(include="object"))  # categorical columns
+\end{lstlisting}
+Look for:
+\begin{itemize}[leftmargin=*]
+  \item suspicious min/max (data entry errors/outliers),
+  \item impossible values (negative age),
+  \item rare categories (very low counts).
+\end{itemize}
+
+\subsection{Step 5: a small clean step + export}
+One realistic mini-clean is: drop duplicates, fill a missing category with \texttt{"Unknown"}, and export.
+\begin{lstlisting}[language=Python]
+df2 = df.drop_duplicates()
+df2["city"] = df2["city"].fillna("Unknown")
+df2.to_csv("processed.csv", index=False)
+\end{lstlisting}
+\textbf{Cross-check:} Open \texttt{processed.csv} and confirm it contains the expected rows/columns.
+
+\section{What to write in the report (example phrasing)}
+\begin{itemize}[leftmargin=*]
+  \item ``The dataset has 1200 rows and 14 columns. The column \texttt{Age} has 23 missing values (1.9\%).''
+  \item ``\texttt{info()} shows \texttt{Income} is \texttt{object}; we found currency symbols and removed them (converted to float).''
+  \item ``We exported \texttt{processed.csv} after dropping duplicates and filling missing city values with \texttt{Unknown}.''
+\end{itemize}
+
+\section{Troubleshooting (common issues and fixes)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Unicode errors:} try \texttt{pd.read\_csv(..., encoding="utf-8")} or \texttt{"latin-1"}.
+  \item \textbf{Wrong separator:} use \texttt{sep=";"} or \texttt{sep="\\t"} for TSV.
+  \item \textbf{Numeric column read as text:} use \texttt{pd.to\_numeric(..., errors="coerce")}.
+  \item \textbf{Dates read as strings:} use \texttt{parse\_dates=[...]} or \texttt{pd.to\_datetime}.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

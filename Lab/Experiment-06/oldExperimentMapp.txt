@@ -1,0 +1,18 @@
+Elements of AIML — Old Experiment Mapping (Old → Current)
+Date: 2026-03-03
+
+Current experiment:
+- Experiment-06: Missing Values and Outliers
+
+Old source folder:
+- D:\InSync-tofik\Work\UPES\Old-Lectures\OOP Element-AIML\Recieve From Sumanta sir\Elements of AIML\Lab Experiments
+
+Exact mapping:
+- Old Experiment-4.docx + Experiment4.ipynb → Current Experiment-06 (Missing/outliers) — Exact
+
+Old file(s):
+- Experiment-4.docx
+- Experiment4.ipynb (supporting notebook)
+
+Notes:
+- The old doc + notebook match the same missing-value handling and outlier handling topic and workflow.

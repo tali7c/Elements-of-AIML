@@ -1,0 +1,112 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 09 (After-submission Reference): Imbalanced Classification}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This reference is meant to be shared \textbf{after you submit} Experiment~09.
+It explains why accuracy fails on imbalanced data and shows standard improvement methods with correct evaluation practice.
+
+\section{The core problem}
+If positives are rare (e.g., 1\% fraud), a model can get 99\% accuracy by predicting ``not fraud'' always.
+Therefore, for rare positives we usually focus on:
+\begin{itemize}[leftmargin=*]
+  \item recall (catching positives),
+  \item precision (avoiding false alarms),
+  \item F1, PR-AUC (optional but strong),
+  \item confusion matrix (always).
+\end{itemize}
+
+\section{Worked example (self-contained)}
+If you used a real dataset, your numbers differ. This example creates an imbalanced dataset to demonstrate the workflow.
+
+\subsection{Step 1: create imbalanced data}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split
+
+X, y = make_classification(
+    n_samples=4000,
+    n_features=10,
+    n_informative=4,
+    n_redundant=2,
+    weights=[0.97, 0.03],   # 3% positive class
+    random_state=42,
+)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+\end{lstlisting}
+
+\subsection{Step 2: baseline model + evaluation}
+\begin{lstlisting}[language=Python]
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix, classification_report
+
+base = LogisticRegression(max_iter=2000)
+base.fit(X_train, y_train)
+pred = base.predict(X_test)
+
+print(confusion_matrix(y_test, pred))
+print(classification_report(y_test, pred, digits=3))
+\end{lstlisting}
+Interpret the confusion matrix: if FN is high, the model is missing positives.
+
+\subsection{Step 3A: class weights (simple and effective)}
+\begin{lstlisting}[language=Python]
+weighted = LogisticRegression(max_iter=2000, class_weight="balanced")
+weighted.fit(X_train, y_train)
+pred_w = weighted.predict(X_test)
+
+print(confusion_matrix(y_test, pred_w))
+print(classification_report(y_test, pred_w, digits=3))
+\end{lstlisting}
+Typical outcome: recall increases, precision may decrease (more false alarms). Explain the trade-off.
+
+\subsection{Step 3B: resampling (train only)}
+If you have \texttt{imbalanced-learn} installed:
+\begin{lstlisting}[language=Python]
+from imblearn.over_sampling import SMOTE
+
+sm = SMOTE(random_state=42)
+X_res, y_res = sm.fit_resample(X_train, y_train)
+print("Before:", np.bincount(y_train), "After:", np.bincount(y_res))
+\end{lstlisting}
+Then train on \texttt{X\_res, y\_res} and evaluate on the original test set.
+\textbf{Rule:} never resample before the train/test split.
+
+\subsection{Step 4 (optional): probability scores + PR-AUC}
+\begin{lstlisting}[language=Python]
+from sklearn.metrics import average_precision_score
+
+scores = weighted.predict_proba(X_test)[:, 1]
+ap = average_precision_score(y_test, scores)
+print("PR-AUC (Average Precision):", round(ap, 4))
+\end{lstlisting}
+
+\section{What strong observations look like}
+\begin{itemize}[leftmargin=*]
+  \item ``Baseline accuracy was high, but recall for the minority class was near zero, so it missed most positives.''
+  \item ``Using class\_weight increased recall from 0.10 to 0.72 with a moderate precision drop; this is acceptable when FN is costly.''
+  \item ``Resampling improved recall further but increased false positives; threshold tuning may be needed depending on domain costs.''
+\end{itemize}
+
+\section{Troubleshooting}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{No \texttt{predict\_proba}:} some models require probability-enabled settings.
+  \item \textbf{Scores look perfect:} check for leakage (resampling before split, or target leakage features).
+  \item \textbf{Unstable results:} use stratified splits and fix \texttt{random\_state}.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

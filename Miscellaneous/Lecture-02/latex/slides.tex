@@ -1,0 +1,281 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Miscellaneous -- Lecture 02: Eigenvalues and Eigenvectors from a Data Sample}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Supplementary derivation lecture: \textbf{from raw sample data to covariance eigenvectors}\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLMiscSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Context}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item start from a small raw dataset and compute the mean vector,
+    \item center the data and build the covariance matrix,
+    \item solve for eigenvalues and eigenvectors by hand,
+    \item interpret the largest eigenvector as the first PCA direction.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Why This Matters}
+  \begin{itemize}[<+->]
+    \item In \textbf{PCA}, eigenvectors define the principal directions.
+    \item In \textbf{LDA}, a related eigen-problem appears using scatter matrices.
+    \item This lecture shows the mechanics on a tiny dataset where hand calculation is still realistic.
+  \end{itemize}
+\end{frame}
+
+\section{Raw Sample}
+
+\begin{frame}{Raw Sample Data}
+  Consider three two-dimensional samples:
+  \[
+    x_1 =
+    \begin{bmatrix}
+      2\\1
+    \end{bmatrix},
+    \quad
+    x_2 =
+    \begin{bmatrix}
+      1\\2
+    \end{bmatrix},
+    \quad
+    x_3 =
+    \begin{bmatrix}
+      0\\0
+    \end{bmatrix}
+  \]
+  \vspace{0.3em}
+  Goal: compute eigenvalues and eigenvectors \textbf{from this sample}, not from an already given covariance matrix.
+\end{frame}
+
+\section{Centering}
+
+\begin{frame}{Step 1: Compute the Mean}
+  Mean vector:
+  \[
+    \mu =
+    \frac{1}{3}
+    \left(
+    \begin{bmatrix}
+      2\\1
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+      1\\2
+    \end{bmatrix}
+    +
+    \begin{bmatrix}
+      0\\0
+    \end{bmatrix}
+    \right)
+    =
+    \begin{bmatrix}
+      1\\1
+    \end{bmatrix}
+  \]
+\end{frame}
+
+\begin{frame}{Step 2: Center the Data}
+  Subtract the mean from each sample:
+  \[
+    x_1 - \mu =
+    \begin{bmatrix}
+      1\\0
+    \end{bmatrix},
+    \quad
+    x_2 - \mu =
+    \begin{bmatrix}
+      0\\1
+    \end{bmatrix},
+    \quad
+    x_3 - \mu =
+    \begin{bmatrix}
+      -1\\-1
+    \end{bmatrix}
+  \]
+  So the centered data matrix is:
+  \[
+    X_c =
+    \begin{bmatrix}
+      1 & 0\\
+      0 & 1\\
+      -1 & -1
+    \end{bmatrix}
+  \]
+\end{frame}
+
+\section{Covariance}
+
+\begin{frame}{Step 3: Build the Covariance Matrix}
+  \[
+    C = \frac{1}{n-1} X_c^\top X_c
+  \]
+  Here $n=3$, so:
+  \[
+    X_c^\top X_c =
+    \begin{bmatrix}
+      1 & 0 & -1\\
+      0 & 1 & -1
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 & 0\\
+      0 & 1\\
+      -1 & -1
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+      2 & 1\\
+      1 & 2
+    \end{bmatrix}
+  \]
+  Therefore:
+  \[
+    C =
+    \begin{bmatrix}
+      1 & 0.5\\
+      0.5 & 1
+    \end{bmatrix}
+  \]
+\end{frame}
+
+\section{Eigenvalues}
+
+\begin{frame}{Step 4: Solve the Characteristic Equation}
+  We solve:
+  \[
+    \det(C - \lambda I)=0
+  \]
+  \[
+    \det
+    \begin{bmatrix}
+      1-\lambda & 0.5\\
+      0.5 & 1-\lambda
+    \end{bmatrix}
+    = 0
+  \]
+  \[
+    (1-\lambda)^2 - 0.25 = 0
+  \]
+  \[
+    \lambda^2 - 2\lambda + 0.75 = 0
+  \]
+  So the eigenvalues are:
+  \[
+    \lambda_1 = 1.5,
+    \qquad
+    \lambda_2 = 0.5
+  \]
+\end{frame}
+
+\section{Eigenvectors}
+
+\begin{frame}{Step 5: Solve for Eigenvectors}
+  For $\lambda_1 = 1.5$:
+  \[
+    C - 1.5I =
+    \begin{bmatrix}
+      -0.5 & 0.5\\
+      0.5 & -0.5
+    \end{bmatrix}
+  \]
+  Solving $(C-1.5I)v=0$ gives $y=x$, so:
+  \[
+    v_1 \propto
+    \begin{bmatrix}
+      1\\1
+    \end{bmatrix}
+  \]
+  For $\lambda_2 = 0.5$:
+  \[
+    v_2 \propto
+    \begin{bmatrix}
+      1\\-1
+    \end{bmatrix}
+  \]
+\end{frame}
+
+\begin{frame}{Step 6: Normalize the Eigenvectors}
+  Normalized versions:
+  \[
+    \hat v_1 =
+    \frac{1}{\sqrt{2}}
+    \begin{bmatrix}
+      1\\1
+    \end{bmatrix},
+    \qquad
+    \hat v_2 =
+    \frac{1}{\sqrt{2}}
+    \begin{bmatrix}
+      1\\-1
+    \end{bmatrix}
+  \]
+  \vspace{0.3em}
+  Since $\lambda_1 > \lambda_2$, $\hat v_1$ is the first principal direction for PCA.
+\end{frame}
+
+\section{Interpretation}
+
+\begin{frame}{Interpretation for PCA}
+  \begin{itemize}[<+->]
+    \item The first principal direction is the diagonal line $x_2 = x_1$.
+    \item The first eigenvalue is larger, so that direction captures more variance.
+    \item The second direction is perpendicular and captures the remaining smaller spread.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Common Mistakes}
+  \begin{itemize}[<+->]
+    \item Using raw data directly without centering it.
+    \item Taking eigenvalues from the data matrix instead of the covariance matrix.
+    \item Forgetting to normalize the eigenvectors.
+    \item Forgetting that the largest eigenvalue corresponds to the first PCA component.
+  \end{itemize}
+\end{frame}
+
+\section{Summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item Start from the raw sample, compute the mean, and center the data.
+    \item Build the covariance matrix before solving the eigen-problem.
+    \item Solve $\det(C-\lambda I)=0$, then solve $(C-\lambda I)v=0$.
+    \item In PCA, the eigenvector of the largest eigenvalue becomes the first principal component.
+  \end{itemize}
+  \slidesources{\AIMLMiscSources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item Why do we center the data before computing covariance?
+    \item What matrix do we use for the eigenvalue problem in PCA?
+    \item Which eigenvector becomes PC1?
+    \item Why must eigenvectors usually be normalized?
+  \end{enumerate}
+\end{frame}
+
+\end{document}

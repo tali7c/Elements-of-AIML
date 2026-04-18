@@ -1,0 +1,117 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 01 (After-submission Reference): WEKA for Regression}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This document is meant to be shared \textbf{after you submit} Experiment~01.
+Use it to cross-check:
+\begin{itemize}[leftmargin=*]
+  \item whether you selected the correct \textbf{class attribute} (numeric target),
+  \item whether you evaluated correctly (CV or hold-out, not training-set),
+  \item whether you interpreted MAE/RMSE in the \textbf{units of the target}.
+\end{itemize}
+Numbers in WEKA depend on the dataset and on random seeds/parameters, so your exact values may differ.
+
+\section{Quick recap: what regression means}
+Regression is \textbf{supervised learning} where the target is \textbf{numeric} (continuous), e.g., price, time, temperature.
+In WEKA, regression is done in the \textbf{Classify} tab using a \textbf{regressor} (not a classifier).
+
+\subsection{Key terms (minimum)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Model}: a function that maps features $x$ to a numeric prediction $\hat{y}$.
+  \item \textbf{MAE}: average absolute error (same units as $y$).
+  \item \textbf{RMSE}: square-root of average squared error (same units as $y$; punishes large errors).
+  \item \textbf{Cross-validation (CV)}: repeat train/test on folds and average to get a stable estimate.
+  \item \textbf{Overfitting}: model performs well on training data but poorly on unseen data.
+\end{itemize}
+
+\section{Worked example in WEKA (end-to-end)}
+\subsection{Dataset choice (example)}
+If you do not have a dataset, WEKA often ships with sample datasets under a \texttt{data/} folder.
+For regression, a common example is a housing dataset where the target is a numeric value.
+
+\subsection{Step 1: load data and set class attribute}
+\begin{enumerate}[leftmargin=*]
+  \item Open \textbf{WEKA} $\rightarrow$ \textbf{Explorer}.
+  \item \textbf{Preprocess} tab $\rightarrow$ \textbf{Open file...} $\rightarrow$ load \texttt{.arff} or \texttt{.csv}.
+  \item In the right panel, set \textbf{Class} to the \textbf{target} column (the value to predict).
+\end{enumerate}
+\textbf{Cross-check:} the class attribute must be \textbf{numeric}. If it is nominal, you are doing classification.
+
+\subsection{Step 2: minimal preprocessing (recommended)}
+Typical safe steps:
+\begin{itemize}[leftmargin=*]
+  \item Missing values $\rightarrow$ \texttt{Filter} $\rightarrow$ \texttt{unsupervised/attribute/ReplaceMissingValues}.
+  \item Remove obvious IDs (e.g., \texttt{CustomerID}) that do not represent a measurable feature.
+\end{itemize}
+Record any filter you apply (preprocessing is part of the final pipeline).
+
+\subsection{Step 3: train and evaluate two regressors}
+\paragraph{Model A: Linear Regression.}
+\begin{enumerate}[leftmargin=*]
+  \item Go to \textbf{Classify}.
+  \item \textbf{Choose} $\rightarrow$ \texttt{functions/LinearRegression}.
+  \item \textbf{Test options} $\rightarrow$ choose \textbf{Cross-validation} (10 folds) \emph{or} \textbf{Percentage split} (e.g., 70/30).
+  \item Click \textbf{Start}.
+\end{enumerate}
+In the output, note MAE and RMSE (and correlation coefficient if shown).
+
+\paragraph{Model B: Random Forest (a strong baseline).}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Choose} $\rightarrow$ \texttt{trees/RandomForest}.
+  \item Keep the \textbf{same} test option as Model~A (fair comparison).
+  \item Click \textbf{Start}.
+\end{enumerate}
+
+\subsection{Step 4: interpret the metrics correctly}
+Write metric interpretations in your dataset's units. Example:
+\begin{itemize}[leftmargin=*]
+  \item If the target is \texttt{Price (INR)} and RMSE $= 5000$, then typical errors are about \textbf{5000 INR}.
+  \item If RMSE is much larger than MAE, your model may be making a few very large mistakes (outliers / hard cases).
+\end{itemize}
+
+\subsection{Step 5: optional error visualization (useful)}
+WEKA can visualize prediction errors for some models.
+If available:
+\begin{itemize}[leftmargin=*]
+  \item in the output list, right-click the result $\rightarrow$ \textbf{Visualize classifier errors}.
+\end{itemize}
+This helps you explain \emph{where} the model fails (certain ranges of the target, or certain feature regions).
+
+\section{What a strong submission looks like (cross-check)}
+\subsection{Screenshots}
+\begin{itemize}[leftmargin=*]
+  \item Preprocess tab: dataset loaded + correct \textbf{class attribute} selected.
+  \item Classify tab: regressor selected + test option selected.
+  \item Output: metrics (MAE/RMSE) for at least two regressors.
+\end{itemize}
+
+\subsection{Report structure (1--2 pages)}
+\begin{enumerate}[leftmargin=*]
+  \item Dataset: name/source, target definition, number of rows/columns.
+  \item Preprocessing: missing value handling, removed columns, any transformations.
+  \item Models: Model~A and Model~B with evaluation method.
+  \item Results table: MAE/RMSE (+ any other metrics you used).
+  \item Observations: 3--5 clear points explaining which model is better and why.
+\end{enumerate}
+
+\section{Troubleshooting (common issues and fixes)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Class attribute is wrong:} re-check the \textbf{Class} selection in Preprocess.
+  \item \textbf{Evaluating on training set:} in Test options, avoid \textbf{Use training set}.
+  \item \textbf{Target accidentally nominal:} if the target is stored as text/categorical, convert it to numeric (or choose a proper numeric target).
+  \item \textbf{Very poor error values:} check for outliers, wrong units, or missing values not handled.
+  \item \textbf{Unfair comparison:} use the same evaluation method for all models.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

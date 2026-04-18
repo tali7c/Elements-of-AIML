@@ -1,0 +1,106 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 10 (After-submission Reference): Visualization with Matplotlib \& Seaborn}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This reference is meant to be shared \textbf{after you submit} Experiment~10.
+It focuses on two skills:
+\begin{itemize}[leftmargin=*]
+  \item choosing the right plot for the right variable type,
+  \item communicating a clear message (labels, titles, readable scales).
+\end{itemize}
+
+\section{A simple plot-selection cheat sheet}
+\begin{itemize}[leftmargin=*]
+  \item Numeric distribution $\rightarrow$ histogram/KDE, boxplot, violin plot
+  \item Categorical counts $\rightarrow$ bar plot / count plot
+  \item Numeric vs numeric $\rightarrow$ scatter plot (add transparency if many points)
+  \item Numeric vs categorical $\rightarrow$ boxplot/violin by category
+  \item Many numeric relationships $\rightarrow$ correlation heatmap / pairplot
+  \item Time series $\rightarrow$ line plot (time on x-axis)
+\end{itemize}
+
+\section{Worked example (good plotting hygiene)}
+\subsection{Step 1: load and set a clean theme}
+\begin{lstlisting}[language=Python]
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set_theme(style="whitegrid")
+df = pd.read_csv("processed.csv")  # or your dataset
+\end{lstlisting}
+
+\subsection{Step 2: create a 5-plot portfolio (template)}
+\paragraph{1) Histogram + KDE.}
+\begin{lstlisting}[language=Python]
+sns.histplot(df["num_col"], kde=True)
+plt.title("Distribution of num_col")
+plt.xlabel("num_col")
+plt.ylabel("Count")
+plt.savefig("01_hist.png", dpi=150, bbox_inches="tight")
+plt.show()
+\end{lstlisting}
+
+\paragraph{2) Boxplot (outliers/spread).}
+\begin{lstlisting}[language=Python]
+sns.boxplot(x=df["num_col"])
+plt.title("Boxplot of num_col")
+plt.savefig("02_box.png", dpi=150, bbox_inches="tight")
+plt.show()
+\end{lstlisting}
+
+\paragraph{3) Bar/count plot (categorical counts).}
+\begin{lstlisting}[language=Python]
+sns.countplot(data=df, x="cat_col")
+plt.title("Counts of cat_col")
+plt.xticks(rotation=30, ha="right")
+plt.savefig("03_count.png", dpi=150, bbox_inches="tight")
+plt.show()
+\end{lstlisting}
+
+\paragraph{4) Scatter plot (relationship).}
+\begin{lstlisting}[language=Python]
+sns.scatterplot(data=df, x="num_col1", y="num_col2", alpha=0.6)
+plt.title("num_col1 vs num_col2")
+plt.savefig("04_scatter.png", dpi=150, bbox_inches="tight")
+plt.show()
+\end{lstlisting}
+
+\paragraph{5) Correlation heatmap (numeric).}
+\begin{lstlisting}[language=Python]
+corr = df.select_dtypes("number").corr()
+sns.heatmap(corr, cmap="coolwarm", center=0, annot=False)
+plt.title("Correlation heatmap")
+plt.savefig("05_heatmap.png", dpi=150, bbox_inches="tight")
+plt.show()
+\end{lstlisting}
+
+\section{How to write strong observations}
+For each plot, write 2--3 lines:
+\begin{itemize}[leftmargin=*]
+  \item what the plot shows (variables + plot type),
+  \item the main pattern (skew, clusters, trend, outliers),
+  \item a possible next action (missing/outlier handling, transformation, feature idea).
+\end{itemize}
+
+\section{Common mistakes (and fixes)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Missing labels/titles:} add \texttt{plt.xlabel}, \texttt{plt.ylabel}, \texttt{plt.title}.
+  \item \textbf{Overplotting:} use \texttt{alpha} or smaller markers; sample if extremely large.
+  \item \textbf{Misleading scales:} avoid changing axes without explaining; prefer consistent scales for comparisons.
+  \item \textbf{Plotting categories as continuous:} use countplots/bar plots for categories.
+  \item \textbf{Not saving figures:} always \texttt{savefig} for submissions.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

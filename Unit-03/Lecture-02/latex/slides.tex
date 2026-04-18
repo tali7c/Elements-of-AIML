@@ -51,6 +51,14 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Before We Split: What Must Already Be Clear?}
+  \begin{itemize}[<+->]
+    \item From Lecture 01: know what the \textbf{features}, \textbf{labels}, and \textbf{task type} are.
+    \item Choose the split strategy \emph{after} identifying the task: classification, regression, grouped data, or time series.
+    \item Honest evaluation means the \textbf{test set stays untouched} until the end.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Abbreviations \& Symbols}
   \begin{itemize}[<+->]
     \item Train/Val/Test: training/validation/testing splits
@@ -120,6 +128,15 @@
   \small Average the validation metric over rounds; then retrain on all training data with chosen settings.
 \end{frame}
 
+\begin{frame}{Worked Story: Churn Prediction}
+  \begin{itemize}[<+->]
+    \item Suppose 1{,}000 customers are available and only about 12\% churn.
+    \item Split into train/test first, then use \textbf{stratified 5-fold CV} inside training.
+    \item Example validation F1 scores: 0.71, 0.75, 0.73, 0.70, 0.76.
+    \item Choose the model using the average CV score; report the test score only once at the end.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Stratification (Classification)}
   For classification, ensure each fold keeps class proportions similar to the full dataset.
   \vspace{0.4em}
@@ -162,7 +179,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
   \end{lstlisting}
   \vspace{0.3em}
-  Always fit preprocessing \emph{only on training data}, then apply to validation/test.
+  \small Use \texttt{stratify=y} for classification tasks. For regression, omit it and choose a split strategy that matches the data source.
 \end{frame}
 
 \begin{frame}[fragile]{Leakage-Safe Pattern (Pipeline)}

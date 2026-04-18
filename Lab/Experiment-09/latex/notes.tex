@@ -1,0 +1,77 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 09: Imbalanced Data Handling (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints}.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Show why accuracy can be misleading on imbalanced datasets.
+  \item Apply at least one imbalance-handling technique and compare results.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Use an imbalanced classification dataset (minority class must be clearly smaller).
+  \item Report class distribution (counts and \%).
+  \item Train a baseline classifier and report:
+  \begin{itemize}[leftmargin=*]
+    \item confusion matrix,
+    \item precision/recall/F1 (and accuracy if you want, but not alone).
+  \end{itemize}
+  \item Apply at least \textbf{one} technique (choose any one):
+  \begin{itemize}[leftmargin=*]
+    \item class weights,
+    \item oversampling/undersampling (train only),
+    \item SMOTE (optional; if library available),
+    \item threshold tuning (optional).
+  \end{itemize}
+  \item Compare baseline vs improved approach using the same split and metrics.
+  \item Write 3--5 observations explaining what improved and what trade-off you see.
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Always use stratified train/test split for imbalanced data.
+  \item Resampling must be done on \textbf{training data only} (otherwise it leaks test information).
+  \item A common simple approach is \texttt{class\_weight="balanced"} (many models support it).
+  \item Expect trade-offs: improving recall can reduce precision (more false alarms).
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: baseline vs improved comparison with metrics and observations.
+  \item \texttt{README.md}: dataset link/source, technique chosen, and summary of results/trade-offs.
+  \item \texttt{assets/} (optional): any saved outputs/plots.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item Class distribution shown (counts and \%).
+  \item Baseline metrics included (confusion matrix + precision/recall/F1).
+  \item One imbalance-handling technique applied and compared fairly.
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Reporting accuracy only.
+  \item Resampling before the split (leakage).
+  \item Changing multiple things at once and not being able to explain the effect.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}

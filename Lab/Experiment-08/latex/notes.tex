@@ -1,0 +1,70 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 08: PCA (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints}.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Reduce dimensionality using PCA and justify the number of components.
+  \item Visualize explained variance and (if applicable) a 2D PCA projection.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Use a dataset with multiple numeric features (from previous labs or approved dataset).
+  \item Apply PCA to numeric features (do not include labels/targets as PCA input features).
+  \item Report explained variance ratio and cumulative explained variance.
+  \item Choose a number of components $k$ and justify it (e.g., 90\% variance or elbow point).
+  \item Produce:
+  \begin{itemize}[leftmargin=*]
+    \item one cumulative explained variance plot,
+    \item one 2D scatter plot of PC1 vs PC2 (if possible for your dataset).
+  \end{itemize}
+  \item Write 3--5 observations (compression achieved, trade-offs, and when PCA is useful).
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Standardize numeric features before PCA if they are on different scales (\texttt{StandardScaler}).
+  \item PCA tools: \texttt{PCA}, \texttt{explained\_variance\_ratio\_}, cumulative sum.
+  \item If you later train a model, avoid leakage: fit scaler+PCA on training data only (pipeline recommended).
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: PCA steps, plots, chosen $k$, and observations.
+  \item \texttt{README.md}: dataset link/source, chosen $k$ with justification, and key results.
+  \item \texttt{assets/} (optional): plot images if saved separately.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item PCA applied on numeric features (no label leakage into PCA inputs).
+  \item EVR + cumulative EVR reported and plotted.
+  \item $k$ chosen and justified.
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Skipping standardization when features have very different scales.
+  \item Choosing $k$ without justification or without an EVR plot.
+  \item Including the target/label column in PCA inputs.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}

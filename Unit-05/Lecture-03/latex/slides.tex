@@ -60,6 +60,29 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Case-Study Lens for This Wrap-Up}
+  \begin{itemize}[<+->]
+    \item For each domain, identify the \textbf{task}, \textbf{metric}, \textbf{main risk}, and \textbf{monitoring signal}.
+    \item This is the same lens used in Lecture 02; the goal now is course-wide comparison.
+    \item Treat this lecture as revision through applications, not as a list of isolated sectors.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Cross-Domain Map}
+  \scriptsize
+  \begin{tabular}{p{1.9cm}p{2.2cm}p{2.0cm}p{4.9cm}}
+    \toprule
+    \textbf{Domain} & \textbf{Task} & \textbf{Metric} & \textbf{Main risk / monitoring} \\
+    \midrule
+    Education & recommendation / dropout & completion + fairness & privacy and unfair intervention / subgroup performance \\
+    Insurance & pricing / fraud / triage & cost + explainability & proxy bias and regulation / appeals, subgroup gaps \\
+    Retail & forecasting / recommendation & MAE/RMSE or ranking KPI & seasonality, feedback loops / forecast error, exposure drift \\
+    Transport & ETA / routing & MAE/RMSE + SLA & sensor failure, safety / route errors, latency \\
+    Energy & forecasting / fault detection & forecast error or recall & rare-event reliability / demand drift, alarm quality \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
 \begin{frame}{Education}
   \begin{itemize}[<+->]
     \item personalization / recommendations
@@ -142,6 +165,16 @@
     \item What does PCA optimize and why standardize before PCA?
     \item Give two examples of drift and how to monitor it.
   \end{enumerate}
+\end{frame}
+
+\begin{frame}{Revision Map (Where to Review)}
+  \begin{itemize}[<+->]
+    \item Entailment and unification: \textbf{Unit 02 Lecture 03}
+    \item Splits, CV, and leakage: \textbf{Unit 03 Lecture 02}
+    \item PCA and dimensionality reduction: \textbf{Unit 03 Lecture 03}
+    \item Regression/classification metrics: \textbf{Unit 04 Lectures 01--02}
+    \item Responsible AI checks and domain risk: \textbf{Unit 05 Lectures 01--02}
+  \end{itemize}
 \end{frame}
 
 \section{Summary}

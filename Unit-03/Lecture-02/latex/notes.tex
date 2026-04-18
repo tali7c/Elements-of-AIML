@@ -26,6 +26,15 @@ This lecture gives you a repeatable workflow for honest evaluation that you shou
   \item Use a basic scikit-learn split pattern correctly.
 \end{itemize}
 
+\section{Before you start}
+Before studying this lecture, make sure you can already identify:
+\begin{itemize}[leftmargin=*]
+  \item what the \textbf{features} and \textbf{labels} are in a dataset (\textbf{Unit 03 Lecture 01}),
+  \item which task type you are solving: regression, classification, or clustering,
+  \item why evaluation must reflect the real goal rather than only an impressive number (\textbf{Unit 01 Lecture 01}).
+\end{itemize}
+This lecture is about protecting the evaluation process from accidental self-deception.
+
 \section{Keywords}
 \begin{itemize}[leftmargin=*]
   \item \textbf{Overfitting:} model fits noise in training data; poor generalization.
@@ -134,6 +143,17 @@ Fit preprocessing only on training data:
   \item apply the same transformation to validation/test.
 \end{itemize}
 
+\section{Worked scenario: churn prediction evaluation}
+Suppose a telecom company has 1{,}000 customer records and wants to predict whether a customer will churn in the next month.
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Task type:} binary classification.
+  \item \textbf{Why stratify?} only about 120 customers have churned, so random splitting can create folds with too few positive examples.
+  \item \textbf{One sensible workflow:} 80\% train and 20\% test; then use 5-fold stratified CV inside the training set to compare models.
+  \item \textbf{Illustrative fold scores (F1):} 0.71, 0.75, 0.73, 0.70, 0.76. The mean is about 0.73, so that is the model-selection signal.
+  \item \textbf{Final step:} retrain the chosen pipeline on the full training split, then report the test score only once.
+\end{itemize}
+The important lesson is not the exact numbers; it is the decision order: \emph{split first, tune on training/CV, test once at the end}.
+
 \section{Minimal code patterns}
 \subsection{Train-test split}
 \begin{lstlisting}[language=Python]
@@ -143,6 +163,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 \end{lstlisting}
+Use `stratify=y` for classification problems when class balance matters. For regression, omit `stratify` and use a split strategy consistent with the data source (for example, time-based splits for forecasting).
 
 \subsection{Stratified k-fold}
 \begin{lstlisting}[language=Python]

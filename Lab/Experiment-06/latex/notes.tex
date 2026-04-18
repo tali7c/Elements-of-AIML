@@ -1,0 +1,69 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 06: Missing Values \& Outliers (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints}.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Detect missing values and outliers in a dataset.
+  \item Apply and compare multiple handling strategies and document the impact.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Use the dataset from Experiment~04/05 (preferred) or another approved dataset.
+  \item Report missing values per column (count and \%).
+  \item Apply at least \textbf{two} missing-value strategies (e.g., drop vs impute) and compare outcomes.
+  \item Detect outliers for at least \textbf{one} numeric column using a rule such as \textbf{IQR} or \textbf{z-score}.
+  \item Handle outliers using at least \textbf{one} approach (remove or cap/winsorize) and justify.
+  \item Compare before vs after using summaries and at least one visual (recommended: boxplot).
+  \item Write 3--5 observations describing what changed and why your choices are reasonable.
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Typical Pandas helpers: \texttt{df.isna().sum}, \texttt{df.isna().mean}, \texttt{df.describe}, \texttt{fillna}, \texttt{dropna}.
+  \item Median imputation is often safer than mean on skewed data.
+  \item Outliers can be errors or rare-but-real events; do not delete blindly.
+  \item If you later train ML models, avoid leakage: fit imputers/rules on training data only.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: steps performed, before/after comparisons, and observations.
+  \item \texttt{README.md}: dataset link/source, strategies used, and justification summary.
+  \item \texttt{assets/} (optional): plot images if saved separately.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item Missingness reported (count and \%) for columns.
+  \item Two missing-value strategies shown and compared.
+  \item One outlier rule applied + one handling approach applied + justification written.
+  \item Before/after impact shown with summaries and at least one plot.
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Deleting many rows without explaining the cost/impact.
+  \item Handling missing values/outliers but not showing before/after evidence.
+  \item Applying rules on the full dataset in an ML setting (leakage risk).
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}

@@ -33,6 +33,14 @@ When using PCA in code, remember the evaluation rule: fit PCA on training data o
   \item Distinguish PCA vs LDA vs ICA conceptually.
 \end{itemize}
 
+\section{Before you start}
+This lecture assumes two earlier Unit III ideas are already clear:
+\begin{itemize}[leftmargin=*]
+  \item from \textbf{Unit 03 Lecture 01}: features are design choices, and their scale/representation affects the model,
+  \item from \textbf{Unit 03 Lecture 02}: preprocessing must be fit on the \textbf{training split only} to avoid leakage.
+\end{itemize}
+PCA is a feature-transformation method, so both ideas still apply.
+
 \section{Keywords}
 \begin{itemize}[leftmargin=*]
   \item \textbf{Dimensionality:} number of features ($d$).
@@ -107,6 +115,147 @@ Given data matrix $X$ with $n$ samples and $d$ features:
   \item Choose top-$k$ eigenvectors and project: $Z = X_c V_k$.
 \end{enumerate}
 
+\subsection{How to get eigenvalues and eigenvectors manually}
+For PCA, you do \textbf{not} find eigenvalues directly from the raw data matrix.
+You first compute the covariance matrix $C$, and then solve:
+\[
+  C v = \lambda v
+\]
+where:
+\begin{itemize}[leftmargin=*]
+  \item $\lambda$ is an eigenvalue, which tells how much variance that direction captures,
+  \item $v$ is an eigenvector, which gives the direction of that component.
+\end{itemize}
+
+For a small matrix, the manual steps are:
+\begin{enumerate}[leftmargin=*]
+  \item Form $C$ from the centered data.
+  \item Solve the characteristic equation:
+  \[
+    \det(C - \lambda I)=0
+  \]
+  to obtain the eigenvalues.
+  \item For each eigenvalue $\lambda$, solve:
+  \[
+    (C-\lambda I)v=0
+  \]
+  to obtain the corresponding eigenvector.
+  \item Normalize the eigenvector to unit length.
+  \item Sort eigenvalues in decreasing order; the eigenvector of the largest eigenvalue is the first principal component.
+\end{enumerate}
+This is practical only for tiny examples such as $2 \times 2$ covariance matrices. Real software uses more stable matrix methods internally.
+
+\subsection{Worked 2D example: manual eigenvalues and eigenvectors}
+Suppose that after centering the data, the covariance matrix is:
+\[
+  C =
+  \begin{bmatrix}
+    3 & 1\\
+    1 & 3
+  \end{bmatrix}
+\]
+
+\paragraph{Step 1: Find eigenvalues.}
+Solve:
+\[
+  \det(C-\lambda I)=
+  \det
+  \begin{bmatrix}
+    3-\lambda & 1\\
+    1 & 3-\lambda
+  \end{bmatrix}
+  = 0
+\]
+So:
+\[
+  (3-\lambda)^2 - 1 = 0
+\]
+\[
+  9 - 6\lambda + \lambda^2 - 1 = 0
+\]
+\[
+  \lambda^2 - 6\lambda + 8 = 0
+\]
+\[
+  (\lambda - 4)(\lambda - 2)=0
+\]
+Hence the eigenvalues are:
+\[
+  \lambda_1 = 4,\qquad \lambda_2 = 2
+\]
+
+\paragraph{Step 2: Find eigenvector for $\lambda_1 = 4$.}
+\[
+  C - 4I =
+  \begin{bmatrix}
+    -1 & 1\\
+    1 & -1
+  \end{bmatrix}
+\]
+Solve:
+\[
+  \begin{bmatrix}
+    -1 & 1\\
+    1 & -1
+  \end{bmatrix}
+  \begin{bmatrix}
+    x\\y
+  \end{bmatrix}
+  = 0
+\]
+This gives $-x + y = 0$, so $y=x$.
+One eigenvector is therefore:
+\[
+  v_1 =
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+\]
+Normalized:
+\[
+  \hat v_1 = \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+\]
+
+\paragraph{Step 3: Find eigenvector for $\lambda_2 = 2$.}
+\[
+  C - 2I =
+  \begin{bmatrix}
+    1 & 1\\
+    1 & 1
+  \end{bmatrix}
+\]
+Solve:
+\[
+  x + y = 0 \Rightarrow y = -x
+\]
+One eigenvector is:
+\[
+  v_2 =
+  \begin{bmatrix}
+    1\\-1
+  \end{bmatrix}
+\]
+Normalized:
+\[
+  \hat v_2 = \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1\\-1
+  \end{bmatrix}
+\]
+
+\paragraph{Interpretation for PCA.}
+Because $\lambda_1 = 4$ is larger than $\lambda_2 = 2$, the first principal component is the direction:
+\[
+  \hat v_1 = \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+\]
+This is the diagonal direction. PCA keeps this direction first because it captures more variance than the perpendicular direction.
+
 \subsection{Explained variance}
 Eigenvalue $\lambda_i$ corresponds to variance captured by component $i$.
 Explained variance ratio:
@@ -149,12 +298,14 @@ You do not need to compute SVD by hand, but it explains why PCA works well for l
   \item Always fit PCA on \textbf{training data only} (otherwise you leak information from validation/test).
 \end{itemize}
 
-\section{LDA and ICA (conceptual)}
+\section{LDA and ICA (conceptual preview)}
 \subsection{LDA}
 Linear Discriminant Analysis is supervised: it uses class labels and tries to find a projection that separates classes.
 \paragraph{How it differs from PCA.}
 PCA ignores labels and maximizes variance overall.
 LDA uses labels and tries to maximize between-class separation while minimizing within-class spread.
+\paragraph{Why it is only a preview here.}
+LDA makes much more sense after you have seen classification properly in \textbf{Unit 04 Lecture 02}. For now, remember only this anchor: PCA ignores labels, while LDA uses them.
 
 \subsection{ICA}
 Independent Component Analysis tries to find components that are statistically independent. A classic intuition is separating mixed signals into original sources.
@@ -164,14 +315,23 @@ ICA assumes the underlying sources are independent and non-Gaussian.
 
 \section{Python example (PCA)}
 \begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
-X_scaled = StandardScaler().fit_transform(X)
-pca = PCA(n_components=2)
-Z = pca.fit_transform(X_scaled)
-print(pca.explained_variance_ratio_)
+X_train, X_test = train_test_split(X, test_size=0.2, random_state=42)
+
+pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("pca", PCA(n_components=2))
+])
+
+Z_train = pipe.fit_transform(X_train)
+Z_test = pipe.transform(X_test)
+print(pipe.named_steps["pca"].explained_variance_ratio_)
 \end{lstlisting}
+The key rule is unchanged from the previous lecture: fit scaling and PCA on \textbf{training data only}, then reuse the learned transformation on validation/test data.
 
 \section{Practice (with answers)}
 \subsection*{P1. Why is it incorrect to apply PCA on the full dataset before splitting into train/test?}

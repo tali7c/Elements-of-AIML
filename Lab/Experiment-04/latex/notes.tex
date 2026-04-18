@@ -1,0 +1,72 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 04: Pandas Import/Export and Summaries (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints}.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Load a dataset in Python using Pandas.
+  \item Produce basic dataset summaries (shape, types, missingness, simple statistics).
+  \item Export a processed dataset file for later experiments.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Choose a dataset (\texttt{.csv} recommended) and record its source/link.
+  \item Load it into a Pandas DataFrame.
+  \item Compute and record:
+  \begin{itemize}[leftmargin=*]
+    \item number of rows/columns,
+    \item column names and data types,
+    \item missing values per column,
+    \item basic statistics for numeric columns (min/max/mean/median).
+  \end{itemize}
+  \item Perform at least \textbf{one} small processing action (e.g., drop duplicates, rename columns, select columns).
+  \item Export \texttt{processed.csv} (this file can be used in later labs).
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Common Pandas functions: \texttt{pd.read\_csv}, \texttt{df.shape}, \texttt{df.head}, \texttt{df.info}, \texttt{df.describe}, \texttt{df.isna().sum}, \texttt{df.to\_csv}.
+  \item If import fails, check separator/encoding (\texttt{sep=}, \texttt{encoding=}).
+  \item Do not overwrite the raw file; export to a new file (\texttt{processed.csv}).
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: your lab record with outputs/tables and brief notes.
+  \item \texttt{README.md}: dataset link/source, what summaries you produced, what processing you applied, and where \texttt{processed.csv} was generated.
+  \item \texttt{processed.csv}: only if it is reasonably small; otherwise provide a link to it.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item Summaries included: rows/cols, dtypes, missing values, numeric statistics.
+  \item One processing step documented.
+  \item \texttt{processed.csv} exported and verified to open.
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Treating text columns as numeric (or vice versa) without checking types.
+  \item Ignoring missing values (later experiments depend on this).
+  \item Exporting a file but not verifying it opens correctly.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}

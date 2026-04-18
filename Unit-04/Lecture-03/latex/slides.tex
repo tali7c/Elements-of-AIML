@@ -29,8 +29,8 @@
   \centering
   \hyperlink{sec:cluster}{\beamerbutton{Clustering}}\hspace{0.6em}
   \hyperlink{sec:kmeans}{\beamerbutton{k-means}}\hspace{0.6em}
-  \hyperlink{sec:rl}{\beamerbutton{RL Basics}}\hspace{0.6em}
   \hyperlink{sec:semi}{\beamerbutton{Semi-Supervised}}\hspace{0.6em}
+  \hyperlink{sec:rl}{\beamerbutton{RL Basics}}\hspace{0.6em}
   \hyperlink{sec:summary}{\beamerbutton{Summary}}
 \end{frame}
 
@@ -58,6 +58,14 @@
     \item RL: $s$ state,\; $a$ action,\; $r$ reward,\; $\pi$ policy,\; $\gamma$ discount
     \item $Q(s,a)$: action-value (Q-function)
     \item Semi-supervised: labeled set $L$, unlabeled set $U$, pseudo-labels
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Three Paradigms, Three Feedback Sources}
+  \begin{itemize}[<+->]
+    \item \textbf{Clustering}: no labels, no rewards; discover groups already present in the data.
+    \item \textbf{Semi-supervised}: a few labels + many unlabeled examples; extend a supervised model carefully.
+    \item \textbf{RL}: no fixed labels per row; the agent learns from delayed rewards during interaction.
   \end{itemize}
 \end{frame}
 
@@ -120,48 +128,6 @@
   \end{itemize}
 \end{frame}
 
-\section{Reinforcement Learning}
-\label{sec:rl}
-
-\begin{frame}{Reinforcement Learning (High Level)}
-  \begin{itemize}[<+->]
-    \item Agent interacts with environment: \textbf{state} $\rightarrow$ \textbf{action} $\rightarrow$ \textbf{reward}
-    \item Goal: learn a \textbf{policy} that maximizes cumulative reward
-    \item Feedback is delayed and noisy (harder than supervised learning)
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Return and Discounting (Key RL Idea)}
-  \begin{itemize}[<+->]
-    \item Goal is not just immediate reward, but \textbf{total return}:
-    \[
-      G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots
-    \]
-    \item $\gamma \in [0,1)$ discounts future rewards.
-    \item Higher $\gamma$ values emphasize long-term planning.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Q-Learning (One-line Update)}
-  \begin{itemize}[<+->]
-    \item Learn an action-value function $Q(s,a)$.
-    \item Update rule:
-    \[
-      Q(s,a) \leftarrow Q(s,a) + \alpha\bigl(r + \gamma \max_{a'}Q(s',a') - Q(s,a)\bigr)
-    \]
-    \item $\alpha$ is learning rate; $s'$ is next state after taking action $a$ in state $s$.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{Toy Example: Grid World}
-  \begin{itemize}[<+->]
-    \item State: agent position on a grid
-    \item Actions: up/down/left/right
-    \item Reward: +1 at goal, -1 at trap, small penalty per step
-    \item Learn a policy to reach goal quickly
-  \end{itemize}
-\end{frame}
-
 \section{Semi-supervised learning}
 \label{sec:semi}
 
@@ -183,6 +149,42 @@
   \end{itemize}
   \vspace{0.3em}
   \small Use validation to avoid reinforcing mistakes.
+\end{frame}
+
+\begin{frame}{Failure Mode: Wrong Pseudo-Labels}
+  \begin{itemize}[<+->]
+    \item Start with very few labeled examples from a rare class.
+    \item A weak first model can assign confident but wrong pseudo-labels.
+    \item If we retrain on those errors, the model becomes more biased, not less.
+  \end{itemize}
+\end{frame}
+
+\section{Reinforcement Learning}
+\label{sec:rl}
+
+\begin{frame}{Reinforcement Learning (High Level)}
+  \begin{itemize}[<+->]
+    \item Agent interacts with environment: \textbf{state} $\rightarrow$ \textbf{action} $\rightarrow$ \textbf{reward}
+    \item Goal: learn a \textbf{policy} that maximizes cumulative reward
+    \item Feedback is delayed and noisy, so evaluation is harder than in supervised learning
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Return and Discounting (Key RL Idea)}
+  \begin{itemize}[<+->]
+    \item We care about \textbf{total future reward}, not only the current reward.
+    \item A discount factor $\gamma$ controls short-term vs long-term focus.
+    \item High $\gamma$ values encourage planning for later rewards.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Toy Example: Grid World}
+  \begin{itemize}[<+->]
+    \item State: agent position on a grid
+    \item Actions: up/down/left/right
+    \item Reward: +1 at goal, -1 at trap, small penalty per step
+    \item Learn a policy to reach goal quickly
+  \end{itemize}
 \end{frame}
 
 \section{Summary}

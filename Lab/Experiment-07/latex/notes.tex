@@ -1,0 +1,67 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 07: Scaling \& One-Hot Encoding (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints}.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Apply feature scaling for numeric features and one-hot encoding for categorical features.
+  \item Demonstrate a leakage-safe preprocessing approach (train-only fit).
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Use the dataset from Experiment~04/05 (preferred) or another approved dataset.
+  \item Identify numeric vs categorical columns.
+  \item Apply \textbf{one} scaling method to numeric columns (standardization or min-max normalization).
+  \item Apply \textbf{one-hot encoding} to categorical columns.
+  \item Demonstrate leakage-safe practice: preprocessing must be fit on \textbf{training} data and applied to test/validation (use a pipeline approach).
+  \item Report the final feature count after encoding and write 3--5 observations.
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Common tools: \texttt{StandardScaler}, \texttt{MinMaxScaler}, \texttt{OneHotEncoder}.
+  \item Pipeline helpers: \texttt{ColumnTransformer} and \texttt{Pipeline}.
+  \item For unseen categories in test data, \texttt{handle\_unknown="ignore"} avoids errors.
+  \item Do not encode ID-like columns (they create useless features and can leak identity).
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: preprocessing steps and before/after shapes (feature counts).
+  \item \texttt{README.md}: dataset link/source, scaling method, encoding method, and leakage-safe approach summary.
+  \item \texttt{assets/} (optional): any saved outputs/plots.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item Numeric vs categorical columns identified.
+  \item Scaling + one-hot encoding applied and documented.
+  \item Leakage-safe pipeline (train-only fit) demonstrated.
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Scaling/encoding before the train/test split (leakage).
+  \item One-hot encoding an ID column.
+  \item Not reporting how many features were created after encoding.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}

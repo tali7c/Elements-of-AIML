@@ -1,0 +1,71 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 01: WEKA Regression (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints} so you perform the work yourself.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Perform a regression task in WEKA (predict a \textbf{numeric} target).
+  \item Train and compare at least \textbf{two} regressors using a correct evaluation method.
+  \item Report and interpret regression metrics (MAE, RMSE) with proper units.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Choose a dataset where the target (class) attribute is \textbf{numeric}.
+  \item Load the dataset in \textbf{WEKA Explorer} and set the \textbf{Class} attribute correctly.
+  \item Train at least \textbf{two} regression models in the \textbf{Classify} tab.
+  \item Evaluate using \textbf{10-fold cross-validation} \emph{or} a \textbf{percentage split} (same setting for both models).
+  \item Create a results table comparing the models (at least MAE and RMSE).
+  \item Write 3--5 observations explaining which model performed better and why you think so.
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item In WEKA, regression requires the class to be \textbf{numeric}. If the class is nominal, you are doing classification.
+  \item Avoid \textbf{Use training set} for evaluation (it gives misleadingly good results).
+  \item Typical useful filters: \texttt{ReplaceMissingValues}; remove obvious ID columns if they exist.
+  \item Common regressors you may try: \texttt{LinearRegression}, \texttt{SMOreg}, \texttt{RandomForest}.
+  \item RMSE/MAE must be interpreted in the \textbf{units of the target} (e.g., INR, minutes, degrees).
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: your lab record (can be markdown-focused) with screenshots and a results table.
+  \item \texttt{README.md}: dataset link/source, target column, models compared, evaluation method, and key observations.
+  \item \texttt{assets/} (folder): screenshots/images used in the notebook/README.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item Class attribute is correct and numeric.
+  \item Two regressors compared using the same evaluation method.
+  \item Metrics table included (MAE, RMSE).
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Wrong class attribute (predicting an ID or unrelated column).
+  \item Comparing models using different test options (not a fair comparison).
+  \item Reporting only one metric without interpretation.
+  \item Missing screenshots/evidence of WEKA settings and outputs.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

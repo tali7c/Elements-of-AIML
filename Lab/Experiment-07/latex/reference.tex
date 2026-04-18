@@ -1,0 +1,107 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 07 (After-submission Reference): Scaling and One-Hot Encoding}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This reference is meant to be shared \textbf{after you submit} Experiment~07.
+It explains the two most common preprocessing operations in ML:
+\begin{itemize}[leftmargin=*]
+  \item scaling numeric features, and
+  \item one-hot encoding categorical features,
+\end{itemize}
+while highlighting the most important risk: \textbf{data leakage}.
+
+\section{Scaling (what it does)}
+\subsection{Standardization (z-score)}
+Transforms a numeric feature $x$ to:
+\[
+  z = \frac{x - \mu}{\sigma}
+\]
+so the transformed feature has mean $\approx 0$ and standard deviation $\approx 1$ on the training data.
+
+\subsection{Min-max normalization}
+Transforms to:
+\[
+  x' = \frac{x - \min(x)}{\max(x) - \min(x)}
+\]
+so values map to $[0,1]$ (on the training data range).
+
+\section{One-hot encoding (what it does)}
+A categorical column like \texttt{City} with values \texttt{\{Delhi, Mumbai\}} becomes two binary columns such as \texttt{City\_Delhi}, \texttt{City\_Mumbai}.
+
+\section{Worked example (leakage-safe pipeline)}
+\subsection{Step 1: load and split}
+\begin{lstlisting}[language=Python]
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+df = pd.read_csv("processed.csv")  # or your dataset
+
+X = df.drop(columns=["target"])    # change target name
+y = df["target"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+\end{lstlisting}
+
+\subsection{Step 2: build a ColumnTransformer + Pipeline}
+\begin{lstlisting}[language=Python]
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+
+num_cols = X_train.select_dtypes("number").columns
+cat_cols = X_train.select_dtypes(exclude="number").columns
+
+pre = ColumnTransformer([
+    ("num", StandardScaler(), num_cols),
+    ("cat", OneHotEncoder(handle_unknown="ignore"), cat_cols),
+])
+
+pipe = Pipeline([
+    ("pre", pre),
+    ("clf", LogisticRegression(max_iter=1000)),
+])
+
+pipe.fit(X_train, y_train)
+\end{lstlisting}
+\textbf{Why this is correct:} scaling and encoding are learned from \textbf{training} and applied to \textbf{test} without leaking test statistics.
+
+\subsection{Step 3: inspect the transformed feature space (optional but useful)}
+\begin{lstlisting}[language=Python]
+Xtr = pipe.named_steps["pre"].transform(X_train)
+print("Transformed train shape:", Xtr.shape)
+\end{lstlisting}
+If you need column names:
+\begin{lstlisting}[language=Python]
+feat_names = pipe.named_steps["pre"].get_feature_names_out()
+print(feat_names[:20])
+\end{lstlisting}
+
+\section{What to write in reports (good explanations)}
+\begin{itemize}[leftmargin=*]
+  \item ``We standardized numeric features to remove scale effects, because our model uses gradients/distances.''
+  \item ``We used one-hot encoding with \texttt{handle\_unknown='ignore'} so unseen categories in test do not crash the model.''
+  \item ``We used a pipeline to avoid leakage: preprocessing parameters were fit using training data only.''
+\end{itemize}
+
+\section{Troubleshooting}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Pipeline error:} check column names and ensure \texttt{target} exists.
+  \item \textbf{Too many one-hot columns:} remove ID-like categorical features; group rare categories.
+  \item \textbf{Model performs worse after scaling:} some models (trees) do not need scaling; explain model choice.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

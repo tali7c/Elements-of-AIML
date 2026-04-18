@@ -1,0 +1,129 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 08 (After-submission Reference): PCA (Dimensionality Reduction)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This reference is meant to be shared \textbf{after you submit} Experiment~08.
+It clarifies:
+\begin{itemize}[leftmargin=*]
+  \item why scaling is needed before PCA,
+  \item how to choose number of components using explained variance,
+  \item how to avoid leakage when PCA is used before a model.
+\end{itemize}
+
+\section{PCA: what it learns}
+PCA finds new axes (principal components) such that:
+\begin{itemize}[leftmargin=*]
+  \item PC1 captures maximum variance,
+  \item PC2 captures maximum remaining variance subject to being orthogonal to PC1,
+  \item and so on.
+\end{itemize}
+Each principal component is a weighted combination of original features.
+
+\section{Worked example (end-to-end)}
+\subsection{Step 1: load data and select features}
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+df = pd.read_csv("processed.csv")  # or your dataset
+X = df.select_dtypes("number")     # PCA requires numeric features
+\end{lstlisting}
+If you have a label column, keep it separately (do not include in PCA features).
+
+\subsection{Step 2: scale + fit PCA}
+\begin{lstlisting}[language=Python]
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+pca = PCA()
+Z = pca.fit_transform(X_scaled)
+
+evr = pca.explained_variance_ratio_
+cum = np.cumsum(evr)
+print("First 10 EVR:", evr[:10])
+print("First 10 cumulative:", cum[:10])
+\end{lstlisting}
+
+\subsection{Step 3: pick number of components}
+Two common choices:
+\begin{itemize}[leftmargin=*]
+  \item choose the smallest $k$ such that cumulative EVR $\ge 0.90$ (90\% variance),
+  \item or choose $k$ at the ``elbow'' of the cumulative curve (diminishing returns).
+\end{itemize}
+You can also let scikit-learn choose by ratio:
+\begin{lstlisting}[language=Python]
+pca90 = PCA(n_components=0.90)
+Z90 = pca90.fit_transform(X_scaled)
+print("Chosen components:", pca90.n_components_)
+\end{lstlisting}
+
+\subsection{Step 4: plot cumulative explained variance}
+\begin{lstlisting}[language=Python]
+import matplotlib.pyplot as plt
+
+plt.plot(cum, marker="o")
+plt.axhline(0.90, color="red", linestyle="--", label="90%")
+plt.xlabel("Number of components")
+plt.ylabel("Cumulative explained variance")
+plt.grid(True)
+plt.legend()
+plt.show()
+\end{lstlisting}
+
+\subsection{Step 5: interpret components (loadings)}
+Loadings show which original features contribute to each PC.
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+loadings = pd.DataFrame(
+    pca.components_.T,
+    index=X.columns,
+    columns=[f"PC{i+1}" for i in range(pca.n_components_)]
+)
+
+print(loadings["PC1"].sort_values(key=abs, ascending=False).head(8))
+\end{lstlisting}
+\textbf{Interpretation tip:} large magnitude loading $\Rightarrow$ that feature strongly influences that component.
+
+\section{Leakage-safe PCA (important)}
+If you use PCA before training a model:
+\begin{itemize}[leftmargin=*]
+  \item split train/test first,
+  \item fit scaler+PCA on training only,
+  \item transform test using fitted objects,
+  \item ideally use a pipeline.
+\end{itemize}
+Example:
+\begin{lstlisting}[language=Python]
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+
+pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("pca", PCA(n_components=0.90)),
+    ("clf", LogisticRegression(max_iter=1000)),
+])
+\end{lstlisting}
+
+\section{Troubleshooting}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PCA fails:} check for non-numeric columns and missing values.
+  \item \textbf{EVR is low:} your features may be weakly correlated; PCA may not compress much.
+  \item \textbf{PC plot looks noisy:} PCA is not a classifier; separation is not guaranteed.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

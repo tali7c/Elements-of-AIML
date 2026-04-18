@@ -51,6 +51,14 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Prerequisite Refresh}
+  \begin{itemize}[<+->]
+    \item From Lecture 01: features are design choices, and scaling changes the representation.
+    \item From Lecture 02: preprocessing must be fit on the \textbf{training split only}.
+    \item PCA is a feature-transformation method, so both lessons still apply here.
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Abbreviations \& Symbols}
   \begin{itemize}[<+->]
     \item $n$: samples,\; $d$: original features,\; $k$: reduced dimensions
@@ -119,6 +127,68 @@
   \small $V_k$ contains the top-$k$ eigenvectors (principal directions).
 \end{frame}
 
+\begin{frame}{Manual Procedure: Eigenvalues and Eigenvectors}
+  \begin{enumerate}[<+->]
+    \item Compute the covariance matrix $C$ from centered data.
+    \item Solve $\det(C-\lambda I)=0$ to get eigenvalues.
+    \item For each eigenvalue, solve $(C-\lambda I)v=0$ to get an eigenvector.
+    \item Normalize each eigenvector.
+    \item Sort by decreasing eigenvalue: largest $\lambda$ gives PC1.
+  \end{enumerate}
+  \vspace{0.3em}
+  \small Manual calculation is realistic only for tiny matrices such as $2 \times 2$ examples.
+\end{frame}
+
+\begin{frame}{Worked 2D Example (By Hand)}
+  Suppose:
+  \[
+    C =
+    \begin{bmatrix}
+      3 & 1\\
+      1 & 3
+    \end{bmatrix}
+  \]
+  Then:
+  \[
+    \det(C-\lambda I)=
+    \det
+    \begin{bmatrix}
+      3-\lambda & 1\\
+      1 & 3-\lambda
+    \end{bmatrix}
+    = 0
+  \]
+  \[
+    (3-\lambda)^2 - 1 = 0
+    \Rightarrow (\lambda-4)(\lambda-2)=0
+  \]
+  So the eigenvalues are $\lambda_1=4$ and $\lambda_2=2$.
+\end{frame}
+
+\begin{frame}{Worked 2D Example: Principal Directions}
+  For $\lambda_1=4$, solving $(C-4I)v=0$ gives:
+  \[
+    v_1 \propto
+    \begin{bmatrix}
+      1\\1
+    \end{bmatrix}
+    \Rightarrow
+    \hat v_1 = \frac{1}{\sqrt{2}}
+    \begin{bmatrix}
+      1\\1
+    \end{bmatrix}
+  \]
+  For $\lambda_2=2$, solving $(C-2I)v=0$ gives:
+  \[
+    \hat v_2 = \frac{1}{\sqrt{2}}
+    \begin{bmatrix}
+      1\\-1
+    \end{bmatrix}
+  \]
+  \vspace{0.3em}
+  \small Since $\lambda_1 > \lambda_2$, the diagonal direction $\hat v_1$ is the first principal component.
+\end{frame}
+
 \begin{frame}{Explained Variance}
   \begin{itemize}[<+->]
     \item Eigenvalues indicate how much variance each component captures.
@@ -159,6 +229,8 @@
     ICA & No & independent sources & signal separation \\
     \bottomrule
   \end{tabular}
+  \vspace{0.4em}
+  \small Treat LDA as a supervised preview here; its meaning becomes clearer after the classification lecture in Unit IV.
 \end{frame}
 
 \section{Mini example}
@@ -174,17 +246,30 @@
   In the lab, you will implement PCA and visualize explained variance.
 \end{frame}
 
-\begin{frame}[fragile]{Minimal PCA in Python (sketch)}
+\begin{frame}[fragile]{Leakage-Safe PCA in Python (1/2)}
   \begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
-X_scaled = StandardScaler().fit_transform(X)
-pca = PCA(n_components=2)
-Z = pca.fit_transform(X_scaled)
-print(pca.explained_variance_ratio_)
+X_train, X_test = train_test_split(X, test_size=0.2, random_state=42)
+
+pipe = Pipeline([
+    ("scaler", StandardScaler()),
+    ("pca", PCA(n_components=2))
+])
   \end{lstlisting}
-  \small Standardize first; then inspect explained variance ratios.
+  \small First set up the train/test split and define a pipeline that standardizes before PCA.
+\end{frame}
+
+\begin{frame}[fragile]{Leakage-Safe PCA in Python (2/2)}
+  \begin{lstlisting}[language=Python]
+Z_train = pipe.fit_transform(X_train)
+Z_test = pipe.transform(X_test)
+print(pipe.named_steps["pca"].explained_variance_ratio_)
+  \end{lstlisting}
+  \small Fit scaling and PCA on \textbf{training data only}; then reuse the same transformation on test data.
 \end{frame}
 
 \section{Summary}

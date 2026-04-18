@@ -60,6 +60,16 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}{Case-Study Lens for Every Domain}
+  \begin{itemize}[<+->]
+    \item What is the \textbf{task}? (classification, regression, anomaly detection)
+    \item What \textbf{data} and \textbf{labels} are available?
+    \item Which \textbf{metric} matches the real error cost?
+    \item What is the main \textbf{risk}? (drift, bias, adversary, safety)
+    \item Which \textbf{monitoring signal} would reveal trouble early?
+  \end{itemize}
+\end{frame}
+
 \begin{frame}{Banking: Typical ML Tasks}
   \begin{itemize}[<+->]
     \item Fraud detection (rare-event classification)
@@ -150,6 +160,19 @@
     \item Business metrics: chargebacks, false declines, incident volume
     \item Periodic ground-truth performance once labels arrive
   \end{itemize}
+\end{frame}
+
+\begin{frame}{Cross-Domain Comparison}
+  \scriptsize
+  \begin{tabular}{p{1.9cm}p{2.3cm}p{2.2cm}p{4.8cm}}
+    \toprule
+    \textbf{Domain} & \textbf{Task} & \textbf{Metric} & \textbf{Main risk / monitoring} \\
+    \midrule
+    Banking & fraud / credit risk & precision-recall + cost & proxy bias, delayed labels, drift / chargebacks, false declines \\
+    Security & phishing / intrusion & recall + alert quality & adversarial drift / alert volume, confirmed incidents \\
+    Healthcare & risk / imaging / triage & recall + calibration & safety under dataset shift / site-wise performance, override rates \\
+    \bottomrule
+  \end{tabular}
 \end{frame}
 
 \section{Summary}

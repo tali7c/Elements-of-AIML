@@ -1,0 +1,125 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 06 (After-submission Reference): Missing Values and Outliers}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This reference is meant to be shared \textbf{after you submit} Experiment~06.
+It explains \textbf{why} missing values and outliers appear, and shows common handling strategies with clear trade-offs.
+
+\section{Missing values: what they mean}
+Missing values are not all the same:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{MCAR} (missing completely at random): missingness is unrelated to any variable.
+  \item \textbf{MAR} (missing at random): missingness depends on observed variables (e.g., income missing more often for certain job types).
+  \item \textbf{MNAR} (missing not at random): missingness depends on the missing value itself (hardest case).
+\end{itemize}
+In practice, you rarely prove the type; you justify a reasonable strategy and document it.
+
+\section{Outliers: error vs rare-but-real}
+Outliers can be:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{errors} (wrong unit, extra zero, data entry mistake), or
+  \item \textbf{rare-but-real events} (fraud, extreme weather).
+\end{itemize}
+Therefore, deleting outliers without reasoning can damage the analysis.
+
+\section{Worked example (end-to-end)}
+\subsection{Step 1: load dataset and summarize missingness}
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+df = pd.read_csv("processed.csv")  # or your dataset
+
+missing_count = df.isna().sum().sort_values(ascending=False)
+missing_pct = (df.isna().mean() * 100).sort_values(ascending=False)
+
+print(missing_count.head(10))
+print(missing_pct.head(10))
+\end{lstlisting}
+
+\subsection{Step 2: choose a missing-value strategy (with justification)}
+\paragraph{Option A: dropping.}
+Use when missingness is small and dropping does not remove important groups.
+\begin{lstlisting}[language=Python]
+df_drop = df.dropna()
+\end{lstlisting}
+
+\paragraph{Option B: simple imputation (typical baseline).}
+\begin{lstlisting}[language=Python]
+df_imp = df.copy()
+
+num_cols = df_imp.select_dtypes("number").columns
+df_imp[num_cols] = df_imp[num_cols].fillna(df_imp[num_cols].median())
+
+cat_cols = df_imp.select_dtypes(exclude="number").columns
+for c in cat_cols:
+    df_imp[c] = df_imp[c].fillna(df_imp[c].mode().iloc[0])
+\end{lstlisting}
+
+\paragraph{Option C: scikit-learn imputers (pipeline-friendly).}
+This is useful when you later combine preprocessing + modeling.
+\begin{lstlisting}[language=Python]
+from sklearn.impute import SimpleImputer
+
+imp_median = SimpleImputer(strategy="median")
+\end{lstlisting}
+
+\subsection{Step 3: detect outliers (IQR rule)}
+For one numeric column \texttt{num\_col}:
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+x = df_imp["num_col"]   # choose a numeric column
+q1, q3 = x.quantile(0.25), x.quantile(0.75)
+iqr = q3 - q1
+lower, upper = q1 - 1.5 * iqr, q3 + 1.5 * iqr
+
+mask = (x < lower) | (x > upper)
+print("Outliers by IQR:", mask.sum())
+\end{lstlisting}
+
+\subsection{Step 4: handle outliers (two common options)}
+\paragraph{Option A: remove outlier rows (only if justified).}
+\begin{lstlisting}[language=Python]
+df_no_out = df_imp.loc[~mask].copy()
+\end{lstlisting}
+
+\paragraph{Option B: cap outliers (winsorization).}
+\begin{lstlisting}[language=Python]
+df_cap = df_imp.copy()
+df_cap["num_col"] = df_cap["num_col"].clip(lower, upper)
+\end{lstlisting}
+
+\subsection{Step 5: compare before/after impact}
+\begin{lstlisting}[language=Python]
+print("Before:\n", df.describe())
+print("After imputation:\n", df_imp.describe())
+print("After capping:\n", df_cap.describe())
+\end{lstlisting}
+Add one plot if possible (boxplot before vs after) to show the effect clearly.
+
+\section{What strong observations look like (examples)}
+\begin{itemize}[leftmargin=*]
+  \item ``\texttt{Age} had 4.2\% missing values. We used median imputation because the distribution is skewed.''
+  \item ``IQR detected 12 extreme values in \texttt{Income}. We capped them to reduce distortion while keeping rare cases.''
+  \item ``After capping, max income reduced from 9.8M to 1.2M and mean decreased, indicating extreme values were pulling the mean upward.''
+\end{itemize}
+
+\section{Troubleshooting}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{All values flagged as outliers:} check if the column is categorical coded as numbers, or if units are inconsistent.
+  \item \textbf{Imputation changes categories incorrectly:} avoid mode fill when the column has many unique IDs.
+  \item \textbf{Leakage warning (for ML):} always fit imputers/outlier rules on training data only when doing model evaluation.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

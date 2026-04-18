@@ -1,0 +1,17 @@
+Elements of AIML — Old Experiment Mapping (Old → Current)
+Date: 2026-03-03
+
+Current experiment:
+- Experiment-05: Exploratory Data Analysis (EDA)
+
+Old source folder:
+- D:\InSync-tofik\Work\UPES\Old-Lectures\OOP Element-AIML\Recieve From Sumanta sir\Elements of AIML\Lab Experiments
+
+Exact mapping:
+- Old Experiment-3.docx → Current Experiment-05 (EDA) — Exact
+
+Old file(s):
+- Experiment-3.docx
+
+Notes:
+- The old document contains the same EDA checklist/plot-and-observation workflow.

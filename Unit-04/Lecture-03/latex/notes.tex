@@ -21,7 +21,7 @@ This lecture covers three important ML paradigms beyond basic supervised learnin
 
 \section{How to use these notes (self-study)}
 This lecture has three mini-topics. Study them in this order:
-(1) clustering (because it uses only data $X$), (2) reinforcement learning (because it adds time/interaction), and (3) semi-supervised learning (because it combines labeled and unlabeled data).
+(1) clustering (because it uses only data $X$), (2) semi-supervised learning (because it still starts from labeled examples), and (3) reinforcement learning (because it changes the setting from datasets to interaction over time).
 For each topic, focus on the \textbf{objective} and the \textbf{main pitfalls}.
 
 \section{Learning Outcomes}
@@ -48,6 +48,14 @@ For each topic, focus on the \textbf{objective} and the \textbf{main pitfalls}.
   \item $Q(s,a)$: action-value (Q-function); $\alpha$: learning rate.
   \item Semi-supervised: labeled set $L$, unlabeled set $U$, pseudo-labels.
 \end{itemize}
+
+\section{Three paradigms at a glance}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Clustering:} no labels, no rewards. The question is ``what groups already exist in the data?''.
+  \item \textbf{Semi-supervised learning:} a few labels plus many unlabeled examples. The question is ``how can unlabeled data help a supervised model?''.
+  \item \textbf{Reinforcement learning:} no fixed label per row; instead the agent receives delayed rewards while interacting with an environment.
+\end{itemize}
+This comparison matters because the three paradigms use different feedback signals and therefore require different evaluation habits.
 
 \section{Clustering}
 \subsection{What is clustering?}
@@ -110,47 +118,6 @@ Initialize $\mu_1=2$, $\mu_2=9$.
 \end{itemize}
 Next iteration keeps the same assignments, so the algorithm converges.
 
-\section{Reinforcement learning (overview)}
-\subsection{Core idea}
-RL learns by interaction. At each time step:
-\begin{itemize}[leftmargin=*]
-  \item agent observes state $s$,
-  \item chooses action $a$,
-  \item receives reward $r$ and new state $s'$.
-\end{itemize}
-Goal: learn a policy $\pi(a|s)$ that maximizes cumulative reward.
-
-\subsection{Return and discounting}
-We usually care about the \textbf{return} (total future reward), not just immediate reward:
-\[
-  G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots
-\]
-where $\gamma \in [0,1)$ is the \textbf{discount factor}.
-\begin{itemize}[leftmargin=*]
-  \item $\gamma$ close to 0: focus on short-term reward.
-  \item $\gamma$ close to 1: focus on long-term reward.
-\end{itemize}
-
-\subsection{Why RL is harder}
-\begin{itemize}[leftmargin=*]
-  \item feedback can be delayed,
-  \item exploration vs exploitation trade-off,
-  \item environment can be stochastic.
-\end{itemize}
-
-\subsection{Q-learning (high-level)}
-One famous RL method is \textbf{Q-learning}, which learns a value for taking action $a$ in state $s$:
-\[
-  Q(s,a) \leftarrow Q(s,a) + \alpha\bigl(r + \gamma \max_{a'}Q(s',a') - Q(s,a)\bigr)
-\]
-Interpretation: update your estimate toward ``reward + best future value''.
-You are not expected to derive this formula, but you should understand:
-\begin{itemize}[leftmargin=*]
-  \item the meanings of $s,a,r,s'$,
-  \item the role of $\gamma$ (short-term vs long-term),
-  \item why exploration is needed.
-\end{itemize}
-
 \section{Semi-supervised learning}
 \subsection{Motivation}
 Often labels are expensive (medical, legal), but unlabeled data is abundant.
@@ -164,11 +131,65 @@ Often labels are expensive (medical, legal), but unlabeled data is abundant.
 \end{enumerate}
 Risk: if pseudo-labels are wrong, errors can be reinforced.
 
+\subsection{Pseudo-labeling failure example}
+Imagine a medical-image dataset with very few positive cases.
+If the first model is already biased toward the majority class, it may assign high-confidence negative pseudo-labels to borderline positive cases.
+Those wrong pseudo-labels are then fed back into training, making the model even less sensitive to rare positives.
+So semi-supervised learning must be validated carefully; ``more data'' is not automatically ``better data''.
+
 \subsection{Other semi-supervised approaches (brief)}
 \begin{itemize}[leftmargin=*]
   \item \textbf{Co-training}: two models teach each other using different feature ``views'' (when applicable).
   \item \textbf{Label propagation}: build a similarity graph and spread labels to nearby points.
   \item \textbf{Consistency regularization}: encourage stable predictions under perturbations (modern deep learning idea).
+\end{itemize}
+
+\section{Reinforcement learning (overview)}
+\subsection{Core idea}
+RL learns by interaction. At each time step:
+\begin{itemize}[leftmargin=*]
+  \item agent observes state $s$,
+  \item chooses action $a$,
+  \item receives reward $r$ and new state $s'$.
+\end{itemize}
+Goal: learn a policy $\pi(a|s)$ that maximizes cumulative reward.
+This is where the agent concepts from \textbf{Unit 01 Lecture 02} become directly useful again.
+
+\subsection{Return and discounting}
+We usually care about the \textbf{return} (total future reward), not just immediate reward:
+\[
+  G_t = r_{t+1} + \gamma r_{t+2} + \gamma^2 r_{t+3} + \dots
+\]
+where $\gamma \in [0,1)$ is the \textbf{discount factor}.
+\begin{itemize}[leftmargin=*]
+  \item $\gamma$ close to 0: focus on short-term reward.
+  \item $\gamma$ close to 1: focus on long-term reward.
+\end{itemize}
+
+\subsection{Q-learning (numeric intuition)}
+One common RL idea is to update the value of an action using both the immediate reward and the estimated future value.
+Suppose:
+\begin{itemize}[leftmargin=*]
+  \item old estimate $Q(s,a)=2.0$,
+  \item immediate reward $r=1$,
+  \item best next-state value $\max_{a'}Q(s',a')=3.0$,
+  \item learning rate $\alpha=0.5$ and discount $\gamma=0.9$.
+\end{itemize}
+Then the target is:
+\[
+  r + \gamma \max_{a'}Q(s',a') = 1 + 0.9 \times 3 = 3.7
+\]
+and the updated value becomes:
+\[
+  Q_{\text{new}}(s,a) = 2.0 + 0.5(3.7 - 2.0) = 2.85
+\]
+Interpretation: the old estimate moves partway toward a better estimate based on reward plus promising future outcomes.
+
+\subsection{Why RL is harder}
+\begin{itemize}[leftmargin=*]
+  \item feedback can be delayed,
+  \item exploration vs exploitation trade-off,
+  \item environment can be stochastic.
 \end{itemize}
 
 \section{Practice (with answers)}

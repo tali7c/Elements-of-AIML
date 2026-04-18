@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 02: WEKA Classification (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints}.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Perform a classification task in WEKA (predict a \textbf{label} / \textbf{nominal} class).
+  \item Train and compare at least \textbf{two} classifiers using a correct evaluation method.
+  \item Report the confusion matrix and key metrics (precision/recall/F1) and write observations.
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Choose a dataset where the class attribute is \textbf{nominal} (categorical label).
+  \item Load the dataset in \textbf{WEKA Explorer} and set the \textbf{Class} attribute correctly.
+  \item Train at least \textbf{two} classification models in the \textbf{Classify} tab.
+  \item Evaluate using \textbf{10-fold cross-validation} \emph{or} a \textbf{percentage split} (same setting for both models).
+  \item Record results for each model:
+  \begin{itemize}[leftmargin=*]
+    \item confusion matrix,
+    \item precision/recall/F1 (per-class or weighted average, as applicable).
+  \end{itemize}
+  \item Write 3--5 observations (trade-offs and which model you prefer, with reasons).
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item If the class attribute is numeric, you are not doing classification.
+  \item Avoid \textbf{Use training set} for evaluation.
+  \item Use the same test option for all models (fair comparison).
+  \item If classes are imbalanced, do not rely only on accuracy; focus on precision/recall/F1 and the confusion matrix.
+  \item Common classifiers you may try: \texttt{J48}, \texttt{NaiveBayes}, \texttt{Logistic}, \texttt{SMO}, \texttt{RandomForest}.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: your lab record (can be markdown-focused) with screenshots and a comparison table.
+  \item \texttt{README.md}: dataset link/source, class labels, models compared, evaluation method, and observations.
+  \item \texttt{assets/} (folder): screenshots/images used in the notebook/README.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item Class attribute is correct and nominal.
+  \item Two classifiers compared using the same evaluation method.
+  \item Confusion matrix + precision/recall/F1 included.
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Wrong class attribute (predicting an ID or unrelated column).
+  \item Comparing models using different test options.
+  \item Reporting accuracy only (especially when data is imbalanced).
+  \item Missing evidence of WEKA settings/outputs.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}

@@ -1,0 +1,110 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 05 (After-submission Reference): EDA using Python}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This reference is meant to be shared \textbf{after you submit} Experiment~05.
+It demonstrates a complete EDA flow and, more importantly, shows \textbf{how to write observations} (EDA is not only plots).
+
+\section{EDA in one sentence}
+EDA answers: \emph{``What does this dataset look like, what can go wrong, and what should we do next?''}
+
+\section{Recommended EDA sequence (teaching order)}
+\subsection{1) Load + understand structure}
+\begin{lstlisting}[language=Python]
+import pandas as pd
+
+df = pd.read_csv("processed.csv")   # use Exp-04 output if available
+print(df.shape)
+print(df.head())
+print(df.info())
+\end{lstlisting}
+\textbf{What to write:} mention rows/columns and the main column types (numeric/categorical/date).
+
+\subsection{2) Data quality checks (missing + duplicates)}
+\begin{lstlisting}[language=Python]
+miss = df.isna().sum().sort_values(ascending=False)
+print(miss[miss > 0])
+print("Duplicates:", df.duplicated().sum())
+\end{lstlisting}
+\textbf{What to write:} name the top 2--3 columns with missing values and their counts/percentages.
+
+\subsection{3) Descriptive summaries}
+\begin{lstlisting}[language=Python]
+print(df.describe())
+print(df.describe(include="object"))
+\end{lstlisting}
+\textbf{What to look for:} min/max surprises, skewed distributions, rare categories.
+
+\subsection{4) Univariate plots (distribution of one feature)}
+\begin{lstlisting}[language=Python]
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.histplot(df["num_col"], kde=True)
+plt.title("Distribution of num_col")
+plt.show()
+
+sns.boxplot(x=df["num_col"])
+plt.title("Boxplot of num_col")
+plt.show()
+\end{lstlisting}
+\textbf{Observation examples:}
+\begin{itemize}[leftmargin=*]
+  \item ``\texttt{num\_col} is right-skewed; most values are below 50 with a long tail up to 300.''
+  \item ``The boxplot shows extreme values; we may need outlier handling or log transform.''
+\end{itemize}
+
+\subsection{5) Relationship plots (feature vs feature)}
+\begin{lstlisting}[language=Python]
+corr = df.select_dtypes("number").corr()
+sns.heatmap(corr, cmap="coolwarm", center=0)
+plt.title("Correlation heatmap (numeric features)")
+plt.show()
+\end{lstlisting}
+\textbf{How to interpret:}
+\begin{itemize}[leftmargin=*]
+  \item strong positive correlation $\approx$ features increase together,
+  \item strong negative correlation $\approx$ one increases as the other decreases,
+  \item near zero correlation does not guarantee independence (could be non-linear).
+\end{itemize}
+
+\subsection{6) If there is a target column (optional but valuable)}
+\begin{itemize}[leftmargin=*]
+  \item Numeric target: scatter plot feature vs target.
+  \item Class label: compare distributions by class (boxplots or histograms per class).
+\end{itemize}
+
+\section{Minimum plot set (good standard)}
+\begin{itemize}[leftmargin=*]
+  \item One histogram (distribution) + written comment.
+  \item One boxplot (outliers/spread) + written comment.
+  \item One relationship plot (scatter or heatmap) + written comment.
+\end{itemize}
+
+\section{Common EDA writing pattern (use this in reports)}
+For each plot/check, write:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Evidence:} what you saw (numbers/plot pattern).
+  \item \textbf{Meaning:} what it suggests about the data.
+  \item \textbf{Action:} what you would do next (missing handling, scaling, encoding, etc.).
+\end{enumerate}
+
+\section{Troubleshooting}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Plots look empty:} check column names, data types, and missing values.
+  \item \textbf{Too many categories:} plot top-$k$ value counts and group rare categories as ``Other''.
+  \item \textbf{Time columns:} convert with \texttt{pd.to\_datetime} before time-based plots.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

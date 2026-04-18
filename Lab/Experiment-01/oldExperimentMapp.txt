@@ -1,0 +1,15 @@
+Elements of AIML — Old Experiment Mapping (Old → Current)
+Date: 2026-03-03
+
+Current experiment:
+- Experiment-01: WEKA Regression
+
+Old source folder:
+- D:\InSync-tofik\Work\UPES\Old-Lectures\OOP Element-AIML\Recieve From Sumanta sir\Elements of AIML\Lab Experiments
+
+Closest old experiment mapping:
+- Old file(s): (no close match found in this old folder)
+- Similarity: None / Not available
+
+Notes:
+- This current experiment is WEKA regression-based; the old folder mainly contains Pandas/EDA/visualization/missing-outlier labs.

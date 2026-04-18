@@ -32,6 +32,14 @@ This is the same checklist you will use in projects and interviews.
   \item Describe monitoring needs for deployed models.
 \end{itemize}
 
+\section{Before you start}
+This lecture applies earlier concepts rather than introducing new algorithms.
+\begin{itemize}[leftmargin=*]
+  \item From \textbf{Unit 04 Lectures 01--02}, recall how metric choice depends on the cost of errors.
+  \item From \textbf{Unit 03 Lecture 02}, recall leakage, delayed labels, and drift-aware evaluation.
+  \item From \textbf{Unit 05 Lecture 01}, keep the responsible-AI checklist active while reading each domain case.
+\end{itemize}
+
 \section{Keywords}
 \begin{itemize}[leftmargin=*]
   \item \textbf{Fraud detection:} rare-event classification.
@@ -47,6 +55,16 @@ This is the same checklist you will use in projects and interviews.
   \item \textbf{PII}: personally identifiable information.
   \item \textbf{EHR}: electronic health record; \textbf{PHI}: protected health information.
   \item \textbf{Drift}: change in data/label patterns over time; \textbf{monitoring}: ongoing checks in production.
+\end{itemize}
+
+\section{Case-study lens used in this lecture}
+For each domain, answer the same five questions:
+\begin{itemize}[leftmargin=*]
+  \item What is the \textbf{task}? (classification, regression, anomaly detection, ranking, etc.)
+  \item What \textbf{data} and \textbf{labels} are available?
+  \item Which \textbf{metric} best reflects the real cost of errors?
+  \item What is the main \textbf{risk}? (drift, bias, adversaries, safety, privacy)
+  \item Which \textbf{monitoring signal} would tell us the system is going wrong?
 \end{itemize}
 
 \section{Banking applications}
@@ -65,6 +83,14 @@ Fraud is usually rare, so datasets are imbalanced. Key considerations:
   \item customer/account history (age of account, past chargebacks).
 \end{itemize}
 Labels can be delayed (fraud confirmed after investigation), so training/evaluation pipelines must handle late-arriving ground truth.
+
+\paragraph{Case-study snapshot.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Task:} binary classification for card fraud; sometimes anomaly detection for unusual behavior.
+  \item \textbf{Metric:} precision/recall and cost-aware evaluation because FP and FN have different business costs.
+  \item \textbf{Main risk:} proxy bias and drift when fraud patterns or economic behavior change.
+  \item \textbf{Monitoring signal:} chargeback rate, false-decline rate, and distribution changes in transaction features.
+\end{itemize}
 
 \subsection{Credit scoring}
 Credit scoring predicts default risk. Consider:
@@ -101,6 +127,14 @@ Trade-off: too sensitive $\rightarrow$ too many alerts; too insensitive $\righta
   \item \textbf{Operational constraints}: security teams must handle alerts; too many FP can cause ``alert fatigue''.
 \end{itemize}
 
+\paragraph{Case-study snapshot.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Task:} phishing classification or network anomaly detection.
+  \item \textbf{Metric:} high recall matters, but alert volume must stay manageable for analysts.
+  \item \textbf{Main risk:} adversarial drift because attackers adapt intentionally.
+  \item \textbf{Monitoring signal:} alert rate, analyst-confirmed incident rate, and sudden shifts in email/network feature patterns.
+\end{itemize}
+
 \section{Healthcare applications}
 \subsection{Risk prediction and decision support}
 Predicting risk (e.g., readmission) can support clinicians. Key issues:
@@ -131,6 +165,14 @@ Healthcare models should be validated in realistic settings:
   \item prospective/retrospective validation with appropriate splits,
   \item evaluation of workflow impact (time saved, reduced errors),
   \item human factors (interpretability, trust, escalation).
+\end{itemize}
+
+\paragraph{Case-study snapshot.}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Task:} risk prediction, imaging classification, or triage support.
+  \item \textbf{Metric:} recall/sensitivity is often critical when missing a positive case can cause harm; calibration can also matter.
+  \item \textbf{Main risk:} unsafe deployment under dataset shift across hospitals, devices, or populations.
+  \item \textbf{Monitoring signal:} performance by site/population, missing-data patterns, and clinician override/escalation rates.
 \end{itemize}
 
 \section{Concept drift and monitoring}

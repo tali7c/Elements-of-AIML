@@ -1,0 +1,15 @@
+Elements of AIML — Old Experiment Mapping (Old → Current)
+Date: 2026-03-03
+
+Current experiment:
+- Experiment-07: Scaling and One-Hot Encoding
+
+Old source folder:
+- D:\InSync-tofik\Work\UPES\Old-Lectures\OOP Element-AIML\Recieve From Sumanta sir\Elements of AIML\Lab Experiments
+
+Closest old experiment mapping:
+- Old file(s): (no close match found in this old folder)
+- Similarity: None / Not available
+
+Notes:
+- The old folder does not include a dedicated scaling/encoding experiment; this is a newer preprocessing-focused lab.

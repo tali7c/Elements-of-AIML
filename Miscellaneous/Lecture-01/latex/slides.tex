@@ -1,0 +1,201 @@
+\documentclass[aspectratio=169]{beamer}
+
+\input{../../../_shared/beamer-common.tex}
+
+\title[Elements of AIML]{Elements of AIML}
+\subtitle{Miscellaneous -- Lecture 01: PCA, LDA, and ICA in One View}
+\author{Tofik Ali}
+\institute{School of Computer Science, UPES Dehradun}
+\date{\today}
+
+\graphicspath{{../images/}{../../../_shared/}{../../../_shared/UPES-Beamer-Theme/}}
+
+\begin{document}
+
+\UPESCoverFrame
+\setcounter{framenumber}{0}
+
+\begin{frame}
+  \titlepage
+  \vspace{0.3em}
+  \begin{center}
+    \footnotesize Supplementary lecture: \textbf{what each method optimizes, when to use it, and how they differ}\\[0.25em]
+    \footnotesize Repository: \texttt{\AIMLRepoURL}
+  \end{center}
+  \slidesources{\AIMLMiscSources}
+\end{frame}
+
+\begin{frame}{Agenda}
+  \tableofcontents
+\end{frame}
+
+\section{Context}
+
+\begin{frame}{Learning Outcomes}
+  By the end of this lecture, you should be able to:
+  \begin{itemize}[<+->]
+    \item explain the core objective of \textbf{PCA}, \textbf{LDA}, and \textbf{ICA},
+    \item identify whether a method is supervised or unsupervised,
+    \item compare the three methods across assumptions, outputs, and use-cases,
+    \item choose a method more carefully for a new AIML problem.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Reading Order and Prerequisites}
+  \begin{itemize}[<+->]
+    \item First read \textbf{Unit 03 Lecture 03} for the PCA pipeline and the leakage-safe preprocessing rule.
+    \item For \textbf{LDA}, basic classification language from \textbf{Unit 04} is useful because labels matter.
+    \item For the eigenvalue derivation itself, use \textbf{Miscellaneous Lecture 02}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Three Questions Before Choosing a Method}
+  \begin{enumerate}[<+->]
+    \item Do I have class labels?
+    \item Do I want \textbf{maximum variance}, \textbf{class separation}, or \textbf{independent sources}?
+    \item Is my main goal compression, classification support, visualization, or source separation?
+  \end{enumerate}
+\end{frame}
+
+\section{Method Intuition}
+
+\begin{frame}{PCA: What Does It Do?}
+  \begin{block}{Principal Component Analysis}
+    Find orthogonal directions that capture the \textbf{largest variance} in the data.
+  \end{block}
+  \begin{itemize}[<+->]
+    \item Unsupervised: uses only the feature matrix.
+    \item Produces new components that are linear combinations of the original features.
+    \item Common goals: compression, denoising, and visualization.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{LDA: What Does It Do?}
+  \begin{block}{Linear Discriminant Analysis}
+    Find projections that make classes far apart while keeping samples of the same class close together.
+  \end{block}
+  \begin{itemize}[<+->]
+    \item Supervised: requires class labels.
+    \item Uses between-class scatter and within-class scatter.
+    \item Common goal: prepare features for classification.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{ICA: What Does It Do?}
+  \begin{block}{Independent Component Analysis}
+    Recover latent components that are as \textbf{statistically independent} as possible.
+  \end{block}
+  \begin{itemize}[<+->]
+    \item Unsupervised, but not a variance-maximization method.
+    \item Often motivated by source separation: mixed signals $\rightarrow$ original sources.
+    \item Common goals: artifact removal, blind source separation, latent-signal recovery.
+  \end{itemize}
+\end{frame}
+
+\section{Mathematics}
+
+\begin{frame}{Core Objective Functions}
+  \begin{itemize}[<+->]
+    \item \textbf{PCA:} maximize variance of projections.
+    \[
+      \max_{\|v\|=1} v^\top C v
+    \]
+    \item \textbf{LDA:} maximize class separation relative to class spread.
+    \[
+      J(W) = \frac{|W^\top S_B W|}{|W^\top S_W W|}
+    \]
+    \item \textbf{ICA:} maximize independence, usually through non-Gaussianity after centering and whitening.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{What Matrix Problem Appears?}
+  \begin{itemize}[<+->]
+    \item \textbf{PCA:} eigenvectors of the covariance matrix $C$.
+    \item \textbf{LDA:} generalized eigenvectors of $S_W^{-1} S_B$.
+    \item \textbf{ICA:} often starts with whitening, but the final optimization is not just a covariance-eigenvalue problem.
+  \end{itemize}
+  \vspace{0.3em}
+  \small This is a key difference: PCA and LDA are directly tied to eigen-analysis; ICA goes beyond second-order statistics.
+\end{frame}
+
+\begin{frame}{Dimensionality Limits}
+  \centering
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Method} & \textbf{Label use} & \textbf{Dimension limit} \\
+    \midrule
+    PCA & No & choose any $k \le d$ \\
+    LDA & Yes & at most $C-1$ for $C$ classes \\
+    ICA & No & usually same order as observed signals/features \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\section{Detailed Comparison}
+
+\begin{frame}{Detailed Comparison I}
+  \centering
+  \begin{tabular}{p{2.1cm}p{2.2cm}p{3.1cm}p{3.5cm}}
+    \toprule
+    \textbf{Method} & \textbf{Supervised?} & \textbf{Optimizes} & \textbf{Best used for} \\
+    \midrule
+    PCA & No & maximum variance & compression, visualization, denoising \\
+    LDA & Yes & class separation & classification-oriented projection \\
+    ICA & No & independence & source separation, latent-signal extraction \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{Detailed Comparison II}
+  \centering
+  \begin{tabular}{p{2.1cm}p{2.6cm}p{2.7cm}p{2.8cm}}
+    \toprule
+    \textbf{Method} & \textbf{Important assumption} & \textbf{Component relation} & \textbf{Typical risk} \\
+    \midrule
+    PCA & high variance is informative & orthogonal & loses label information \\
+    LDA & class labels are meaningful & not just variance-based & weak when class overlap is high \\
+    ICA & latent sources are independent and often non-Gaussian & independent, not merely orthogonal & unstable if assumptions fail \\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+\begin{frame}{What Students Often Confuse}
+  \begin{itemize}[<+->]
+    \item PCA is \textbf{not} a classification method.
+    \item LDA is \textbf{not} just ``supervised PCA''; the optimization target is different.
+    \item ICA is \textbf{not} the same as PCA with more components; it cares about independence, not variance.
+    \item Orthogonality and independence are different ideas.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Which Method Should I Choose?}
+  \begin{itemize}[<+->]
+    \item Need 2D visualization or compression before modeling? \textbf{Start with PCA.}
+    \item Need a low-dimensional space that separates known classes? \textbf{Consider LDA.}
+    \item Need to separate mixed signals or hidden sources? \textbf{Consider ICA.}
+    \item If labels are unavailable, LDA is not applicable.
+  \end{itemize}
+\end{frame}
+
+\section{Summary}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item PCA maximizes variance and is best for compression or visualization.
+    \item LDA uses labels and is best when class separation matters.
+    \item ICA seeks independent latent sources and is common in signal-style problems.
+    \item The right method depends on the \textbf{goal}, not just on the number of dimensions.
+  \end{itemize}
+  \slidesources{\AIMLMiscSources}
+\end{frame}
+
+\begin{frame}{Exit Questions}
+  \begin{enumerate}
+    \item Why is PCA unsupervised while LDA is supervised?
+    \item Why can LDA return at most $C-1$ components?
+    \item What is the difference between orthogonality and independence?
+    \item Give one realistic use-case for ICA.
+  \end{enumerate}
+\end{frame}
+
+\end{document}

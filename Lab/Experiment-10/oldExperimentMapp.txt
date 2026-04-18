@@ -1,0 +1,17 @@
+Elements of AIML — Old Experiment Mapping (Old → Current)
+Date: 2026-03-03
+
+Current experiment:
+- Experiment-10: Visualization (Matplotlib + Seaborn)
+
+Old source folder:
+- D:\InSync-tofik\Work\UPES\Old-Lectures\OOP Element-AIML\Recieve From Sumanta sir\Elements of AIML\Lab Experiments
+
+Exact mapping:
+- Old Experiment-1.docx → Current Experiment-10 (Visualization) — Exact
+
+Old file(s):
+- Experiment-1.docx
+
+Notes:
+- The old document is the same visualization lab (Matplotlib + Seaborn).

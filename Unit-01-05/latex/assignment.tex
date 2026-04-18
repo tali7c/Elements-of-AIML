@@ -1,0 +1,287 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Elements of AIML (B.Tech)}
+\rhead{Assignment: Units 01--05}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{April 28, 2026}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Assignment -- Units 01--05}}\\[0.25em]
+  {\large Elements of AIML}\\[0.25em]
+  \normalsize (Introduction to AI, Logic for AI, Machine Learning Basics, ML Types, and AI/ML Applications)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{SAP-ID:} \_\_\_\_\_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item Answer \textbf{all} questions. This assignment is cumulative and covers \textbf{Unit 01 to Unit 05}.
+  \item Submission format: submit one ZIP containing:
+    \begin{itemize}[leftmargin=*]
+      \item \texttt{notebook.ipynb} (typed answers with equations/diagrams where useful),
+      \item \texttt{README.md} (1-page summary of what you revised and references used),
+      \item optional \texttt{assets/} folder for tables, screenshots, or diagrams.
+    \end{itemize}
+  \item Use your own examples whenever the question is open-ended.
+  \item For logic questions, show major steps clearly (truth tables, CNF conversion, resolution, substitutions).
+  \item For ML questions, explain data assumptions, metrics, and why your workflow avoids leakage.
+  \item Write clearly enough that another student could study from your solution.
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (20 Questions)}
+\begin{enumerate}[label=E\arabic*., leftmargin=*]
+  \item \textbf{Define AI:} Give a 2--3 line definition of Artificial Intelligence in your own words.
+    Mention one key goal such as perception, planning, language, or decision-making.
+
+  \item \textbf{AI applications:} List five AI applications from different domains.
+    For each, write one line in the form \emph{input} $\rightarrow$ \emph{output}.
+
+  \item \textbf{AI vs ML vs Data Science:} Write 6--10 lines comparing AI, Machine Learning, and Data Science.
+    Give one example project for each.
+
+  \item \textbf{Technique categories:} Name three broad AI technique families and give one example of each:
+    search/planning, logic/reasoning, and learning.
+
+  \item \textbf{Success criteria:} For each system below, write two success criteria beyond accuracy:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item medical screening support,
+      \item loan approval decision support.
+    \end{enumerate}
+
+  \item \textbf{Agent basics:} Define an \textbf{agent}. Give one example and list its sensors and actuators.
+
+  \item \textbf{PEAS:} Write a PEAS description for a spam filter.
+
+  \item \textbf{Environment properties:} Classify \textbf{chess} and an \textbf{online shopping recommender}
+    using the following properties where appropriate: observable, deterministic, episodic/sequential, static/dynamic.
+    Justify briefly.
+
+  \item \textbf{Rationality:} Define a rational agent in 3--5 lines.
+    Explain the difference between a performance measure and a reward.
+
+  \item \textbf{Limitations:} List four deployment-time limitations of AI systems.
+    For each, write one practical mitigation.
+
+  \item \textbf{PL translation:} Let $P$ = ``Smoke is detected'' and $Q$ = ``Raise an alert''.
+    Translate: ``If smoke is detected then raise an alert, and smoke is detected.''
+    Write the formula and state what it entails.
+
+  \item \textbf{Truth table:} Write the truth table for $P \rightarrow Q$ and state when it is false.
+
+  \item \textbf{Validity and satisfiability:} Define \textbf{valid} and \textbf{satisfiable}.
+    Give one example sentence for each.
+
+  \item \textbf{Entailment vs implication:} Explain in 6--10 lines the difference between $KB \models \alpha$ and $KB \rightarrow \alpha$.
+
+  \item \textbf{FOL basics:} In $Studies(Student, Course)$ identify the predicate symbol, constants, and variables (if any).
+    Then write one quantified sentence using the same predicate.
+
+  \item \textbf{Dataset vocabulary:} Define \textbf{dataset}, \textbf{instance}, \textbf{feature}, and \textbf{label}
+    with one small example.
+
+  \item \textbf{Data splitting:} Explain the roles of train, validation, and test sets in 5--7 lines.
+
+  \item \textbf{Leakage:} Give one concrete example of data leakage and explain why it causes an unreliable evaluation.
+
+  \item \textbf{PCA intuition:} State what PCA optimizes and explain in 3--5 lines why standardization is often required before PCA.
+
+  \item \textbf{Learning task types:} Distinguish regression, classification, and clustering.
+    Give one example problem for each.
+\end{enumerate}
+
+\section*{Medium (20 Questions)}
+\begin{enumerate}[label=M\arabic*., leftmargin=*]
+  \item \textbf{PEAS design:} Create a PEAS description for an online exam proctoring system.
+    Include at least five items for performance measure and sensors.
+
+  \item \textbf{Environment analysis:} Consider a smart thermostat in a hostel room.
+    Classify its environment using at least five properties and justify each.
+
+  \item \textbf{Agent comparison:} Compare simple reflex, model-based reflex, goal-based, utility-based, and learning agents in a table.
+    Add one example task for each.
+
+  \item \textbf{Choosing an agent:} You must design an elevator controller for a multi-floor academic block.
+    Choose one agent type and justify your choice in 8--12 lines.
+
+  \item \textbf{Model checking:} Let $KB=\{P \rightarrow Q,\ Q \rightarrow R,\ P\}$.
+    Check whether $KB \models R$ using a truth table or model enumeration.
+
+  \item \textbf{CNF conversion:} Convert $\lnot(P \rightarrow Q)$ to CNF and show the main steps.
+
+  \item \textbf{CNF with biconditional:} Convert
+    \[
+      \lnot(P \leftrightarrow Q) \rightarrow (R \lor P)
+    \]
+    to CNF. Show the major transformations.
+
+  \item \textbf{Resolution proof:} Using resolution refutation, prove
+    \[
+      \{P \rightarrow Q,\ Q \rightarrow R,\ P\} \models R.
+    \]
+
+  \item \textbf{English to FOL:} Domain: students and courses. Translate into FOL:
+    \begin{enumerate}[label=(\alph*), leftmargin=*]
+      \item Every student studies at least one course.
+      \item Some course is studied by every student.
+    \end{enumerate}
+
+  \item \textbf{Unification:} Find an MGU if it exists:
+    \[
+      Knows(John,x) \quad \text{and} \quad Knows(y,Bill).
+    \]
+
+  \item \textbf{Occurs-check:} Explain why unifying $x$ with $f(x)$ should fail.
+    State one issue it can cause in inference.
+
+  \item \textbf{Dataset design:} You want to predict hostel electricity usage for the next day.
+    Propose at least six features, one target variable, and one preprocessing step.
+
+  \item \textbf{Split design:} For a dataset of 300 student records with an imbalanced final outcome label,
+    propose a train/validation/test split and explain why stratification matters.
+
+  \item \textbf{Cross-validation:} Explain when k-fold cross-validation is better than one fixed split.
+    Mention one limitation of cross-validation.
+
+  \item \textbf{Explained variance:} Suppose PCA gives explained variance ratios
+    \[
+      [0.52, 0.21, 0.12, 0.08, 0.07].
+    \]
+    How many components are required to retain at least 80\% variance and at least 90\% variance?
+
+  \item \textbf{PCA vs LDA vs ICA:} Compare these three methods conceptually.
+    Mention the main objective of each and one suitable use-case.
+
+  \item \textbf{Confusion matrix metrics:} A classifier gives:
+    TP = 45, FP = 15, FN = 5, TN = 35.
+    Compute accuracy, precision, recall, and F1-score.
+
+  \item \textbf{MAE vs RMSE:} Explain the difference between MAE and RMSE.
+    When is RMSE usually preferred?
+
+  \item \textbf{k-means basics:} State the k-means objective function in words and write two practical pitfalls of using k-means.
+
+  \item \textbf{Learning paradigms:} Contrast supervised, unsupervised, semi-supervised,
+    and reinforcement learning. Give one example for each.
+\end{enumerate}
+
+\section*{Hard (20 Questions)}
+\begin{enumerate}[label=H\arabic*., leftmargin=*]
+  \item \textbf{Full case design:} Design an AI system for waste collection optimization in a city.
+    Provide the agent description, PEAS, success criteria, and three major risks with mitigations.
+
+  \item \textbf{Self-driving analysis:} Explain why self-driving is a difficult AI task.
+    Classify the environment using at least six properties and justify each.
+
+  \item \textbf{Learning agent decomposition:} For a news recommendation system, describe the performance element,
+    learning element, critic, and problem generator. Draw a simple block diagram if useful.
+
+  \item \textbf{Knowledge-based agent:} Design a propositional knowledge base for a smart home security scenario.
+    Provide at least six symbols, six rules/facts, and one query answered through entailment.
+
+  \item \textbf{Integrated reasoning:} A campus assistant must decide whether to send an emergency alert.
+    Build a propositional KB with at least six sentences involving alarm, smoke, system fault, and manual override.
+    Ask two queries and answer them using model checking or resolution.
+
+  \item \textbf{Resolution chain:} Prove using resolution refutation:
+    \[
+      \{A \rightarrow B,\ B \rightarrow C,\ C \rightarrow D,\ A\} \models D.
+    \]
+
+  \item \textbf{Clause form:} Convert to clause form and show Skolemization:
+    \[
+      \forall x\ (Student(x) \rightarrow \exists y\ Mentors(y,x)).
+    \]
+
+  \item \textbf{FOL resolution proof:} From
+    \[
+      \forall x\ (Human(x) \rightarrow Mortal(x)), \quad Human(Socrates)
+    \]
+    prove $Mortal(Socrates)$ using resolution.
+
+  \item \textbf{Quantifier scope ambiguity:} Write two FOL translations for
+    ``Every student likes a course.''
+    Explain the meaning difference clearly.
+
+  \item \textbf{Countermodel:} Give a small KB and show a countermodel that proves $KB \not\models \alpha$.
+    Write the interpretation or assignment explicitly.
+
+  \item \textbf{Full ML pipeline:} Design a machine learning workflow for predicting student dropout risk.
+    Include data collection, splitting, preprocessing, validation, metric choice, and post-deployment monitoring.
+
+  \item \textbf{PCA workflow:} You have a 30-feature sensor dataset for equipment monitoring.
+    Explain how you would apply PCA end-to-end, choose $k$, and decide whether PCA is helping.
+
+  \item \textbf{Regression case study:} Propose a regression pipeline for energy demand forecasting.
+    Include feature ideas, metric choice, train/validation/test strategy, and one deployment risk.
+
+  \item \textbf{Classification case study:} Design a healthcare screening classifier where false negatives are costly.
+    Explain metric choice, threshold setting, and one monitoring plan after deployment.
+
+  \item \textbf{Clustering case study:} A retailer wants customer segments.
+    Propose a clustering workflow including preprocessing, choice of $k$, validation, and business interpretation.
+
+  \item \textbf{Reinforcement learning design:} Design an RL setup for adaptive traffic signal control.
+    Define state, action, reward, policy objective, and one exploration challenge.
+
+  \item \textbf{Semi-supervised design:} A medical imaging project has few labeled scans but many unlabeled ones.
+    Propose a semi-supervised workflow and explain how you would control pseudo-labeling errors.
+
+  \item \textbf{Responsible AI policy note:} Write a one-page policy note for an AI-based scholarship recommender.
+    Include fairness, privacy, transparency, accountability, and human override.
+
+  \item \textbf{Cross-domain comparison:} Compare AI/ML use in banking, security, and healthcare.
+    For each, identify one task, one important metric, one major risk, and one monitoring need.
+
+  \item \textbf{Course reflection:} In 14--20 lines, explain how logical reasoning, ML evaluation, and responsible deployment
+    fit together in real AI systems.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assignment}
+
+\end{document}

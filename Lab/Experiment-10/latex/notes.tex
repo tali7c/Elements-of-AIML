@@ -1,0 +1,71 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 10: Visualization (Student Handout — Before Submission)}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{About this handout}
+This is the \textbf{pre-submission} student handout.
+It intentionally provides only \textbf{requirements} and \textbf{hints}.
+After submission, you may receive a separate \textbf{reference} document for cross-checking.
+
+\section{Objective}
+\begin{itemize}[leftmargin=*]
+  \item Create a small portfolio of plots and write observations for each.
+  \item Demonstrate good visualization hygiene (titles, labels, readable scales).
+\end{itemize}
+
+\section{What you must do (minimum requirements)}
+\begin{enumerate}[leftmargin=*]
+  \item Choose a dataset (from previous labs preferred) and record its source/link.
+  \item Create and save at least \textbf{five} plots, including:
+  \begin{itemize}[leftmargin=*]
+    \item one numeric distribution plot (histogram/KDE),
+    \item one boxplot,
+    \item one categorical count plot (bar/count plot),
+    \item one relationship plot (scatter),
+    \item one correlation-style plot (heatmap) for numeric features.
+  \end{itemize}
+  \item Every plot must have a title and labeled axes (and legend if needed).
+  \item For each plot, write 2--3 lines of observation (what it shows and what it suggests).
+\end{enumerate}
+
+\section{Hints (read only if stuck)}
+\begin{itemize}[leftmargin=*]
+  \item Use Matplotlib + Seaborn; save plots as \texttt{.png} at readable resolution.
+  \item Choose plot types based on variable types (numeric vs categorical vs time).
+  \item If you have too many categories, plot top-$k$ categories and group the rest as ``Other''.
+\end{itemize}
+
+\section{What to submit (MANDATORY)}
+Submit a single zipped folder containing:
+\begin{itemize}[leftmargin=*]
+  \item \texttt{notebook.ipynb}: code + plots + observations.
+  \item \texttt{README.md}: dataset link/source and a list of plots with key takeaways.
+  \item \texttt{plots/} (folder): exported \texttt{.png} files.
+\end{itemize}
+Dataset rule: do not upload large datasets; provide a link/source instead.
+
+\section{Submission checklist}
+\begin{itemize}[leftmargin=*]
+  \item Five required plot types included and saved.
+  \item Titles and axis labels present on all plots.
+  \item Observations written for each plot.
+  \item Notebook + README included and readable.
+\end{itemize}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item Missing labels/titles (plots become unusable).
+  \item Wrong plot choice for variable type.
+  \item Saving low-resolution plots that cannot be read.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}

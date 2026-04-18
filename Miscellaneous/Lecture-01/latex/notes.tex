@@ -1,0 +1,277 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Miscellaneous -- Lecture 01 Notes\\PCA, LDA, and ICA in One View}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This supplementary lecture puts \textbf{PCA}, \textbf{LDA}, and \textbf{ICA} side by side.
+Students often remember their names but confuse:
+\begin{itemize}[leftmargin=*]
+  \item what each method optimizes,
+  \item whether labels are needed,
+  \item what kind of output each method produces,
+  \item when one method should be preferred over another.
+\end{itemize}
+The aim here is not to replace the Unit III lecture, but to make the comparison easier to revise later.
+\notesources{\AIMLMiscSources}
+
+\section{How to use these notes}
+Recommended order:
+\begin{enumerate}[leftmargin=*]
+  \item First read \textbf{Unit 03 Lecture 03} for PCA basics and the leakage-safe preprocessing rule.
+  \item Read this lecture to compare PCA, LDA, and ICA more systematically.
+  \item Read \textbf{Miscellaneous Lecture 02} if you want the full manual eigenvalue/eigenvector derivation behind PCA.
+\end{enumerate}
+
+\section{What should already be familiar?}
+\begin{itemize}[leftmargin=*]
+  \item From \textbf{Unit 03 Lecture 03}: covariance matrix, eigenvalues, eigenvectors, and explained variance.
+  \item From \textbf{Unit 04}: class labels, classes, and why classification quality depends on separability.
+\end{itemize}
+If these ideas are weak, revisit those lectures first; otherwise the comparison here will feel more abstract than useful.
+
+\section{A common confusion: same category, different goals}
+PCA, LDA, and ICA are all discussed under \textbf{dimensionality reduction} or \textbf{feature transformation}, but they do not solve the same problem.
+
+\subsection{A useful first question}
+Before choosing one of the three methods, ask:
+\begin{enumerate}[leftmargin=*]
+  \item Do I have labels?
+  \item Do I want compression, class separation, or latent-source recovery?
+  \item Do I care more about variance, discrimination, or independence?
+\end{enumerate}
+
+\section{PCA}
+\subsection{Core idea}
+\textbf{Principal Component Analysis (PCA)} finds orthogonal directions that capture the largest variance in the data.
+It is unsupervised: labels are not used.
+
+\subsection{What PCA optimizes}
+If $C$ is the covariance matrix, PCA chooses a unit vector $v$ that maximizes projected variance:
+\[
+  \max_{\|v\|=1} v^\top C v
+\]
+The first solution is the eigenvector corresponding to the largest eigenvalue.
+The second solution is orthogonal to the first, and so on.
+
+\subsection{What PCA gives back}
+\begin{itemize}[leftmargin=*]
+  \item principal directions (eigenvectors),
+  \item variance captured by each direction (eigenvalues),
+  \item transformed coordinates in the reduced space.
+\end{itemize}
+
+\subsection{When PCA is useful}
+\begin{itemize}[leftmargin=*]
+  \item data compression,
+  \item noise reduction,
+  \item 2D or 3D visualization,
+  \item reducing redundancy in correlated features.
+\end{itemize}
+
+\subsection{Where PCA can disappoint}
+\begin{itemize}[leftmargin=*]
+  \item High variance is not always the same as high usefulness.
+  \item PCA may keep directions that are statistically strong but not class-discriminative.
+  \item Components are often harder to interpret than original features.
+\end{itemize}
+
+\section{LDA}
+\subsection{Core idea}
+\textbf{Linear Discriminant Analysis (LDA)} tries to find projections that separate classes well.
+Unlike PCA, it is supervised because it uses class labels.
+
+\subsection{The two scatter matrices}
+LDA balances:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{within-class scatter} $S_W$: how spread each class is inside itself,
+  \item \textbf{between-class scatter} $S_B$: how far class means are from each other.
+\end{itemize}
+The usual criterion is:
+\[
+  J(W) = \frac{|W^\top S_B W|}{|W^\top S_W W|}
+\]
+So the method wants:
+\begin{itemize}[leftmargin=*]
+  \item large separation between class centers,
+  \item small spread within each class.
+\end{itemize}
+
+\subsection{What LDA gives back}
+LDA returns discriminant directions.
+These directions are chosen for class separation, not for overall data variance.
+
+\subsection{Why LDA has a dimension limit}
+If there are $C$ classes, LDA can return at most $C-1$ useful directions.
+This happens because between-class information depends on class means, and there are only $C-1$ independent mean-separation directions.
+
+\subsection{When LDA is useful}
+\begin{itemize}[leftmargin=*]
+  \item when class labels are available,
+  \item when the purpose is classification support,
+  \item when you want a lower-dimensional representation that still preserves class discrimination.
+\end{itemize}
+
+\subsection{Where LDA can disappoint}
+\begin{itemize}[leftmargin=*]
+  \item If classes overlap strongly, LDA cannot force clean separation.
+  \item If labels are noisy, the projection becomes less meaningful.
+  \item Without labels, LDA cannot be applied at all.
+\end{itemize}
+
+\section{ICA}
+\subsection{Core idea}
+\textbf{Independent Component Analysis (ICA)} assumes observed features are mixtures of hidden latent sources.
+The aim is to recover components that are as statistically independent as possible.
+
+\subsection{Mixing model}
+ICA is usually explained by:
+\[
+  X = A S
+\]
+where:
+\begin{itemize}[leftmargin=*]
+  \item $S$ contains hidden source signals,
+  \item $A$ is an unknown mixing matrix,
+  \item $X$ is what we observe.
+\end{itemize}
+The job of ICA is to estimate an unmixing matrix so that the recovered components behave independently.
+
+\subsection{Why ICA is different from PCA}
+PCA only removes correlation and ranks directions by variance.
+ICA goes further: it tries to recover statistically independent components, which is a stronger condition than uncorrelatedness.
+
+\subsection{Typical ICA pipeline}
+\begin{enumerate}[leftmargin=*]
+  \item center the data,
+  \item often whiten the data,
+  \item optimize an independence criterion, often related to non-Gaussianity.
+\end{enumerate}
+
+\subsection{When ICA is useful}
+\begin{itemize}[leftmargin=*]
+  \item signal separation,
+  \item EEG or audio artifact removal,
+  \item recovering hidden source-like factors from mixed observations.
+\end{itemize}
+
+\subsection{Where ICA can disappoint}
+\begin{itemize}[leftmargin=*]
+  \item If the latent sources are not independent, the model assumption breaks.
+  \item If the data is close to Gaussian, ICA becomes much less informative.
+  \item ICA components are often sensitive to scaling and preprocessing choices.
+\end{itemize}
+
+\section{Detailed comparison}
+\subsection{Comparison by objective}
+\begin{center}
+\begin{tabular}{p{2.2cm}p{5.2cm}p{5.2cm}}
+\toprule
+\textbf{Method} & \textbf{Main objective} & \textbf{Interpretation} \\
+\midrule
+PCA & maximize variance & keep the strongest spread directions \\
+LDA & maximize between-class separation relative to within-class spread & help classes separate in a lower-dimensional space \\
+ICA & maximize statistical independence & recover hidden source-like signals \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Comparison by supervision}
+\begin{center}
+\begin{tabular}{p{2.2cm}p{2.5cm}p{7.9cm}}
+\toprule
+\textbf{Method} & \textbf{Uses labels?} & \textbf{Why this matters} \\
+\midrule
+PCA & No & cannot use label information, so class separation may be accidental rather than intentional \\
+LDA & Yes & uses labels directly, so it can align the representation with classification needs \\
+ICA & No & focuses on independence structure, not on labels or class boundaries \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Comparison by assumptions}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PCA}: important information is reflected in large-variance directions.
+  \item \textbf{LDA}: classes are meaningful and separability matters.
+  \item \textbf{ICA}: latent sources are independent and often non-Gaussian.
+\end{itemize}
+
+\subsection{Comparison by geometry/statistics}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PCA} produces orthogonal components.
+  \item \textbf{LDA} produces class-discriminative directions, not necessarily variance-dominant ones.
+  \item \textbf{ICA} seeks independence, which is stronger than orthogonality and stronger than simple uncorrelatedness.
+\end{itemize}
+
+\subsection{Comparison by output dimension}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PCA}: any $k \le d$ may be chosen.
+  \item \textbf{LDA}: at most $C-1$ directions for $C$ classes.
+  \item \textbf{ICA}: usually chosen according to the assumed number of sources or observed variables.
+\end{itemize}
+
+\subsection{Comparison by classroom use-case}
+\begin{itemize}[leftmargin=*]
+  \item If you want to compress features before plotting or faster modeling, start with \textbf{PCA}.
+  \item If your real goal is classification and labels are available, \textbf{LDA} may be more aligned with the task.
+  \item If you are separating mixed signals or hidden factors, \textbf{ICA} is the more natural tool.
+\end{itemize}
+
+\section{One-sentence memory anchors}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PCA:} ``keep the directions with the most variance.''
+  \item \textbf{LDA:} ``keep the directions that separate classes.''
+  \item \textbf{ICA:} ``recover independent hidden sources from mixtures.''
+\end{itemize}
+
+\section{What students often say incorrectly}
+\subsection*{Incorrect statement 1: ``LDA is supervised PCA.''}
+\textbf{Correction:} the two methods are related only at a high level as linear transformations. Their objectives are different: PCA maximizes variance, while LDA maximizes discriminative separation.
+
+\subsection*{Incorrect statement 2: ``ICA gives more important principal components.''}
+\textbf{Correction:} ICA does not rank components by variance at all. It looks for independence, not for variance dominance.
+
+\subsection*{Incorrect statement 3: ``Orthogonal means independent.''}
+\textbf{Correction:} orthogonal vectors are geometrically perpendicular; independence is a stronger probabilistic statement. Two components can be uncorrelated but still not independent.
+
+\section{Decision checklist}
+Use this quick decision process:
+\begin{enumerate}[leftmargin=*]
+  \item If labels are absent, remove LDA from the candidate list.
+  \item If the goal is compression or visualization, prefer PCA.
+  \item If the goal is better class separation, investigate LDA.
+  \item If the goal is source separation or mixed-signal recovery, investigate ICA.
+  \item Check whether the method assumptions actually make sense for the data.
+\end{enumerate}
+
+\section{Practice Questions (with answers)}
+\subsection*{Q1. Why can PCA fail to help classification even when it keeps most variance?}
+\textbf{Answer:} because the directions that contain the most variance may not be the directions that best separate classes. Variance and discriminative power are different objectives.
+
+\subsection*{Q2. Why can LDA not be used without labels?}
+\textbf{Answer:} because LDA needs class means and class-wise scatter. Without labels, those class-based quantities are undefined.
+
+\subsection*{Q3. Why is ICA more demanding than PCA?}
+\textbf{Answer:} PCA only uses second-order structure such as covariance, while ICA tries to recover statistically independent latent sources, which requires stronger assumptions and harder optimization.
+
+\subsection*{Q4. Which method would you try first for a 2D visualization of high-dimensional embeddings?}
+\textbf{Answer:} PCA, because its goal is compression/variance preservation and it is easy to apply without labels.
+
+\section{Summary}
+PCA, LDA, and ICA belong to the same broad family of linear transformations, but they answer different questions:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{PCA:} what directions preserve the most variance?
+  \item \textbf{LDA:} what directions separate known classes best?
+  \item \textbf{ICA:} what hidden components are most independent?
+\end{itemize}
+The method should therefore be chosen by \textbf{goal and assumptions}, not by familiarity of name.
+\notesources{\AIMLMiscSources}
+
+\end{document}

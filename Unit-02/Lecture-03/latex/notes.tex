@@ -33,6 +33,14 @@ While studying, always keep a paper ``clause set'' and write each new resolvent 
   \item Define unification and compute simple MGUs.
 \end{itemize}
 
+\section{Before you start}
+This lecture assumes two earlier routines are already familiar:
+\begin{itemize}[leftmargin=*]
+  \item from \textbf{Unit 02 Lecture 01}: entailment, unsatisfiability, and basic CNF conversion,
+  \item from \textbf{Unit 02 Lecture 02}: predicates, quantifiers, and substitution.
+\end{itemize}
+If any of those ideas feel weak, quickly revisit the earlier notes first. Resolution is mechanical only after the prerequisite language is stable.
+
 \section{Keywords}
 \begin{itemize}[leftmargin=*]
   \item \textbf{CNF:} conjunctive normal form (AND of OR clauses).
@@ -264,23 +272,52 @@ Steps:
 \end{enumerate}
 The Skolem function $f(x)$ should be read as ``the course chosen for $x$'' (it may differ for different $x$).
 
-\subsection{Classic example: Socrates is mortal}
-Knowledge:
+\subsection{Worked end-to-end example: ``Socrates is mortal''}
+English statements:
+\begin{itemize}[leftmargin=*]
+  \item Every human is mortal.
+  \item Socrates is a human.
+  \item Query: Is Socrates mortal?
+\end{itemize}
+
+\paragraph{Step 1: translate to FOL.}
 \[
   \forall x\; (Human(x) \rightarrow Mortal(x)),\qquad Human(Socrates)
 \]
-Query: $Mortal(Socrates)$.
-
-Convert to clause-like form:
-\begin{itemize}[leftmargin=*]
-  \item $Human(x) \rightarrow Mortal(x)$ becomes $\lnot Human(x) \lor Mortal(x)$.
-  \item Add $\lnot Mortal(Socrates)$ (negated query).
-\end{itemize}
-Clauses:
+Query:
 \[
-  (\lnot Human(x) \lor Mortal(x)),\quad Human(Socrates),\quad \lnot Mortal(Socrates)
+  Mortal(Socrates)
 \]
-Resolve $(\lnot Human(x) \lor Mortal(x))$ with $Human(Socrates)$ using substitution $\{x/Socrates\}$ to get $Mortal(Socrates)$, then resolve with $\lnot Mortal(Socrates)$ to reach $\Box$.
+
+\paragraph{Step 2: set up refutation.}
+To prove $KB \models Mortal(Socrates)$, add the negated query:
+\[
+  \lnot Mortal(Socrates)
+\]
+
+\paragraph{Step 3: convert to clause form.}
+\begin{itemize}[leftmargin=*]
+  \item $\forall x\; (Human(x) \rightarrow Mortal(x))$ becomes $\lnot Human(x) \lor Mortal(x)$.
+  \item $Human(Socrates)$ is already an atomic clause.
+  \item $\lnot Mortal(Socrates)$ is already an atomic clause.
+\end{itemize}
+Clause set:
+\[
+  C_1:(\lnot Human(x) \lor Mortal(x)),\quad
+  C_2:Human(Socrates),\quad
+  C_3:\lnot Mortal(Socrates)
+\]
+
+\paragraph{Step 4: resolve with unification.}
+Resolve $C_1$ with $C_2$ using substitution $\{x/Socrates\}$:
+\[
+  C_4:Mortal(Socrates)
+\]
+Now resolve $C_4$ with $C_3$:
+\[
+  \Box
+\]
+Because the empty clause is derived, the negated query is inconsistent with the KB, so the original query is entailed.
 
 \section{Unification}
 \subsection{Definition}

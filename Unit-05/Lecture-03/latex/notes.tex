@@ -31,6 +31,14 @@ Then use the revision questions to connect logic (Unit II) with evaluation (Unit
   \item Answer revision questions across the course.
 \end{itemize}
 
+\section{Before you start}
+Treat this lecture as a course-integration pack:
+\begin{itemize}[leftmargin=*]
+  \item from \textbf{Unit 05 Lecture 01}, reuse the fairness/privacy/accountability lens,
+  \item from \textbf{Unit 05 Lecture 02}, reuse the domain-case template of task, metric, risk, and monitoring,
+  \item from Units II--IV, keep the underlying reasoning, evaluation, and modeling tools available for the revision set.
+\end{itemize}
+
 \section{Keywords}
 \begin{itemize}[leftmargin=*]
   \item \textbf{Drift:} changing patterns over time.
@@ -44,6 +52,16 @@ Then use the revision questions to connect logic (Unit II) with evaluation (Unit
   \item \textbf{ETA}: estimated time of arrival (transport).
   \item \textbf{SLA}: service-level agreement (latency/uptime requirements).
   \item \textbf{Objective mismatch}: optimizing the wrong metric for the real-world goal.
+\end{itemize}
+
+\section{Cross-domain case map}
+Use the same lens across every domain:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Education:} task = recommendation or dropout prediction; metric = completion/engagement plus fairness; risk = privacy and unfair intervention; monitoring = subgroup performance and engagement trends.
+  \item \textbf{Insurance:} task = pricing support, fraud detection, or claim triage; metric = cost-aware classification/regression plus explainability; risk = proxy bias and regulatory failure; monitoring = appeal rates and subgroup gaps.
+  \item \textbf{Retail/supply chain:} task = forecasting, recommendation, or inventory optimization; metric = MAE/RMSE or ranking/business KPIs; risk = seasonality, feedback loops, and data quality; monitoring = forecast error and product-exposure drift.
+  \item \textbf{Transportation/logistics:} task = ETA prediction, routing, or predictive maintenance; metric = ETA MAE/RMSE and SLA compliance; risk = sensor failure and safety issues; monitoring = latency, route-error trends, and sensor health.
+  \item \textbf{Energy/utilities:} task = load forecasting or fault detection; metric = forecasting error or recall on rare events; risk = reliability failure under rare conditions; monitoring = demand-pattern drift and alarm quality.
 \end{itemize}
 
 \section{Applications across domains}
@@ -135,33 +153,43 @@ Use this checklist before and after deployment:
 
 \subsection*{R1. What is entailment and how can we test it using refutation?}
 \textbf{Answer:} entailment $KB \models \alpha$ means $\alpha$ is true in every model of $KB$. Refutation test: check if $KB \land \lnot \alpha$ is unsatisfiable (derive contradiction via resolution).
+\textbf{Revisit:} Unit 02 Lecture 03.
 
 \subsection*{R2. Why do we need train/validation/test splits?}
 \textbf{Answer:} to measure generalization honestly. Train fits parameters, validation tunes choices, test gives an unbiased final evaluation. Reusing test for tuning causes optimistic bias.
+\textbf{Revisit:} Unit 03 Lecture 02.
 
 \subsection*{R3. Regression vs classification (and metrics)?}
 \textbf{Answer:} regression predicts continuous values (MAE/RMSE/$R^2$). Classification predicts labels (precision/recall/F1/ROC-AUC). Metric choice depends on error costs and imbalance.
+\textbf{Revisit:} Unit 04 Lectures 01--02.
 
 \subsection*{R4. What does PCA optimize and why standardize first?}
 \textbf{Answer:} PCA finds orthogonal directions of maximum variance. Standardization prevents large-scale features from dominating the covariance and components.
+\textbf{Revisit:} Unit 03 Lecture 03.
 
 \subsection*{R5. Give two examples of drift and one monitoring method.}
 \textbf{Answer:} fraud patterns change; customer behavior changes seasonally; spam tactics evolve. Monitoring: track feature distributions and performance metrics over time with alerts.
+\textbf{Revisit:} Unit 03 Lecture 02 and Unit 05 Lecture 02.
 
 \subsection*{R6. What is class imbalance and why is accuracy misleading?}
 \textbf{Answer:} imbalance means one class is rare. Accuracy can be high by predicting the majority class; use precision/recall/F1 and cost-aware evaluation.
+\textbf{Revisit:} Unit 04 Lecture 02.
 
 \subsection*{R7. What is unification used for in logic inference?}
 \textbf{Answer:} unification finds substitutions to match FOL literals so resolution can be applied with variables (e.g., $Human(x)$ with $Human(Socrates)$).
+\textbf{Revisit:} Unit 02 Lecture 03.
 
 \subsection*{R8. Give one example of a feedback loop in recommendations.}
 \textbf{Answer:} if a recommender shows certain products more, users click them more, which produces data that further reinforces recommending the same products, potentially reducing diversity and increasing bias.
+\textbf{Revisit:} Unit 05 Lecture 03, Retail and Supply Chain.
 
 \subsection*{R9. Why is explainability important in insurance?}
 \textbf{Answer:} decisions affect people financially; regulations and trust require understandable reasons; explainability supports auditing and contesting errors.
+\textbf{Revisit:} Unit 05 Lecture 03, Insurance.
 
 \subsection*{R10. What are two responsible AI checks before deployment?}
 \textbf{Answer:} fairness evaluation across subgroups and privacy/security review (data governance, access control), plus monitoring plan for drift.
+\textbf{Revisit:} Unit 05 Lecture 01.
 
 \section{Exit questions (with answers)}
 

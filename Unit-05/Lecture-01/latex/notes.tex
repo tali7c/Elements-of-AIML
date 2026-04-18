@@ -26,6 +26,37 @@ Responsible AI is best studied through questions:
 Who is affected, what harms are possible, and what evidence do we need before deployment?
 When you read each section (fairness, privacy, sustainability), try to connect it to a concrete scenario such as loan approval, hiring, or healthcare triage.
 
+\section{Before you start}
+These notes assume you already understand basic model evaluation from Unit 03, especially precision, recall, false positives, false negatives, and why metrics depend on the application.
+If those ideas feel weak, briefly revisit the evaluation material in Unit 03 before reading this lecture in depth.
+
+\section{Case-study lens used in this lecture}
+Use the same six questions throughout the lecture:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Task}: what decision or prediction is the model making?
+  \item \textbf{Data}: what inputs and labels are used?
+  \item \textbf{Metric}: what performance measure matters most?
+  \item \textbf{Main risk}: what harm can happen if the system fails?
+  \item \textbf{Monitoring signal}: what should we track after deployment?
+  \item \textbf{Human role}: where should review, appeal, or override exist?
+\end{itemize}
+
+\paragraph{Case-study snapshot: loan screening}
+\textbf{Task:} predict whether an applicant is likely to repay a loan.\\
+\textbf{Data:} income history, debt ratio, repayment history, employment pattern.\\
+\textbf{Metric:} recall for risky applicants and false positive rate for rejected safe applicants.\\
+\textbf{Main risk:} unfair rejection of capable applicants from under-represented groups.\\
+\textbf{Monitoring signal:} approval rate, default rate, and false positive rate by subgroup over time.\\
+\textbf{Human role:} borderline cases should go to manual review with documented justification.
+
+\paragraph{Case-study snapshot: hospital triage support}
+\textbf{Task:} flag patients who may need urgent specialist attention.\\
+\textbf{Data:} symptoms, age, test results, medical history.\\
+\textbf{Metric:} recall/sensitivity, because missed urgent cases are costly.\\
+\textbf{Main risk:} false negatives can delay treatment and cause harm.\\
+\textbf{Monitoring signal:} missed-critical-case rate, subgroup recall, and drift in incoming patient profiles.\\
+\textbf{Human role:} the model should support, not replace, clinician judgment.
+
 \section{Learning Outcomes}
 \begin{itemize}[leftmargin=*]
   \item Explain why responsible AI is required beyond accuracy metrics.
@@ -90,6 +121,7 @@ Fairness is context-dependent. Common questions:
   \item Is there a strong justification for differences?
 \end{itemize}
 There is no single metric that solves every fairness situation; we choose based on domain and risk tolerance.
+In the loan-screening example above, equal overall accuracy is not enough if one subgroup experiences a much higher false rejection rate.
 
 \subsection{Fairness metrics (high-level examples)}
 Some common (but not universal) fairness notions:
@@ -133,6 +165,7 @@ Even if the dataset is protected, models can leak information:
   \item extraction attacks when models are exposed publicly.
 \end{itemize}
 Mitigations include limiting access, careful logging, and privacy-preserving techniques (advanced topic).
+In the hospital triage example, privacy is not optional because even a small leak can expose highly sensitive medical details.
 
 \section{Safety and accountability}
 In high-stakes settings:
@@ -174,6 +207,7 @@ Under-representation can cause unequal performance. Practical actions:
   \item evaluate metrics by subgroup,
   \item collect feedback and involve stakeholders in defining success.
 \end{itemize}
+This is why the monitoring signals listed in the case-study lens should always be checked by subgroup, not only on the full population average.
 
 \section{Practice (with answers)}
 \subsection*{P1. Give one example of a proxy feature that could introduce unfairness.}

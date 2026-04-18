@@ -1,0 +1,415 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML\\Miscellaneous -- Lecture 02 Notes\\Eigenvalues and Eigenvectors from a Data Sample}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Lecture Overview}
+This supplementary lecture shows the full manual path from a tiny \textbf{raw data sample} to:
+\begin{itemize}[leftmargin=*]
+  \item the mean vector,
+  \item the centered data matrix,
+  \item the covariance matrix,
+  \item the eigenvalues,
+  \item the eigenvectors,
+  \item the PCA interpretation of those eigenvectors.
+\end{itemize}
+This is useful because students often understand the definitions but do not see how the calculation is chained from the original sample.
+\notesources{\AIMLMiscSources}
+
+\section{How to use these notes}
+Use this lecture after:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Unit 03 Lecture 03}, where PCA is introduced conceptually,
+  \item \textbf{Miscellaneous Lecture 01}, if you want to know why PCA and LDA are tied to eigen-analysis.
+\end{itemize}
+The present lecture is not mainly about comparing methods; it is about doing one derivation carefully and correctly.
+
+\section{Learning Outcomes}
+\begin{itemize}[leftmargin=*]
+  \item Compute the mean vector from a small dataset.
+  \item Center the data correctly.
+  \item Build the covariance matrix from the centered data.
+  \item Solve the characteristic equation to obtain eigenvalues.
+  \item Solve the linear system for eigenvectors.
+  \item Interpret the largest-eigenvalue direction as the first principal component.
+\end{itemize}
+
+\section{Raw sample data}
+Consider the following three data points:
+\[
+  x_1 =
+  \begin{bmatrix}
+    2\\1
+  \end{bmatrix},
+  \qquad
+  x_2 =
+  \begin{bmatrix}
+    1\\2
+  \end{bmatrix},
+  \qquad
+  x_3 =
+  \begin{bmatrix}
+    0\\0
+  \end{bmatrix}
+\]
+These are deliberately small so the entire calculation can be done by hand.
+
+\section{Step 1: Compute the mean vector}
+The sample mean is:
+\[
+  \mu =
+  \frac{1}{3}(x_1 + x_2 + x_3)
+\]
+Substitute the values:
+\[
+  \mu =
+  \frac{1}{3}
+  \left(
+  \begin{bmatrix}
+    2\\1
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+    1\\2
+  \end{bmatrix}
+  +
+  \begin{bmatrix}
+    0\\0
+  \end{bmatrix}
+  \right)
+  =
+  \frac{1}{3}
+  \begin{bmatrix}
+    3\\3
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+\]
+
+\section{Step 2: Center each sample}
+Centering means subtracting the mean vector from every sample:
+\[
+  x_i^{(c)} = x_i - \mu
+\]
+So:
+\[
+  x_1^{(c)} =
+  \begin{bmatrix}
+    2\\1
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    1\\0
+  \end{bmatrix}
+\]
+\[
+  x_2^{(c)} =
+  \begin{bmatrix}
+    1\\2
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    0\\1
+  \end{bmatrix}
+\]
+\[
+  x_3^{(c)} =
+  \begin{bmatrix}
+    0\\0
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    -1\\-1
+  \end{bmatrix}
+\]
+
+Therefore the centered data matrix is:
+\[
+  X_c =
+  \begin{bmatrix}
+    1 & 0\\
+    0 & 1\\
+    -1 & -1
+  \end{bmatrix}
+\]
+where each row is one centered sample.
+
+\section{Step 3: Compute the covariance matrix}
+For $n=3$ samples, the sample covariance matrix is:
+\[
+  C = \frac{1}{n-1} X_c^\top X_c = \frac{1}{2} X_c^\top X_c
+\]
+
+\subsection{Compute $X_c^\top X_c$}
+\[
+  X_c^\top =
+  \begin{bmatrix}
+    1 & 0 & -1\\
+    0 & 1 & -1
+  \end{bmatrix}
+\]
+Now multiply:
+\[
+  X_c^\top X_c =
+  \begin{bmatrix}
+    1 & 0 & -1\\
+    0 & 1 & -1
+  \end{bmatrix}
+  \begin{bmatrix}
+    1 & 0\\
+    0 & 1\\
+    -1 & -1
+  \end{bmatrix}
+\]
+\[
+  =
+  \begin{bmatrix}
+    1^2 + 0^2 + (-1)^2 & 1\cdot 0 + 0\cdot 1 + (-1)(-1)\\
+    0\cdot 1 + 1\cdot 0 + (-1)(-1) & 0^2 + 1^2 + (-1)^2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    2 & 1\\
+    1 & 2
+  \end{bmatrix}
+\]
+So:
+\[
+  C =
+  \frac{1}{2}
+  \begin{bmatrix}
+    2 & 1\\
+    1 & 2
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    1 & 0.5\\
+    0.5 & 1
+  \end{bmatrix}
+\]
+
+\section{Step 4: Find the eigenvalues}
+We solve:
+\[
+  \det(C - \lambda I)=0
+\]
+Substitute $C$:
+\[
+  \det
+  \begin{bmatrix}
+    1-\lambda & 0.5\\
+    0.5 & 1-\lambda
+  \end{bmatrix}
+  = 0
+\]
+So:
+\[
+  (1-\lambda)^2 - (0.5)(0.5) = 0
+\]
+\[
+  (1-\lambda)^2 - 0.25 = 0
+\]
+\[
+  1 - 2\lambda + \lambda^2 - 0.25 = 0
+\]
+\[
+  \lambda^2 - 2\lambda + 0.75 = 0
+\]
+Factor:
+\[
+  (\lambda - 1.5)(\lambda - 0.5)=0
+\]
+Hence the eigenvalues are:
+\[
+  \lambda_1 = 1.5,
+  \qquad
+  \lambda_2 = 0.5
+\]
+
+\section{Step 5: Find the eigenvectors}
+\subsection{Eigenvector for $\lambda_1 = 1.5$}
+Compute:
+\[
+  C - 1.5I =
+  \begin{bmatrix}
+    1 & 0.5\\
+    0.5 & 1
+  \end{bmatrix}
+  -
+  \begin{bmatrix}
+    1.5 & 0\\
+    0 & 1.5
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+    -0.5 & 0.5\\
+    0.5 & -0.5
+  \end{bmatrix}
+\]
+Now solve:
+\[
+  \begin{bmatrix}
+    -0.5 & 0.5\\
+    0.5 & -0.5
+  \end{bmatrix}
+  \begin{bmatrix}
+    x\\y
+  \end{bmatrix}
+  = 0
+\]
+This gives:
+\[
+  -0.5x + 0.5y = 0
+  \Rightarrow y=x
+\]
+So one eigenvector is:
+\[
+  v_1 =
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+\]
+
+\subsection{Eigenvector for $\lambda_2 = 0.5$}
+Compute:
+\[
+  C - 0.5I =
+  \begin{bmatrix}
+    0.5 & 0.5\\
+    0.5 & 0.5
+  \end{bmatrix}
+\]
+Now solve:
+\[
+  \begin{bmatrix}
+    0.5 & 0.5\\
+    0.5 & 0.5
+  \end{bmatrix}
+  \begin{bmatrix}
+    x\\y
+  \end{bmatrix}
+  = 0
+\]
+This gives:
+\[
+  0.5x + 0.5y = 0
+  \Rightarrow y=-x
+\]
+So one eigenvector is:
+\[
+  v_2 =
+  \begin{bmatrix}
+    1\\-1
+  \end{bmatrix}
+\]
+
+\section{Step 6: Normalize the eigenvectors}
+To convert them into unit vectors:
+\[
+  \|v_1\| = \sqrt{1^2 + 1^2} = \sqrt{2},
+  \qquad
+  \|v_2\| = \sqrt{1^2 + (-1)^2} = \sqrt{2}
+\]
+Therefore:
+\[
+  \hat v_1 =
+  \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix},
+  \qquad
+  \hat v_2 =
+  \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1\\-1
+  \end{bmatrix}
+\]
+
+\section{Interpretation}
+Because:
+\[
+  \lambda_1 = 1.5 > \lambda_2 = 0.5
+\]
+the direction:
+\[
+  \hat v_1 =
+  \frac{1}{\sqrt{2}}
+  \begin{bmatrix}
+    1\\1
+  \end{bmatrix}
+\]
+captures more variance than the perpendicular direction.
+
+\subsection{PCA meaning}
+If we use this covariance matrix in PCA:
+\begin{itemize}[leftmargin=*]
+  \item $\hat v_1$ becomes the first principal component,
+  \item $\hat v_2$ becomes the second principal component,
+  \item the first component is more informative because its eigenvalue is larger.
+\end{itemize}
+
+\section{What this example teaches}
+This worked example shows a full chain:
+\begin{enumerate}[leftmargin=*]
+  \item start from raw samples,
+  \item compute the mean,
+  \item center the samples,
+  \item build the covariance matrix,
+  \item solve the characteristic equation,
+  \item solve for the eigenvectors,
+  \item interpret the result in PCA language.
+\end{enumerate}
+
+\section{Common mistakes}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Skipping centering:} then the covariance matrix does not reflect spread around the mean correctly.
+  \item \textbf{Using the raw data matrix directly:} in PCA the eigen-problem is applied to the covariance matrix, not to the raw sample matrix.
+  \item \textbf{Ignoring normalization:} direction is enough mathematically, but unit vectors make the interpretation cleaner.
+  \item \textbf{Confusing largest eigenvalue with largest coordinate:} the eigenvalue measures variance along the direction, not the magnitude of one coordinate.
+\end{itemize}
+
+\section{Practice Questions (with answers)}
+\subsection*{Q1. Why do we divide by $n-1$ in the covariance formula?}
+\textbf{Answer:} because we are computing the sample covariance, which uses Bessel's correction.
+
+\subsection*{Q2. Why is the covariance matrix symmetric?}
+\textbf{Answer:} because covariance between feature 1 and feature 2 equals covariance between feature 2 and feature 1, so $C = C^\top$.
+
+\subsection*{Q3. Which eigenvector becomes PC1?}
+\textbf{Answer:} the eigenvector corresponding to the largest eigenvalue.
+
+\subsection*{Q4. Why is this example useful for PCA but not enough for ICA?}
+\textbf{Answer:} because PCA depends directly on covariance eigen-analysis, while ICA requires a stronger independence-based optimization beyond covariance alone.
+
+\section{Summary}
+For a tiny dataset, eigenvalues and eigenvectors can be found by hand.
+This derivation is important because it makes the PCA procedure less mysterious:
+\begin{itemize}[leftmargin=*]
+  \item covariance summarizes feature spread,
+  \item eigenvectors give the principal directions,
+  \item eigenvalues tell how much variance those directions capture.
+\end{itemize}
+\notesources{\AIMLMiscSources}
+
+\end{document}

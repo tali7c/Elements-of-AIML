@@ -72,6 +72,29 @@
   So we must evaluate not only accuracy, but also \textbf{fairness, safety, privacy, and accountability}.
 \end{frame}
 
+\begin{frame}{Case-Study Lens for Responsible AI}
+  For every deployed system, ask the same six questions:
+  \begin{itemize}[<+->]
+    \item What is the \textbf{task}?
+    \item What \textbf{data} and labels are used?
+    \item Which \textbf{metric} matters most?
+    \item What is the main \textbf{risk/harm}?
+    \item What \textbf{monitoring signal} should trigger review?
+    \item Where does \textbf{human oversight} enter?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Story: Loan Screening}
+  \begin{itemize}[<+->]
+    \item \textbf{Task}: approve or review loan applications.
+    \item \textbf{Metric}: not just accuracy; track false rejection and default rates.
+    \item \textbf{Fairness risk}: one subgroup may be rejected more often despite similar repayment ability.
+    \item \textbf{Privacy risk}: financial records contain sensitive personal data.
+    \item \textbf{Monitoring}: approval rate, default rate, and subgroup error rates over time.
+    \item \textbf{Human role}: borderline cases should be reviewed, not auto-rejected blindly.
+  \end{itemize}
+\end{frame}
+
 \section{Bias and fairness}
 \label{sec:bias}
 

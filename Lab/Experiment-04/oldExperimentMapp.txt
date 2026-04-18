@@ -1,0 +1,17 @@
+Elements of AIML — Old Experiment Mapping (Old → Current)
+Date: 2026-03-03
+
+Current experiment:
+- Experiment-04: Pandas Import/Export and Summaries
+
+Old source folder:
+- D:\InSync-tofik\Work\UPES\Old-Lectures\OOP Element-AIML\Recieve From Sumanta sir\Elements of AIML\Lab Experiments
+
+Exact mapping:
+- Old Experiment-2.docx → Current Experiment-04 (Pandas import/export) — Exact
+
+Old file(s):
+- Experiment-2.docx
+
+Notes:
+- The old document is essentially the same lab flow (data import/export using Pandas + basic summaries).

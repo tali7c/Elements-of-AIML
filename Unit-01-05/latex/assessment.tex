@@ -1,0 +1,299 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{listings}
+
+\geometry{margin=1in}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  urlcolor=blue
+}
+
+\setlist{itemsep=0.35em, topsep=0.35em}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Elements of AIML (B.Tech)}
+\rhead{Units 01--05: Diagnostic Assessment}
+\cfoot{\thepage}
+\setlength{\headheight}{14pt}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{teal},
+  showstringspaces=false,
+  columns=fullflexible,
+  frame=single
+}
+
+\newcommand{\SubmissionDeadline}{April 28, 2026}
+\newcommand{\EMarks}{\textbf{[2 marks]} }
+\newcommand{\MMarks}{\textbf{[3 marks]} }
+\newcommand{\HMarks}{\textbf{[5 marks]} }
+
+\begin{document}
+
+\begin{center}
+  {\LARGE \textbf{Diagnostic Assessment -- Units 01--05}}\\[0.25em]
+  {\large Elements of AIML}\\[0.25em]
+  \normalsize (Cumulative assessment for Unit 01 to Unit 05)
+\end{center}
+
+\noindent
+\textbf{Instructor:} Tofik Ali \hfill \textbf{Time Limit:} None\\
+\textbf{Submission Deadline:} \SubmissionDeadline\\
+\textbf{Student Name:} \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ \hfill \textbf{SAP-ID:} \_\_\_\_\_\_\_\_\_\_\_\_\\
+
+\vspace{0.6em}
+\hrule
+\vspace{0.8em}
+
+\textbf{Instructions}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{This is a diagnostic assessment, not a speed test.} The goal is to identify conceptual gaps across \textbf{Unit 01 to Unit 05}.
+  \item \textbf{Total marks: 200.} Easy: 20 $\times$ 2 = 40, Medium: 20 $\times$ 3 = 60, Hard: 20 $\times$ 5 = 100.
+  \item \textbf{No time limit.} Submit on or before \textbf{\SubmissionDeadline}.
+  \item \textbf{Important (70\% rule):} to have the linked assignment counted, the target score is at least 70\%,
+    that is \textbf{140/200 or higher}. Reattempts are allowed.
+  \item \textbf{Marking policy (honest attempt):} marks are deducted mainly for non-attempts and high similarity with other submissions.
+    Correctness matters, but reasoning and visible effort matter more.
+  \item Show key steps for logic and ML questions. If you are uncertain, write your assumptions and attempt anyway.
+  \item Multiple valid answers are acceptable for open-ended design questions when they are logically consistent and technically justified.
+  \item Unless stated otherwise, round numeric answers to \textbf{2 decimal places}.
+\end{itemize}
+
+\vspace{0.6em}
+
+\section*{Easy (20 Questions)}
+\begin{enumerate}[label=\textbf{E\arabic*.}, leftmargin=*]
+  \item \EMarks \textbf{[Subjective]} Define AI in one sentence and mention one common deployment limitation.
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are parts of PEAS?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item Performance measure
+      \item Environment
+      \item Actuators
+      \item Sensors
+      \item Training dataset
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Classify chess as fully or partially observable,
+    and as deterministic or stochastic. Justify briefly.
+
+  \item \EMarks \textbf{[MCQ -- Select one]} A rational agent chooses actions that:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item maximize expected performance measure based on available percepts
+      \item always maximize immediate reward only
+      \item never use internal state
+      \item solve every problem optimally in all environments
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Name the four components of a learning agent and state the role of the critic.
+
+  \item \EMarks \textbf{[MCQ -- Select one]} A sentence is \textbf{valid} if it is:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item true in at least one model
+      \item true in all models
+      \item false in all models
+      \item true only in the intended model
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Write the truth table for $P \rightarrow Q$ and state when it is false.
+
+  \item \EMarks \textbf{[Subjective]} Convert $P \rightarrow Q$ into an equivalent form using only $\lnot$ and $\lor$.
+
+  \item \EMarks \textbf{[Subjective]} Explain $KB \models \alpha$ in plain words in 2--4 lines.
+
+  \item \EMarks \textbf{[Subjective]} Perform one resolution step on:
+    \[
+      (P \lor Q),\ (\lnot P \lor R).
+    \]
+
+  \item \EMarks \textbf{[MCQ -- Select all that apply]} Which are quantifiers in first-order logic?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item $\forall$
+      \item $\exists$
+      \item $\land$
+      \item $\rightarrow$
+      \item $\lor$
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} State the difference between a function symbol and a predicate symbol.
+
+  \item \EMarks \textbf{[Subjective]} Define dataset, feature, and label using one small ML example.
+
+  \item \EMarks \textbf{[MCQ -- Select one]} Which split should normally be touched only once at the end?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item training set
+      \item validation set
+      \item test set
+      \item bootstrap sample
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Define data leakage and give one example.
+
+  \item \EMarks \textbf{[Subjective]} State what PCA tries to optimize.
+
+  \item \EMarks \textbf{[MCQ -- Select one]} Which metric is most natural for a continuous prediction problem?
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item recall
+      \item F1-score
+      \item MAE
+      \item silhouette score
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Why can accuracy be misleading for imbalanced classification?
+
+  \item \EMarks \textbf{[MCQ -- Select one]} Clustering is mainly:
+    \begin{enumerate}[label=(\Alph*), leftmargin=*]
+      \item supervised learning
+      \item unsupervised learning
+      \item reinforcement learning
+      \item online search
+    \end{enumerate}
+
+  \item \EMarks \textbf{[Subjective]} Give one responsible AI risk in an education application and one mitigation.
+\end{enumerate}
+
+\section*{Medium (20 Questions)}
+\begin{enumerate}[label=\textbf{M\arabic*.}, leftmargin=*]
+  \item \MMarks \textbf{[Subjective]} Give a PEAS description for a campus navigation assistant.
+
+  \item \MMarks \textbf{[Subjective]} Give three success criteria beyond accuracy for an AI system in healthcare.
+
+  \item \MMarks \textbf{[Subjective]} Let $KB=\{P \rightarrow Q,\ Q \rightarrow R,\ P\}$.
+    Check whether $KB \models R$ by truth table/model checking.
+
+  \item \MMarks \textbf{[Subjective]} Determine satisfiability of:
+    \[
+      (P \lor Q),\ (\lnot P \lor Q),\ (P \lor \lnot Q).
+    \]
+    Provide one satisfying assignment if it exists.
+
+  \item \MMarks \textbf{[Subjective]} Convert
+    \[
+      (P \rightarrow Q) \land (Q \rightarrow R)
+    \]
+    to CNF.
+
+  \item \MMarks \textbf{[Subjective]} Translate to propositional logic:
+    ``If the server is down then send an alert. The server is down. Therefore send an alert.''
+
+  \item \MMarks \textbf{[Subjective]} Translate into FOL:
+    ``Every student studies at least one course.''
+
+  \item \MMarks \textbf{[Subjective]} Find an MGU if it exists:
+    \[
+      Knows(John,x) \quad \text{and} \quad Knows(y,Bill).
+    \]
+
+  \item \MMarks \textbf{[Subjective]} Explain occurs-check using the attempt to unify $x$ and $f(x)$.
+
+  \item \MMarks \textbf{[Subjective]} For a dataset of 100 rows, propose a train/validation/test split and explain your choice.
+
+  \item \MMarks \textbf{[Subjective]} When do we use k-fold cross-validation and why is it useful?
+
+  \item \MMarks \textbf{[Subjective]} PCA returns explained variance ratios
+    \[
+      [0.60, 0.20, 0.10, 0.06, 0.04].
+    \]
+    How many components are required to retain at least 85\% variance?
+
+  \item \MMarks \textbf{[Subjective]} Compare PCA and LDA in 5--8 lines.
+
+  \item \MMarks \textbf{[Subjective]} Distinguish regression and classification, and give one metric for each.
+
+  \item \MMarks \textbf{[Subjective]} A classifier gives TP = 30, FP = 10, FN = 20, TN = 40.
+    Compute precision and recall.
+
+  \item \MMarks \textbf{[Subjective]} Why is accuracy a weak metric for rare-event detection?
+
+  \item \MMarks \textbf{[Subjective]} State the objective of k-means and explain why scaling matters.
+
+  \item \MMarks \textbf{[Subjective]} Define state, action, reward, and policy in reinforcement learning.
+
+  \item \MMarks \textbf{[Subjective]} Give one useful semi-supervised learning scenario and one major risk.
+
+  \item \MMarks \textbf{[Subjective]} Give one example of concept drift in banking, education, or security,
+    and mention one monitoring method.
+\end{enumerate}
+
+\section*{Hard (20 Questions)}
+\begin{enumerate}[label=\textbf{H\arabic*.}, leftmargin=*]
+  \item \HMarks \textbf{[Subjective]} Design a knowledge-based agent for a smart home security scenario.
+    Provide propositional symbols, rules/facts, and one entailment query.
+
+  \item \HMarks \textbf{[Subjective]} Use resolution refutation to show:
+    \[
+      \{A \rightarrow B,\ B \rightarrow C,\ C \rightarrow D,\ A\} \models D.
+    \]
+
+  \item \HMarks \textbf{[Subjective]} Convert to clause form and show Skolemization:
+    \[
+      \forall x\ (Student(x) \rightarrow \exists y\ Mentors(y,x)).
+    \]
+
+  \item \HMarks \textbf{[Subjective]} From
+    \[
+      \forall x\ (Human(x) \rightarrow Mortal(x)),\quad Human(Socrates)
+    \]
+    prove $Mortal(Socrates)$ using resolution.
+
+  \item \HMarks \textbf{[Subjective]} Write two FOL translations for ``Every student likes a course''
+    and explain the meaning difference.
+
+  \item \HMarks \textbf{[Subjective]} Provide a small KB and a countermodel showing $KB \not\models \alpha$.
+
+  \item \HMarks \textbf{[Subjective]} Design an ML workflow for predicting hostel electricity demand.
+    Include features, splits, preprocessing, metrics, and one deployment risk.
+
+  \item \HMarks \textbf{[Subjective]} Give a clear example of data leakage in a student-performance prediction system
+    and explain how to fix the workflow.
+
+  \item \HMarks \textbf{[Subjective]} Design an evaluation plan for a healthcare classifier where false negatives are costly.
+
+  \item \HMarks \textbf{[Subjective]} Propose a regression workflow for demand forecasting in energy/utilities.
+
+  \item \HMarks \textbf{[Subjective]} Design a clustering workflow for customer segmentation and explain how you would choose $k$.
+
+  \item \HMarks \textbf{[Subjective]} Design an RL setup for adaptive traffic signal control.
+
+  \item \HMarks \textbf{[Subjective]} Propose a semi-supervised workflow for medical images with few labels and many unlabeled samples.
+
+  \item \HMarks \textbf{[Subjective]} Write a short responsible AI policy note for an AI-based scholarship recommender.
+
+  \item \HMarks \textbf{[Subjective]} Compare one AI/ML application each in banking, security, and healthcare:
+    task, metric, risk, and monitoring.
+
+  \item \HMarks \textbf{[Subjective]} Explain why self-driving is difficult using environment properties,
+    sensors, and uncertainty.
+
+  \item \HMarks \textbf{[Subjective]} A university chatbot gave incorrect scholarship advice.
+    Write a short failure postmortem with causes, impact, and prevention plan.
+
+  \item \HMarks \textbf{[Subjective]} Explain one fairness risk and one privacy risk in an education recommender system,
+    plus one mitigation for each.
+
+  \item \HMarks \textbf{[Subjective]} Create a deployment checklist for a student-facing AI application.
+    Include privacy, monitoring, fallback, human override, and incident handling.
+
+  \item \HMarks \textbf{[Subjective]} In 12--16 lines, explain how logical reasoning, ML modeling, evaluation metrics,
+    and responsible deployment fit together in a complete AI system.
+\end{enumerate}
+
+\vfill
+\noindent\textit{End of Assessment}
+
+\end{document}

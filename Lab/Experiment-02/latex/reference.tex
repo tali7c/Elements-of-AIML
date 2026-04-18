@@ -1,0 +1,119 @@
+\documentclass[11pt]{article}
+
+\input{../../../_shared/notes-common.tex}
+
+\title{Elements of AIML Lab\\Experiment 02 (After-submission Reference): WEKA for Classification}
+\author{Tofik Ali}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{How to use this reference}
+This document is meant to be shared \textbf{after you submit} Experiment~02.
+Use it to verify that you:
+\begin{itemize}[leftmargin=*]
+  \item selected a \textbf{nominal} class attribute (label),
+  \item evaluated models fairly (same split/CV),
+  \item interpreted the confusion matrix and precision/recall/F1 correctly.
+\end{itemize}
+
+\section{Quick recap: what classification means}
+Classification is \textbf{supervised learning} where the target is a \textbf{label} (nominal), e.g., spam/ham, pass/fail, disease/no-disease.
+
+\subsection{Confusion matrix (binary)}
+\begin{center}
+\begin{tabular}{c|cc}
+  & Pred + & Pred - \\\hline
+  True + & TP & FN \\
+  True - & FP & TN \\
+\end{tabular}
+\end{center}
+Interpretation in plain words:
+\begin{itemize}[leftmargin=*]
+  \item TP: correct ``positive'' predictions
+  \item FP: false alarms
+  \item FN: missed positives
+  \item TN: correct ``negative'' predictions
+\end{itemize}
+
+\subsection{Metrics (why more than accuracy)}
+\begin{itemize}[leftmargin=*]
+  \item Accuracy $= \frac{TP+TN}{TP+TN+FP+FN}$ (can be misleading if classes are imbalanced).
+  \item Precision $= \frac{TP}{TP+FP}$ (quality of positive predictions).
+  \item Recall $= \frac{TP}{TP+FN}$ (coverage of true positives).
+  \item F1 balances precision and recall.
+\end{itemize}
+
+\section{Worked example in WEKA (end-to-end)}
+\subsection{Dataset choice (example)}
+WEKA often provides sample classification datasets under a \texttt{data/} folder (e.g., \texttt{iris.arff}, \texttt{weather.nominal.arff}).
+Your screenshots/metrics may differ depending on dataset choice.
+
+\subsection{Step 1: load data and set class attribute}
+\begin{enumerate}[leftmargin=*]
+  \item WEKA $\rightarrow$ \textbf{Explorer} $\rightarrow$ \textbf{Preprocess} $\rightarrow$ \textbf{Open file...}
+  \item Set \textbf{Class} to the label column.
+\end{enumerate}
+\textbf{Cross-check:} the class attribute must be \textbf{nominal}. If numeric, you are doing regression.
+
+\subsection{Step 2: (optional) Replace missing values and remove IDs}
+\begin{itemize}[leftmargin=*]
+  \item Missing values: \texttt{Filter} $\rightarrow$ \texttt{unsupervised/attribute/ReplaceMissingValues}.
+  \item Remove ID-like columns (roll number, customer ID) that leak identity rather than signal.
+\end{itemize}
+
+\subsection{Step 3: train and evaluate two classifiers}
+\paragraph{Model A: Decision tree (J48).}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Classify} tab $\rightarrow$ \textbf{Choose} $\rightarrow$ \texttt{trees/J48}.
+  \item \textbf{Test options} $\rightarrow$ \textbf{Cross-validation} (10 folds) \emph{or} \textbf{Percentage split}.
+  \item Click \textbf{Start}.
+\end{enumerate}
+
+\paragraph{Model B: Naive Bayes (a fast baseline).}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Choose} $\rightarrow$ \texttt{bayes/NaiveBayes}.
+  \item Keep the \textbf{same} test option as Model~A.
+  \item Click \textbf{Start}.
+\end{enumerate}
+
+\subsection{Step 4: interpret WEKA output}
+In the output, you typically see:
+\begin{itemize}[leftmargin=*]
+  \item overall accuracy,
+  \item confusion matrix,
+  \item per-class precision/recall/F1,
+  \item weighted averages (important when classes are imbalanced).
+\end{itemize}
+\textbf{Practical reading tip:} If FN is costly (e.g., missing a disease), focus on \textbf{recall}. If FP is costly (e.g., blocking a genuine payment), focus on \textbf{precision}.
+
+\section{What a strong submission looks like (cross-check)}
+\subsection{Screenshots}
+\begin{itemize}[leftmargin=*]
+  \item Preprocess: correct class selected.
+  \item Classify: model name + evaluation method.
+  \item Output: confusion matrix + precision/recall/F1 for both models.
+\end{itemize}
+
+\subsection{Report structure (1--2 pages)}
+\begin{enumerate}[leftmargin=*]
+  \item Dataset and class labels (what does ``positive'' mean?).
+  \item Preprocessing steps (if any).
+  \item Two models, same evaluation method.
+  \item Results table (accuracy, precision, recall, F1).
+  \item Observations (trade-offs: which model increases recall but decreases precision, etc.).
+\end{enumerate}
+
+\section{Troubleshooting (common issues and fixes)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Wrong class attribute:} selecting an ID column creates meaningless results.
+  \item \textbf{Different evaluation settings across models:} comparisons become unfair.
+  \item \textbf{Only reporting accuracy:} always include confusion matrix + precision/recall/F1.
+  \item \textbf{Imbalance ignored:} if one class is rare, weighted averages and minority-class recall matter most.
+\end{itemize}
+
+\notesources{\AIMLLabSources}
+\end{document}
+

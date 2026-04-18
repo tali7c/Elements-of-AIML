@@ -28,6 +28,15 @@ These two skills make the rest of AI topics easier, because they force you to st
   \item Compare agent types and describe a learning agent architecture.
 \end{itemize}
 
+\section{Bridge from Lecture 01}
+Before continuing, recall three ideas from \textbf{Unit 01 Lecture 01}:
+\begin{itemize}[leftmargin=*]
+  \item AI systems are goal-directed, so we need a clear \textbf{performance measure}.
+  \item The same domain can be framed as different AI tasks depending on the required \textbf{action}.
+  \item Rational behavior means choosing actions that best support the goal under available information.
+\end{itemize}
+This lecture adds the missing design lens: \emph{what exactly can the system observe, what can it do, and what type of environment is it operating in?}
+
 \section{Keywords}
 \begin{itemize}[leftmargin=*]
   \item \textbf{Agent:} entity that perceives (sensors) and acts (actuators).
@@ -98,6 +107,21 @@ PEAS provides a structured way to describe an agent task.
   \item \textbf{Actuators:} move, turn, suck, dock/charge.
   \item \textbf{Sensors:} camera/LiDAR, bump sensor, dirt sensor, battery level.
 \end{itemize}
+
+\subsection{Worked design example: campus navigation assistant}
+Suppose the problem statement is: ``Build an assistant that recommends safe and fast walking routes inside a university campus.'' A complete design flow looks like this:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{PEAS.}
+  \begin{itemize}[leftmargin=*]
+    \item Performance: low travel time, safe route, accessibility, low number of wrong turns.
+    \item Environment: campus map, temporary blockages, weather, pedestrian traffic, user preferences.
+    \item Actuators: route suggestions, alerts for diversions, spoken/text instructions.
+    \item Sensors: GPS, map data, traffic updates, user destination, accessibility settings.
+  \end{itemize}
+  \item \textbf{Environment classification.} This is partially observable (GPS can be noisy), stochastic (crowds and closures change), sequential (wrong turns affect later steps), dynamic, and multi-agent.
+  \item \textbf{Suitable agent type.} A simple reflex agent is too weak because the best route depends on remembered context and changing conditions. A model-based or utility-based agent is more suitable because it must trade off time, safety, and accessibility.
+  \item \textbf{Likely failure mode.} If the reward or utility overemphasizes shortest distance and ignores safety, the system can recommend risky paths even when it appears ``efficient''.
+\end{enumerate}
 
 \section{Environment properties}
 We often classify environments along several dimensions:
